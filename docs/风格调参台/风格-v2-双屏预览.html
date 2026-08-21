@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisteria 双屏预览 · 首页 + 聊天</title>
+<style>
+  :root{--paper:#e7dfd0;--ink:#3D3535;--ink-soft:#8A8580;}
+  body{margin:0;background:var(--paper);font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
+  .wrap{display:flex;gap:28px;justify-content:center;align-items:flex-start;padding:24px;flex-wrap:wrap;}
+  .card h2{margin:0 0 12px;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:1px;}
+  .card h2 span{font-size:10px;color:var(--ink-soft);font-weight:400;margin-left:8px;}
+  iframe{width:432px;height:882px;border:none;display:block;border-radius:14px;background:transparent;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card"><h2>🏠 首页<span>月历-v3-毛玻璃调参-定稿</span></h2><iframe src="月历-v3-毛玻璃调参-定稿.html?demo"></iframe></div>
+  <div class="card"><h2>💬 聊天<span>聊天-v1-调参</span></h2><iframe src="聊天-v1-调参.html?demo"></iframe></div>
+</div>
+</body>
+</html>

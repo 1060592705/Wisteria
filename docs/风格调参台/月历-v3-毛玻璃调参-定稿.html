@@ -120,6 +120,9 @@
   .btns button{flex:1;padding:5px;border:none;border-radius:5px;background:#c74a4a;color:#fff;font-size:11px;cursor:pointer;}
   .btns button.sec{background:#544d40;}
   .codebox{background:#2b2721;border-radius:6px;padding:8px;font-family:monospace;font-size:9.5px;color:#d8cfbd;line-height:1.5;margin-top:8px;white-space:pre-wrap;word-break:break-all;max-height:160px;overflow-y:auto;}
+
+  /* demo 模式：隐藏面板，手机居中（总览页 iframe 用） */
+  body.demo aside#panel{display:none;}
 </style>
 </head>
 <body>
@@ -548,5 +551,6 @@ ${sheets}
   }
 </script>
 
+<script>if(new URLSearchParams(location.search).has('demo'))document.body.classList.add('demo');</script>
 </body>
 </html>
