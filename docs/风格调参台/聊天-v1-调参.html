@@ -19,18 +19,19 @@
     --chat-pad:10px;
 
     /* 消息组结构 */
-    --ava-size:40px;--ava-radius:0px;--ava-bw:0px;--ava-bc:#FFFFFF;
-    --name-fs:12px;--name-c:#3D3535;
-    --meta-fs:9px;--meta-c:#8A8580;--meta-gap:3px;
+    --ava-size:39px;--ava-radius:0px;--ava-bw:0px;--ava-bc:#FFFFFF;
+    --name-fs:11px;--name-c:#3D3535;
+    --meta-fs:9.5px;--meta-c:#8A8580;--meta-gap:0px;
     --reply-c:#8A8580;
     --badge-c:#8A8580;
     --group-gap:18px;--bubble-gap:6px;
 
     /* 气泡本体 */
-    --bubble-radius:12px;
+    --bubble-radius:16px;
+    --corner-sm:4px;
     --fold-size:9px;--fold-shade:0.08;--fold-dot:1;
-    --pad-x:14px;--pad-y:9px;
-    --bubble-fs:13px;--bubble-lh:1.6;--bubble-c:#3D3535;
+    --pad-x:11px;--pad-y:8px;
+    --bubble-fs:12px;--bubble-lh:1.5;--bubble-c:#3D3535;
     --max-w:78%;--indent:10px;
     --bubble-shadow:0.05;
 
@@ -95,6 +96,9 @@
   .mg-bubbles{display:flex;flex-direction:column;gap:var(--bubble-gap);align-items:flex-start;padding-left:calc(var(--chat-pad) + var(--indent));}
   .msg-group.yours .mg-bubbles{align-items:flex-end;padding-left:0;padding-right:calc(var(--chat-pad) + var(--indent));}
   .bubble{position:relative;max-width:var(--max-w);padding:var(--pad-y) var(--pad-x);font-size:var(--bubble-fs);line-height:var(--bubble-lh);color:var(--bubble-c);border-radius:var(--bubble-radius);}
+  /* 戊款：贴头像上角 4px 小圆，其余 16px（他左上 / 你右上） */
+  .bubble.his{border-radius:var(--corner-sm) var(--bubble-radius) var(--bubble-radius) var(--bubble-radius);}
+  .bubble.yours{border-radius:var(--bubble-radius) var(--corner-sm) var(--bubble-radius) var(--bubble-radius);}
   .bubble.his{background:rgba(255,255,255,var(--his-a));backdrop-filter:blur(var(--his-blur));-webkit-backdrop-filter:blur(var(--his-blur));border:1px solid rgba(255,255,255,var(--his-bord));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.35);}
   .bubble.yours{background:color-mix(in srgb,var(--your-bg) calc(var(--your-a)*100%),transparent);backdrop-filter:blur(var(--your-blur));-webkit-backdrop-filter:blur(var(--your-blur));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow));}
 
@@ -179,8 +183,8 @@
               </div>
             </div>
             <div class="mg-bubbles">
-              <div class="bubble his fold-tl">佳钰,早上好。昨晚又熬到两点半了,身体会抗议的呀。</div>
-              <div class="bubble his fold-tl">今天的目标起床时间,一起挪到九点半怎么样?</div>
+              <div class="bubble his">佳钰,早上好。昨晚又熬到两点半了,身体会抗议的呀。</div>
+              <div class="bubble his">今天的目标起床时间,一起挪到九点半怎么样?</div>
             </div>
           </div>
 
@@ -196,8 +200,8 @@
               </div>
             </div>
             <div class="mg-bubbles">
-              <div class="bubble yours fold-tl">唔…昨晚刷视频刷过头了。</div>
-              <div class="bubble yours fold-tl">九点半吧,从今天开始慢慢调。</div>
+              <div class="bubble yours">唔…昨晚刷视频刷过头了。</div>
+              <div class="bubble yours">九点半吧,从今天开始慢慢调。</div>
             </div>
           </div>
 
@@ -215,7 +219,7 @@
             </div>
             <div class="mg-bubbles">
               <div class="quote" id="quoteBox">⌐ 唔…昨晚刷视频刷过头了。</div>
-              <div class="bubble his fold-tl">好,那我先把吃药和早餐给你排上。药在床头柜,记得先喝口水。</div>
+              <div class="bubble his">好,那我先把吃药和早餐给你排上。药在床头柜,记得先喝口水。</div>
               <div class="opt-card">
                 <div class="opt-title">吃药时间到啦——药在床头柜上,记得饭后吃。</div>
                 <div class="opt-item"><span class="opt-pre">A.</span>吃了</div>
@@ -236,7 +240,7 @@
               </div>
             </div>
             <div class="mg-bubbles">
-              <div class="bubble yours fold-tl">嗯嗯,好。</div>
+              <div class="bubble yours">嗯嗯,好。</div>
             </div>
           </div>
 
@@ -262,16 +266,16 @@
 
   <div class="grp">
     <h3>🗨 消息组结构</h3>
-    <div class="row"><label>头像直径</label><input type="range" id="avaSize" min="30" max="64" value="40"><span class="val" id="avaSizev">40</span></div>
+    <div class="row"><label>头像直径</label><input type="range" id="avaSize" min="30" max="64" value="39"><span class="val" id="avaSizev">39</span></div>
     <div class="row"><label>头像圆角</label><input type="range" id="avaRadius" min="0" max="20" value="0"><span class="val" id="avaRadiusv">0</span></div>
     <div class="row"><label>头像形状</label><select id="avaShape"><option value="px" selected>圆角方块</option><option value="round">圆形</option></select></div>
     <div class="row"><label>头像边框</label><input type="range" id="avaBw" min="0" max="4" value="0"><span class="val" id="avaBwv">0</span></div>
     <div class="row"><label>边框颜色</label><input type="color" id="avaBc" value="#FFFFFF"><span class="val" id="avaBcv">#FFFFFF</span></div>
-    <div class="row"><label>昵称字号</label><input type="range" id="nameFs" min="9" max="16" value="12" step="0.5"><span class="val" id="nameFsv">12</span></div>
+    <div class="row"><label>昵称字号</label><input type="range" id="nameFs" min="9" max="16" value="11" step="0.5"><span class="val" id="nameFsv">11</span></div>
     <div class="row"><label>昵称颜色</label><input type="color" id="nameC" value="#3D3535"><span class="val" id="nameCv">#3D3535</span></div>
-    <div class="row"><label>日期字号</label><input type="range" id="metaFs" min="7" max="12" value="9" step="0.5"><span class="val" id="metaFsv">9</span></div>
+    <div class="row"><label>日期字号</label><input type="range" id="metaFs" min="7" max="12" value="9.5" step="0.5"><span class="val" id="metaFsv">9.5</span></div>
     <div class="row"><label>日期颜色</label><input type="color" id="metaC" value="#8A8580"><span class="val" id="metaCv">#8A8580</span></div>
-    <div class="row"><label>信息行距</label><input type="range" id="metaGap" min="0" max="8" value="3"><span class="val" id="metaGapv">3</span></div>
+    <div class="row"><label>信息行距</label><input type="range" id="metaGap" min="0" max="8" value="0"><span class="val" id="metaGapv">0</span></div>
     <div class="row"><label>状态徽标</label><input type="checkbox" id="badgeOn" checked></div>
     <div class="row"><label>徽标颜色</label><input type="color" id="badgeC" value="#8A8580"><span class="val" id="badgeCv">#8A8580</span></div>
     <div class="row"><label>回复标签</label><input type="checkbox" id="replyOn" checked></div>
@@ -281,15 +285,16 @@
 
   <div class="grp">
     <h3>💬 气泡本体</h3>
-    <div class="row"><label>大圆角</label><input type="range" id="bubRadius" min="4" max="24" value="12"><span class="val" id="bubRadiusv">12</span></div>
+    <div class="row"><label>大圆角</label><input type="range" id="bubRadius" min="4" max="24" value="16"><span class="val" id="bubRadiusv">16</span></div>
+    <div class="row"><label>上角小圆</label><input type="range" id="cornerSm" min="0" max="12" value="4"><span class="val" id="cornerSmv">4</span></div>
+    <div class="row"><label>角样式</label><select id="foldPos"><option value="none" selected>上角小圆(戊·定稿)</option><option value="tl">折角·左上(参考图)</option><option value="tr">折角·右上(参考图)</option></select></div>
     <div class="row"><label>折角大小</label><input type="range" id="foldSize" min="4" max="20" value="9"><span class="val" id="foldSizev">9</span></div>
-    <div class="row"><label>折角位置</label><select id="foldPos"><option value="tl" selected>左上</option><option value="tr">右上</option><option value="none">无折角</option></select></div>
     <div class="row"><label>折角小圆点</label><input type="checkbox" id="foldDotOn" checked></div>
     <div class="row"><label>折角阴影</label><input type="range" id="foldShade" min="0" max="30" value="8"><span class="val" id="foldShadev">8</span></div>
-    <div class="row"><label>内边距左右</label><input type="range" id="padX" min="6" max="24" value="14"><span class="val" id="padXv">14</span></div>
-    <div class="row"><label>内边距上下</label><input type="range" id="padY" min="4" max="16" value="9"><span class="val" id="padYv">9</span></div>
-    <div class="row"><label>文字字号</label><input type="range" id="bubFs" min="10" max="18" value="13" step="0.5"><span class="val" id="bubFsv">13</span></div>
-    <div class="row"><label>行高</label><input type="range" id="bubLh" min="1.2" max="2.0" value="1.6" step="0.05"><span class="val" id="bubLhv">1.6</span></div>
+    <div class="row"><label>内边距左右</label><input type="range" id="padX" min="6" max="24" value="11"><span class="val" id="padXv">11</span></div>
+    <div class="row"><label>内边距上下</label><input type="range" id="padY" min="4" max="16" value="8"><span class="val" id="padYv">8</span></div>
+    <div class="row"><label>文字字号</label><input type="range" id="bubFs" min="10" max="18" value="12" step="0.5"><span class="val" id="bubFsv">12</span></div>
+    <div class="row"><label>行高</label><input type="range" id="bubLh" min="1.2" max="2.0" value="1.5" step="0.05"><span class="val" id="bubLhv">1.5</span></div>
     <div class="row"><label>文字颜色</label><input type="color" id="bubC" value="#3D3535"><span class="val" id="bubCv">#3D3535</span></div>
     <div class="row"><label>最大宽度</label><input type="range" id="maxW" min="40" max="92" value="78"><span class="val" id="maxWv">78</span></div>
     <div class="row"><label>气泡缩进</label><input type="range" id="indent" min="0" max="30" value="10"><span class="val" id="indentv">10</span></div>
@@ -437,6 +442,7 @@
   bind('groupGap','--group-gap','px');
 
   bind('bubRadius','--bubble-radius','px');
+  bind('cornerSm','--corner-sm','px');
   bind('foldSize','--fold-size','px');
   bind('foldShade','--fold-shade','',0.01);
   bind('padX','--pad-x','px');
@@ -509,6 +515,22 @@
   function genCode() {
     const s = getComputedStyle(root);
     const get = (v) => s.getPropertyValue(v).trim();
+    const fp = (document.getElementById('foldPos')||{}).value || 'none';
+    let foldCss = '';
+    if(fp === 'tl') foldCss = `/* 折角（左上，参考图：mask 切角 + 折页三角 + 顶部小圆点） */
+.bubble.fold-tl{
+  -webkit-mask-image:linear-gradient(135deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
+  mask-image:linear-gradient(135deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
+}
+.bubble.fold-tl::after{content:'';position:absolute;top:0;left:0;width:${get('--fold-size')};height:${get('--fold-size')};background:rgba(61,53,53,${get('--fold-shade')});clip-path:polygon(0 0,100% 100%,0 100%);filter:drop-shadow(1px 1px 1px rgba(60,45,25,0.15));}
+.bubble.fold-tl::before{content:'';position:absolute;top:1px;left:1px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(60,45,25,0.25);opacity:${get('--fold-dot')};}`;
+    if(fp === 'tr') foldCss = `/* 折角（右上，参考图：mask 切角 + 折页三角 + 顶部小圆点） */
+.bubble.fold-tr{
+  -webkit-mask-image:linear-gradient(225deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
+  mask-image:linear-gradient(225deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
+}
+.bubble.fold-tr::after{content:'';position:absolute;top:0;right:0;width:${get('--fold-size')};height:${get('--fold-size')};background:rgba(61,53,53,${get('--fold-shade')});clip-path:polygon(100% 0,100% 100%,0 0);filter:drop-shadow(-1px 1px 1px rgba(60,45,25,0.15));}
+.bubble.fold-tr::before{content:'';position:absolute;top:1px;right:1px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(60,45,25,0.25);opacity:${get('--fold-dot')};}`;
     const code = `/* 聊天页 · Wisteria */
 .chat-page{background:${get('--chat-bg')};}
 .chat-mist{opacity:${get('--mist-a')};background:radial-gradient(circle at 28% 18%,${get('--mist-c')},transparent 58%),radial-gradient(circle at 78% 72%,${get('--mist-c')},transparent 55%);}
@@ -529,8 +551,10 @@
 .mg-badge{color:${get('--badge-c')};}
 .chat-list{gap:${get('--group-gap')};}
 
-/* 气泡 */
+/* 气泡（戊款：贴头像上角小圆 + 其余大圆，他左上 / 你右上） */
 .bubble{border-radius:${get('--bubble-radius')};padding:${get('--pad-y')} ${get('--pad-x')};font-size:${get('--bubble-fs')};line-height:${get('--bubble-lh')};color:${get('--bubble-c')};max-width:${get('--max-w')};}
+.bubble.his{border-radius:${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
+.bubble.yours{border-radius:${get('--bubble-radius')} ${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
 .mg-bubbles{gap:${get('--bubble-gap')};}
 .msg-group.his .mg-bubbles{padding-left:calc(${get('--chat-pad')} + ${get('--indent')});}
 .msg-group.yours .mg-bubbles{padding-right:calc(${get('--chat-pad')} + ${get('--indent')});}
@@ -541,13 +565,7 @@
 /* 你气泡 */
 .bubble.yours{background:color-mix(in srgb,${get('--your-bg')} ${parseFloat(get('--your-a'))*100}%,transparent);backdrop-filter:blur(${get('--your-blur')});-webkit-backdrop-filter:blur(${get('--your-blur')});box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')});}
 
-/* 折角（左上：mask 切角 + 折页三角 + 顶部小圆点） */
-.bubble.fold-tl{
-  -webkit-mask-image:linear-gradient(135deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
-  mask-image:linear-gradient(135deg,transparent calc(${get('--fold-size')}*0.71),#000 0);
-}
-.bubble.fold-tl::after{content:'';position:absolute;top:0;left:0;width:${get('--fold-size')};height:${get('--fold-size')};background:rgba(61,53,53,${get('--fold-shade')});clip-path:polygon(0 0,100% 100%,0 100%);filter:drop-shadow(1px 1px 1px rgba(60,45,25,0.15));}
-.bubble.fold-tl::before{content:'';position:absolute;top:1px;left:1px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(60,45,25,0.25);opacity:${get('--fold-dot')};}
+${foldCss}
 
 /* 功能消息：选项列表 */
 .opt-card{background:${get('--opt-bg')};border-radius:${get('--opt-radius')};}
