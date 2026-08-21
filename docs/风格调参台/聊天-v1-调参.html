@@ -140,7 +140,8 @@
   .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 var(--wrap-pad);height:var(--bar-h);}
   .ci-ell{flex:0 0 auto;width:var(--ci-w);display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);max-height:var(--bar-h);padding:0 var(--ci-pad);transform:translate(var(--ci-x),var(--ci-y));}
   .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);white-space:nowrap;overflow:hidden;}
-  .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;transform:translate(var(--send-x),var(--send-y));}
+  .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;flex-shrink:0;transform:translate(var(--send-x),var(--send-y));}
+  .ci-send svg{width:58%;height:58%;display:block;}
 
   /* 调参面板 */
   #panel{width:280px;background:#37322a;color:#e8e2d6;padding:16px;overflow-y:auto;height:100vh;flex-shrink:0;font-size:12px;}
@@ -257,7 +258,7 @@
             <div class="ci-ell">
               <div class="ci-field">给薰写点什么…</div>
             </div>
-            <div class="ci-send">↑</div>
+            <div class="ci-send"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 15V4M4.5 8.5L9 4l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           </div>
         </div>
       </div>
@@ -792,7 +793,10 @@ ${foldCss}
 .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 ${get('--wrap-pad')};height:${get('--bar-h')};}
 .ci-ell{flex:0 0 auto;width:${get('--ci-w')};display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};max-height:${get('--bar-h')};padding:0 ${get('--ci-pad')};transform:translate(${get('--ci-x')},${get('--ci-y')});}
 .ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};white-space:nowrap;overflow:hidden;}
-.ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;transform:translate(${get('--send-x')},${get('--send-y')});}
+.ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;flex-shrink:0;transform:translate(${get('--send-x')},${get('--send-y')});}
+/* 发送箭头（iMessage 式圆头细线，标记结构如下）
+   <div class="ci-send"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 15V4M4.5 8.5L9 4l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div> */
+.ci-send svg{width:58%;height:58%;display:block;}
 ${hidCss}${tearCss}`;
     document.getElementById('codeout').textContent = code;
   }
