@@ -21,7 +21,7 @@
     /* 消息组结构 */
     --ava-size:37px;--ava-radius:3px;--ava-bw:0px;--ava-bc:#FFFFFF;
     --name-fs:11px;--name-c:#3D3535;
-    --meta-fs:9px;--meta-c:#8A8580;--meta-gap:0px;
+    --meta-fs:9px;--meta-c:#8A8580;--meta-gap:0px;--meta-lh:1.25;
     --reply-c:#8A8580;
     --badge-c:#8A8580;
     --group-gap:17px;--bubble-gap:6px;
@@ -49,7 +49,7 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --input-h:55px;--input-r:16px;
+    --ci-h:36px;--ci-pad:12px;--ci-bg:rgba(232,229,225,1);
     --icon-fs:17px;--icon-c:#9BAAB8;
     --send-s:22px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
@@ -66,6 +66,7 @@
 
   /* 聊天页 */
   .chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--chat-bg);}
+  .chat-page.bgimg{background:var(--chat-bg) center/cover no-repeat url('../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png');}
   .chat-mist{position:absolute;inset:0;pointer-events:none;opacity:var(--mist-a);
     background:radial-gradient(circle at 28% 18%,var(--mist-c),transparent 58%),radial-gradient(circle at 78% 72%,var(--mist-c),transparent 55%);}
 
@@ -81,7 +82,7 @@
   /* 消息列表 */
   .chat-list{position:relative;z-index:1;flex:1;overflow:hidden;padding:12px 0 8px;display:flex;flex-direction:column;gap:var(--group-gap);}
   .msg-group{display:flex;flex-direction:column;}
-  .mg-head{display:flex;gap:8px;align-items:flex-start;padding:0 var(--chat-pad);}
+  .mg-head{display:flex;gap:8px;align-items:center;padding:0 var(--chat-pad);}
   .msg-group.yours .mg-head{flex-direction:row-reverse;}
   .mg-ava-wrap{position:relative;flex-shrink:0;}
   .mg-ava{width:var(--ava-size);height:var(--ava-size);border-radius:var(--ava-radius);border:var(--ava-bw) solid var(--ava-bc);display:flex;align-items:center;justify-content:center;color:#fff;font-size:calc(var(--ava-size)*0.42);flex-shrink:0;box-shadow:0 2px 6px rgba(60,45,25,0.08);}
@@ -92,7 +93,7 @@
   .mg-l1{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
   .mg-name{font-size:var(--name-fs);color:var(--name-c);font-weight:600;}
   .mg-reply{font-size:var(--meta-fs);color:var(--reply-c);}
-  .mg-l2,.mg-l3{font-size:var(--meta-fs);color:var(--meta-c);line-height:1.25;}
+  .mg-l2,.mg-l3{font-size:var(--meta-fs);color:var(--meta-c);line-height:var(--meta-lh);}
   .msg-group.yours .mg-info{align-items:flex-end;}
 
   /* 气泡 */
@@ -107,7 +108,6 @@
 
   /* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边） */
   .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
-  .bubble.lg.yours{background:linear-gradient(135deg,color-mix(in srgb,var(--your-bg) 55%,#fff),color-mix(in srgb,var(--your-bg) 28%,rgba(255,255,255,0.35)));}
   .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,var(--lg-sheen)),transparent 58%);pointer-events:none;}
   .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,var(--lg-rim));pointer-events:none;}
 
@@ -132,11 +132,12 @@
   .opt-item.active .opt-pre{color:var(--opt-accent);}
 
   /* 输入栏 */
-  .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px var(--chat-pad) 14px;flex-shrink:0;}
+  .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px var(--chat-pad) 14px;background:var(--wrap-bg);flex-shrink:0;}
   .chat-input.tear::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,var(--wrap-bg) 0,var(--wrap-bg) 4px,transparent 4px,transparent 7px);}
-  .ci-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--wrap-bg);border-radius:var(--input-r);height:var(--input-h);padding:0 var(--wrap-pad);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
+  .ci-wrap{flex:1;display:flex;align-items:center;gap:8px;padding:0 var(--wrap-pad);}
+  .ci-ell{flex:1;display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);padding:0 var(--ci-pad);}
   .ci-mic{font-size:var(--icon-fs);color:var(--icon-c);filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
-  .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);padding:0 4px;white-space:nowrap;overflow:hidden;}
+  .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);white-space:nowrap;overflow:hidden;}
   .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--icon-c);font-size:var(--icon-fs);filter:grayscale(1);flex-shrink:0;}
   .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
 
@@ -165,7 +166,7 @@
   <div class="phone">
     <div class="phone-in">
       <div class="dynamic-island"></div>
-      <div class="chat-page">
+      <div class="chat-page bgimg">
         <div class="chat-mist"></div>
         <div class="chat-header">
           <div class="ch-back">‹</div>
@@ -258,7 +259,9 @@
         <div class="chat-input tear">
           <div class="ci-wrap">
             <div class="ci-mic">🎤</div>
-            <div class="ci-field">给薰写点什么…</div>
+            <div class="ci-ell">
+              <div class="ci-field">给薰写点什么…</div>
+            </div>
             <div class="ci-ic">☺</div>
             <div class="ci-ic">📷</div>
             <div class="ci-send">↑</div>
@@ -285,6 +288,7 @@
     <div class="row"><label>日期字号</label><input type="range" id="metaFs" min="7" max="12" value="9" step="0.5"><span class="val" id="metaFsv">9</span></div>
     <div class="row"><label>日期颜色</label><input type="color" id="metaC" value="#8A8580"><span class="val" id="metaCv">#8A8580</span></div>
     <div class="row"><label>信息行距</label><input type="range" id="metaGap" min="0" max="8" value="0"><span class="val" id="metaGapv">0</span></div>
+    <div class="row"><label>信息行高</label><input type="range" id="metaLh" min="1" max="1.8" step="0.05" value="1.25"><span class="val" id="metaLhv">1.25</span></div>
     <div class="row"><label>状态徽标</label><input type="checkbox" id="badgeOn"></div>
     <div class="row"><label>徽标颜色</label><input type="color" id="badgeC" value="#8A8580"><span class="val" id="badgeCv">#8A8580</span></div>
     <div class="row"><label>回复标签</label><input type="checkbox" id="replyOn"></div>
@@ -337,6 +341,7 @@
   <div class="grp">
     <h3>📱 页面与顶部栏</h3>
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
+    <div class="row"><label>点纹背景</label><input type="checkbox" id="bgImgOn" checked></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
     <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="15"><span class="val" id="mistAv">15</span></div>
     <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="72" value="72"><span class="val" id="hdrHv">72</span></div>
@@ -370,15 +375,17 @@
   <div class="grp">
     <h3>✏ 输入栏</h3>
     <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
-    <div class="row"><label>栏高</label><input type="range" id="inputH" min="36" max="60" value="55"><span class="val" id="inputHv">55</span></div>
-    <div class="row"><label>栏圆角</label><input type="range" id="inputR" min="4" max="30" value="16"><span class="val" id="inputRv">16</span></div>
+    <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="24" max="52" value="36"><span class="val" id="ciHv">36</span></div>
     <div class="row"><label>图标颜色</label><input type="color" id="iconC" value="#9BAAB8"><span class="val" id="iconCv">#9BAAB8</span></div>
     <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="17"><span class="val" id="iconFsv">17</span></div>
     <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="22"><span class="val" id="sendSv">22</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
-    <div class="row"><label>栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
-    <div class="row"><label>栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
+    <div class="row"><label>底栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
+    <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
+    <div class="row"><label>椭圆背景色</label><input type="color" id="ciBg" value="#E8E5E1"><span class="val" id="ciBgv">#E8E5E1</span></div>
+    <div class="row"><label>椭圆背景透明</label><input type="range" id="ciBgA" min="0" max="100" value="100"><span class="val" id="ciBgAv">100</span></div>
+    <div class="row"><label>椭圆内距</label><input type="range" id="ciPad" min="4" max="16" value="12"><span class="val" id="ciPadv">12</span></div>
     <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="12"><span class="val" id="wrapPadv">12</span></div>
   </div>
 
@@ -520,15 +527,18 @@
   bind('quoteRadius','--quote-radius','px');
   bindColor('quoteC','--quote-c');
 
-  bind('inputH','--input-h','px');
-  bind('inputR','--input-r','px');
+  bind('ciH','--ci-h','px');
   bindColor('iconC','--icon-c');
   bindCheck('tearOn', v => document.querySelector('.chat-input').classList.toggle('tear', v));
+  bindCheck('bgImgOn', v => document.querySelector('.chat-page').classList.toggle('bgimg', v));
   bind('iconFs','--icon-fs','px');
   bind('sendS','--send-s','px');
   bindColor('sendBg','--send-bg');
   bindColor('placeholderC','--placeholder-c');
   bind('wrapPad','--wrap-pad','px');
+  bindColor('ciBg','--ci-bg');
+  bind('ciPad','--ci-pad','px');
+  bind('metaLh','--meta-lh','');
 
   /* 背景色 + 透明组合（color-mix 需要 base + alpha 两个变量） */
   function updateMixed() {
@@ -536,8 +546,10 @@
     setVar('--opt-bg', `color-mix(in srgb, ${document.getElementById('optBg').value} ${(oa*100).toFixed(0)}%, transparent)`);
     const wa = parseFloat(document.getElementById('wrapBgA').value)/100;
     setVar('--wrap-bg', `color-mix(in srgb, ${document.getElementById('wrapBg').value} ${(wa*100).toFixed(0)}%, transparent)`);
+    const ca = parseFloat(document.getElementById('ciBgA').value)/100;
+    setVar('--ci-bg', `color-mix(in srgb, ${document.getElementById('ciBg').value} ${(ca*100).toFixed(0)}%, transparent)`);
   }
-  ['optBg','optBgA','wrapBg','wrapBgA'].forEach(id => {
+  ['optBg','optBgA','wrapBg','wrapBgA','ciBg','ciBgA'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('input', () => {
@@ -590,17 +602,17 @@
     const tearOn = document.getElementById('tearOn');
     const tearCss = tearOn && tearOn.checked ? `\n/* 撕纸边（同主页导航栏） */\n.chat-input::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 0,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 4px,transparent 4px,transparent 7px);}` : '';
     const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
+    const pageCss = (document.getElementById('bgImgOn')||{}).checked ? `/* 点纹背景：url 请替换为实际图片路径 */\n.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')} center/cover no-repeat url('chat-bg-dots.png');}` : `.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}`;
     const matCss = mat === 'lg' ? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
 
 .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
-.bubble.lg.yours{background:linear-gradient(135deg,color-mix(in srgb,${get('--your-bg')} 55%,#fff),color-mix(in srgb,${get('--your-bg')} 28%,rgba(255,255,255,0.35)));}
 .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
 .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}` : '';
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
 /* 页面 */
-.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}
+${pageCss}
 .chat-mist{position:absolute;inset:0;pointer-events:none;opacity:${get('--mist-a')};background:radial-gradient(circle at 28% 18%,${get('--mist-c')},transparent 58%),radial-gradient(circle at 78% 72%,${get('--mist-c')},transparent 55%);}
 
 /* 顶部栏 */
@@ -615,7 +627,7 @@
 /* 消息组 */
 .chat-list{position:relative;z-index:1;flex:1;overflow:hidden;padding:12px 0 8px;display:flex;flex-direction:column;gap:${get('--group-gap')};}
 .msg-group{display:flex;flex-direction:column;}
-.mg-head{display:flex;gap:8px;align-items:flex-start;padding:0 ${get('--chat-pad')};}
+.mg-head{display:flex;gap:8px;align-items:center;padding:0 ${get('--chat-pad')};}
 .msg-group.yours .mg-head{flex-direction:row-reverse;}
 .mg-ava-wrap{position:relative;flex-shrink:0;}
 .mg-ava{width:${get('--ava-size')};height:${get('--ava-size')};border-radius:${get('--ava-radius')};border:${get('--ava-bw')} solid ${get('--ava-bc')};display:flex;align-items:center;justify-content:center;color:#fff;font-size:calc(${get('--ava-size')}*0.42);flex-shrink:0;box-shadow:0 2px 6px rgba(60,45,25,0.08);}
@@ -627,7 +639,7 @@
 .mg-l1{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
 .mg-name{font-size:${get('--name-fs')};color:${get('--name-c')};font-weight:600;}
 .mg-reply{font-size:${get('--meta-fs')};color:${get('--reply-c')};}
-.mg-l2,.mg-l3{font-size:${get('--meta-fs')};color:${get('--meta-c')};line-height:1.25;}
+.mg-l2,.mg-l3{font-size:${get('--meta-fs')};color:${get('--meta-c')};line-height:${get('--meta-lh')};}
 .mg-bubbles{display:flex;flex-direction:column;gap:${get('--bubble-gap')};align-items:flex-start;margin-top:${get('--bub-mt')};padding-left:calc(${get('--chat-pad')} + ${get('--indent')});}
 .msg-group.yours .mg-bubbles{align-items:flex-end;padding-left:0;padding-right:calc(${get('--chat-pad')} + ${get('--indent')});}
 
@@ -655,10 +667,11 @@ ${foldCss}
 .opt-item.active .opt-pre{color:${get('--opt-accent')};}
 
 /* 输入栏 */
-.chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px ${get('--chat-pad')} 14px;flex-shrink:0;}
-.ci-wrap{flex:1;display:flex;align-items:center;gap:8px;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};border-radius:${get('--input-r')};height:${get('--input-h')};padding:0 ${get('--wrap-pad')};backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
+.chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px ${get('--chat-pad')} 14px;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};flex-shrink:0;}
+.ci-wrap{flex:1;display:flex;align-items:center;gap:8px;padding:0 ${get('--wrap-pad')};}
+.ci-ell{flex:1;display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};padding:0 ${get('--ci-pad')};}
 .ci-mic{font-size:${get('--icon-fs')};color:${get('--icon-c')};filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
-.ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};padding:0 4px;white-space:nowrap;overflow:hidden;}
+.ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};white-space:nowrap;overflow:hidden;}
 .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:${get('--icon-c')};font-size:${get('--icon-fs')};filter:grayscale(1);flex-shrink:0;}
 .ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
 ${hidCss}${tearCss}`;
