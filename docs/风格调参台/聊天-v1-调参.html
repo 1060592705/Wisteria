@@ -42,6 +42,7 @@
     --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
     --lg-warp:15;--lg-wave:50;
     --lg-rimw:2px;--lg-rimb:11px;--lg-disp:19;
+    --lg-rimwht:0;
     --lg-disp-l:#E9F3DF;--lg-disp-r:#C0E2D1;
     --lg-sx:12%;--lg-sy:0%;
 
@@ -112,7 +113,7 @@
   .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));}
   .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at var(--lg-sx,12%) var(--lg-sy,0%),rgba(255,255,255,var(--lg-sheen)),transparent 58%),radial-gradient(45% 38% at 88% 8%,color-mix(in srgb,var(--lg-disp-r) calc(var(--lg-disp)*1%),transparent),transparent 68%),radial-gradient(45% 38% at 8% 18%,color-mix(in srgb,var(--lg-disp-l) calc(var(--lg-disp)*1%),transparent),transparent 68%);pointer-events:none;}
   /* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心到边缘的模糊梯度） */
-  .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--lg-rimw);border:1px solid rgba(255,255,255,var(--lg-rim));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));pointer-events:none;}
+  .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--lg-rimw);background:rgba(255,255,255,calc(var(--lg-rimwht)*1%));border:1px solid rgba(255,255,255,var(--lg-rim));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));pointer-events:none;}
   /* 气泡入场（液态张力：上浮 + 弹性着陆） */
   .bubble.animate{animation:bubbleIn .5s cubic-bezier(.22,1.5,.36,1) both;}
   @keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(0.94);}to{opacity:1;transform:none;}}
@@ -317,6 +318,7 @@
     <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
     <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="11"><span class="val" id="lgRimBv">11</span></div>
     <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="2"><span class="val" id="lgRimWv">2</span></div>
+    <div class="row"><label>边缘白膜</label><input type="range" id="lgRimWht" min="0" max="60" value="0"><span class="val" id="lgRimWhtv">0</span></div>
     <div class="row"><label>背景取色</label><input type="checkbox" id="dispAutoOn" checked></div>
     <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="19"><span class="val" id="lgDispv">19</span></div>
     <div class="row"><label>色散左色</label><input type="color" id="lgDispL" value="#E9F3DF"><span class="val" id="lgDispLv">#E9F3DF</span></div>
@@ -500,6 +502,7 @@
   bind('lgWave','--lg-wave','');
   bind('lgRimW','--lg-rimw','px');
   bind('lgRimB','--lg-rimb','px');
+  bind('lgRimWht','--lg-rimwht','');
   bind('lgDisp','--lg-disp','');
   bindColor('lgDispL','--lg-disp-l');
   bindColor('lgDispR','--lg-disp-r');
@@ -699,7 +702,7 @@
 .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at ${get('--lg-sx')} ${get('--lg-sy')},rgba(255,255,255,${get('--lg-sheen')}),transparent 58%),radial-gradient(45% 38% at 88% 8%,color-mix(in srgb,${get('--lg-disp-r')} calc(${get('--lg-disp')}*1%),transparent),transparent 68%),radial-gradient(45% 38% at 8% 18%,color-mix(in srgb,${get('--lg-disp-l')} calc(${get('--lg-disp')}*1%),transparent),transparent 68%);pointer-events:none;}
 
 /* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心→边缘的模糊梯度） */
-.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:${get('--lg-rimw')};border:1px solid rgba(255,255,255,${get('--lg-rim')});-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});pointer-events:none;}
+.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:${get('--lg-rimw')};background:rgba(255,255,255,calc(${get('--lg-rimwht')}*1%));border:1px solid rgba(255,255,255,${get('--lg-rim')});-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});pointer-events:none;}
 
 /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版）
    需在页面中放入滤镜定义（放 body 内即可）：
