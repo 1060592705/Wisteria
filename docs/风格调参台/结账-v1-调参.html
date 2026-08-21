@@ -21,7 +21,7 @@
     --h-h:58px;--h-bg:#FFFFFF;--h-tfs:14px;
 
     /* 打印口（黑槽） */
-    --slot-h:30px;--slot-c:#2E2B28;--slot-r:15px;--slot-w:24px;
+    --slot-h:32px;--slot-c:#2E2B28;--slot-r:16px;--slot-w:24px;
 
     /* 小票 */
     --tik-w:292px;--tik-bg:#F5FBF7;--tik-pad:14px;
@@ -50,28 +50,20 @@
 
   /* —— 结账页 —— */
   .check-page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--cc-bg);}
-  .check-header{position:relative;z-index:2;display:flex;align-items:center;padding:43px 12px 8px;height:var(--h-h);background:var(--h-bg);flex-shrink:0;}
-  .check-header .ht{flex:1;text-align:center;font-size:var(--h-tfs);font-weight:600;color:var(--ink);}
-  .ch-back{position:relative;width:11px;height:18px;color:var(--blue-grey);flex-shrink:0;}
-  .ch-back i{position:absolute;left:0;top:50%;width:11px;height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
-  .ch-back i:first-child{transform:rotate(-56deg);}
-  .ch-back i:last-child{transform:rotate(56deg);}
 
-  .check-body{flex:1;overflow-y:auto;padding:14px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .check-body{flex:1;overflow-y:auto;padding:0 12px 18px;display:flex;flex-direction:column;align-items:center;}
   .check-body::-webkit-scrollbar{display:none;}
-  .kaoru-note{display:none;align-self:flex-start;max-width:80%;background:rgba(255,255,255,0.85);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:var(--note-fs);line-height:1.6;color:var(--ink);}
-  .kaoru-note.on{display:block;}
 
   /* 打印口（黑槽）——小票从槽口吐出 */
-  .ticket-wrap{position:relative;flex-shrink:0;width:100%;display:flex;flex-direction:column;align-items:center;}
-  .ticket-slot{position:relative;z-index:3;width:calc(var(--tik-w) + var(--slot-w)*2);height:var(--slot-h);background:var(--slot-c);border-radius:var(--slot-r);flex-shrink:0;box-shadow:0 4px 10px rgba(60,45,25,.22);}
+  .ticket-wrap{position:relative;flex-shrink:0;width:100%;padding-top:calc(var(--slot-h)/2 + 5px);}
+  .ticket-slot{position:absolute;z-index:3;top:calc(21px - var(--slot-h)/2);left:50%;transform:translateX(-50%);width:calc(var(--tik-w) + var(--slot-w)*2);max-width:calc(100% - 24px);height:var(--slot-h);background:var(--slot-c);border-radius:var(--slot-r);box-shadow:0 4px 10px rgba(60,45,25,.22);}
   .ticket-slot::before{content:"";position:absolute;inset:0;border-radius:inherit;opacity:.5;background:radial-gradient(circle at 8px 8px, rgba(255,255,255,.35) 1px, transparent 1.5px) 0 0/11px 11px;}
   .ticket-slot::after{content:"";position:absolute;top:50%;left:10px;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--slot-c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);}
   .ticket-slot i{position:absolute;top:50%;right:18px;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--slot-c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);}
   .ticket-slot i::after{content:"";position:absolute;top:0;left:2px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.28);}
 
   /* 小票（纸感） */
-  .ticket{position:relative;z-index:1;flex-shrink:0;width:var(--tik-w);background:var(--tik-bg);padding:calc(var(--slot-h)/2 + 6px) 14px 26px;font-family:var(--font-receipt);font-size:var(--bd-fs);color:var(--ink);box-shadow:0 6px 18px rgba(60,45,25,.10);margin-top:calc(var(--slot-h)/-2);border-radius:6px 6px 0 0;}
+  .ticket{position:relative;z-index:1;flex-shrink:0;width:var(--tik-w);background:var(--tik-bg);padding:calc(var(--slot-h)/2 + 5px) 14px 26px;font-family:var(--font-receipt);font-size:var(--bd-fs);color:var(--ink);box-shadow:0 6px 18px rgba(60,45,25,.14);border-radius:6px 6px 0 0;}
   .ticket::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--zig-h);background:linear-gradient(-135deg,var(--tik-bg) 50%,transparent 50%) 0 0/13px var(--zig-h) repeat-x,linear-gradient(135deg,var(--tik-bg) 50%,transparent 50%) 6.5px 0/13px var(--zig-h) repeat-x;}
   .t-cap{text-align:center;font-size:var(--cap-fs);letter-spacing:var(--cap-ls);color:var(--muted-c);}
   .t-head{display:block;text-align:center;font-family:var(--font-logo);font-size:var(--hd-fs);letter-spacing:var(--hd-ls);color:var(--ink);line-height:1.15;margin:3px 0 1px;}
@@ -147,13 +139,7 @@
     <div class="phone-in">
       <div class="dynamic-island"></div>
       <div class="check-page">
-        <div class="check-header">
-          <span class="ch-back" aria-hidden="true"><i></i><i></i></span>
-          <div class="ht">睡前结账</div>
-          <span style="width:11px"></span>
-        </div>
         <div class="check-body">
-          <div class="kaoru-note on">唔…今天的事整理好了，结账吗？</div>
           <div class="ticket-wrap">
             <div class="ticket-slot"><i></i></div>
             <div class="ticket">
@@ -203,15 +189,10 @@
 
   <h3>页面</h3>
   <div class="row"><label>页面底色</label><input type="color" id="ccBg" value="#F4F2F0"><span class="val" id="ccBgv">#F4F2F0</span></div>
-  <div class="row"><label>顶栏高</label><input type="range" id="hH" min="50" max="70" value="58"><span class="val" id="hHv">58</span></div>
-  <div class="row"><label>顶栏底色</label><input type="color" id="hBg" value="#FFFFFF"><span class="val" id="hBgv">#FFFFFF</span></div>
-  <div class="row"><label>标题字号</label><input type="range" id="hTfs" min="11" max="18" value="14"><span class="val" id="hTfsv">14</span></div>
-  <div class="row"><label>他气泡</label><input type="checkbox" id="noteOn" checked></div>
-
   <h3>打印口（黑槽）</h3>
-  <div class="row"><label>槽高</label><input type="range" id="slotH" min="18" max="44" value="30"><span class="val" id="slotHv">30</span></div>
+  <div class="row"><label>槽高</label><input type="range" id="slotH" min="18" max="44" value="32"><span class="val" id="slotHv">32</span></div>
   <div class="row"><label>槽色</label><input type="color" id="slotC" value="#2E2B28"><span class="val" id="slotCv">#2E2B28</span></div>
-  <div class="row"><label>槽圆角</label><input type="range" id="slotR" min="8" max="22" value="15"><span class="val" id="slotRv">15</span></div>
+  <div class="row"><label>槽圆角</label><input type="range" id="slotR" min="8" max="22" value="16"><span class="val" id="slotRv">16</span></div>
   <div class="row"><label>槽加宽</label><input type="range" id="slotW" min="0" max="60" value="24"><span class="val" id="slotWv">24</span></div>
 
   <h3>小票</h3>
@@ -286,10 +267,6 @@
 
   /* —— 参数绑定 —— */
   bindColor('ccBg','--cc-bg');
-  bind('hH','--h-h','px');
-  bindColor('hBg','--h-bg');
-  bind('hTfs','--h-tfs','px');
-  bindCheck('noteOn', v => document.querySelector('.kaoru-note').classList.toggle('on', v));
 
   bind('slotH','--slot-h','px');
   bindColor('slotC','--slot-c');
@@ -360,24 +337,17 @@
 
 /* 页面 */
 .check-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--cc-bg')};}
-.check-header{position:relative;z-index:2;display:flex;align-items:center;padding:43px 12px 8px;height:${get('--h-h')};background:${get('--h-bg')};flex-shrink:0;}
-.check-header .ht{flex:1;text-align:center;font-size:${get('--h-tfs')};font-weight:600;color:var(--ink);}
-.ch-back{position:relative;width:11px;height:18px;color:var(--blue-grey);flex-shrink:0;}
-.ch-back i{position:absolute;left:0;top:50%;width:11px;height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
-.ch-back i:first-child{transform:rotate(-56deg);}
-.ch-back i:last-child{transform:rotate(56deg);}
-.check-body{flex:1;overflow-y:auto;padding:14px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;}
-.kaoru-note{max-width:80%;background:rgba(255,255,255,0.85);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:${get('--note-fs')};line-height:1.6;color:var(--ink);}
+.check-body{flex:1;overflow-y:auto;padding:0 12px 18px;display:flex;flex-direction:column;align-items:center;}
 
-/* 打印口（黑槽）——小票从槽口吐出 */
-.ticket-wrap{position:relative;flex-shrink:0;width:100%;display:flex;flex-direction:column;align-items:center;}
-.ticket-slot{position:relative;z-index:3;width:calc(${get('--tik-w')} + ${get('--slot-w')}*2);height:${get('--slot-h')};background:${get('--slot-c')};border-radius:${get('--slot-r')};flex-shrink:0;box-shadow:0 4px 10px rgba(60,45,25,.22);}
+/* 打印口（黑槽）——槽与灵动岛齐平，小票从槽口吐出 */
+.ticket-wrap{position:relative;flex-shrink:0;width:100%;padding-top:calc(${get('--slot-h')}/2 + 5px);}
+.ticket-slot{position:absolute;z-index:3;top:calc(21px - ${get('--slot-h')}/2);left:50%;transform:translateX(-50%);width:calc(${get('--tik-w')} + ${get('--slot-w')}*2);max-width:calc(100% - 24px);height:${get('--slot-h')};background:${get('--slot-c')};border-radius:${get('--slot-r')};box-shadow:0 4px 10px rgba(60,45,25,.22);}
 .ticket-slot::before{content:"";position:absolute;inset:0;border-radius:inherit;opacity:.5;background:radial-gradient(circle at 8px 8px, rgba(255,255,255,.35) 1px, transparent 1.5px) 0 0/11px 11px;}
 .ticket-slot::after{content:"";position:absolute;top:50%;left:10px;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--slot-c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);}
 .ticket-slot i{position:absolute;top:50%;right:18px;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--slot-c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.35);}
 
 /* 小票（纸感） */
-.ticket{position:relative;z-index:1;width:${get('--tik-w')};background:${get('--tik-bg')};padding:calc(${get('--slot-h')}/2 + 6px) 14px 26px;font-family:var(--font-receipt);font-size:${get('--bd-fs')};color:var(--ink);box-shadow:0 6px 18px rgba(60,45,25,.10);margin-top:calc(${get('--slot-h')}/-2);border-radius:6px 6px 0 0;}
+.ticket{position:relative;z-index:1;flex-shrink:0;width:${get('--tik-w')};background:${get('--tik-bg')};padding:calc(${get('--slot-h')}/2 + 5px) 14px 26px;font-family:var(--font-receipt);font-size:${get('--bd-fs')};color:var(--ink);box-shadow:0 6px 18px rgba(60,45,25,.14);border-radius:6px 6px 0 0;}
 .ticket::after{content:"";position:absolute;left:0;right:0;bottom:0;height:${get('--zig-h')};background:linear-gradient(-135deg,${get('--tik-bg')} 50%,transparent 50%) 0 0/13px ${get('--zig-h')} repeat-x,linear-gradient(135deg,${get('--tik-bg')} 50%,transparent 50%) 6.5px 0/13px ${get('--zig-h')} repeat-x;}
 .t-cap{text-align:center;font-size:${get('--cap-fs')};letter-spacing:${get('--cap-ls')};color:var(--muted-c);}
 .t-head{display:block;text-align:center;font-family:var(--font-logo);font-size:${get('--hd-fs')};letter-spacing:${get('--hd-ls')};color:var(--ink);line-height:1.15;margin:3px 0 1px;}
