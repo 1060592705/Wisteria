@@ -15,7 +15,6 @@
     --hdr-title-fs:12px;--hdr-title-c:#3D3535;
     --hdr-sub-c:#9BAAB8;
     --back-fs:18px;--back-c:#9BAAB8;
-    --hava-size:33px;--hava-radius:50%;
     --chat-pad:10px;
     --hdr-pt:24px;
 
@@ -50,11 +49,11 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --input-h:55px;--input-r:16px;--input-bg:rgba(255,255,255,0.75);
+    --input-h:55px;--input-r:16px;
     --icon-fs:17px;--icon-c:#9BAAB8;
     --send-s:22px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
-    --wrap-r:20px;--wrap-bg:rgba(255,255,255,1);--wrap-pad:9px;
+    --wrap-bg:rgba(255,255,255,1);--wrap-pad:12px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#e7dfd0;display:flex;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
@@ -73,8 +72,7 @@
   /* 顶部栏 */
   .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:var(--hdr-pt) var(--chat-pad) 8px;height:var(--hdr-h);background:var(--hdr-bg);flex-shrink:0;}
   .ch-back{font-size:var(--back-fs);color:var(--back-c);width:18px;text-align:center;font-weight:600;}
-  .ch-hava{width:var(--hava-size);height:var(--hava-size);border-radius:var(--hava-radius);background:linear-gradient(135deg,#9BAAB8,#E6DADA);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;}
-  .ch-tb{flex:1;min-width:0;}
+  .ch-tb{flex:1;min-width:0;text-align:center;}
   .ch-title{font-size:var(--hdr-title-fs);color:var(--hdr-title-c);font-weight:600;line-height:1.25;}
   .ch-sub{font-size:8.5px;color:var(--hdr-sub-c);line-height:1.3;}
   .ch-follow{font-size:10px;color:var(--ink-soft);border:1px solid #D8D3CD;border-radius:999px;padding:4px 10px;white-space:nowrap;}
@@ -134,11 +132,11 @@
   .opt-item.active .opt-pre{color:var(--opt-accent);}
 
   /* 输入栏 */
-  .chat-input{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:8px var(--chat-pad) 14px;flex-shrink:0;}
-  .ci-wrap{flex:1;display:flex;align-items:center;background:var(--wrap-bg);border-radius:var(--wrap-r);padding:var(--wrap-pad);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
-  .ci-bar{flex:1;display:flex;align-items:center;background:var(--input-bg);border-radius:var(--input-r);height:var(--input-h);padding:0 6px 0 12px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(60,45,25,0.05);}
-  .ci-mic{font-size:var(--icon-fs);color:var(--icon-c);filter:grayscale(1);}
-  .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);padding:0 8px;white-space:nowrap;overflow:hidden;}
+  .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px var(--chat-pad) 14px;flex-shrink:0;}
+  .chat-input.tear::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,var(--wrap-bg) 0,var(--wrap-bg) 4px,transparent 4px,transparent 7px);}
+  .ci-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--wrap-bg);border-radius:var(--input-r);height:var(--input-h);padding:0 var(--wrap-pad);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
+  .ci-mic{font-size:var(--icon-fs);color:var(--icon-c);filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
+  .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);padding:0 4px;white-space:nowrap;overflow:hidden;}
   .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--icon-c);font-size:var(--icon-fs);filter:grayscale(1);flex-shrink:0;}
   .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
 
@@ -171,7 +169,6 @@
         <div class="chat-mist"></div>
         <div class="chat-header">
           <div class="ch-back">‹</div>
-          <div class="ch-hava">薰</div>
           <div class="ch-tb">
             <div class="ch-title">薰 <span id="titleTag" style="font-size:9px;color:#9BAAB8;font-weight:400;">· 他醒了</span></div>
             <div class="ch-sub" id="hdrSub">#1314 #Memories</div>
@@ -258,15 +255,13 @@
 
         </div>
 
-        <div class="chat-input">
+        <div class="chat-input tear">
           <div class="ci-wrap">
-            <div class="ci-bar">
             <div class="ci-mic">🎤</div>
             <div class="ci-field">给薰写点什么…</div>
             <div class="ci-ic">☺</div>
             <div class="ci-ic">📷</div>
             <div class="ci-send">↑</div>
-            </div>
           </div>
         </div>
       </div>
@@ -353,8 +348,7 @@
     <div class="row"><label>已关注钮</label><input type="checkbox" id="hdrFollowOn"></div>
     <div class="row"><label>返回箭头</label><input type="range" id="backFs" min="12" max="22" value="18"><span class="val" id="backFsv">18</span></div>
     <div class="row"><label>箭头颜色</label><input type="color" id="backC" value="#9BAAB8"><span class="val" id="backCv">#9BAAB8</span></div>
-    <div class="row"><label>栏头像大小</label><input type="range" id="havaSize" min="24" max="44" value="33"><span class="val" id="havaSizev">33</span></div>
-    <div class="row"><label>栏头像圆角</label><input type="range" id="havaRadius" min="0" max="50" value="50"><span class="val" id="havaRadiusv">50</span></div>
+    <div class="row"><label>昵称位置</label><select id="titlePos"><option value="center" selected>居中</option><option value="left">靠左</option></select></div>
     <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="40" value="24"><span class="val" id="hdrPtv">24</span></div>
     <div class="row"><label>醒状态标签</label><input type="checkbox" id="titleTagOn"></div>
     <div class="row"><label>分享按钮</label><input type="checkbox" id="shareOn"></div>
@@ -375,19 +369,17 @@
 
   <div class="grp">
     <h3>✏ 输入栏</h3>
-    <div class="row"><label>高度</label><input type="range" id="inputH" min="36" max="60" value="55"><span class="val" id="inputHv">55</span></div>
-    <div class="row"><label>圆角</label><input type="range" id="inputR" min="4" max="30" value="16"><span class="val" id="inputRv">16</span></div>
-    <div class="row"><label>背景色</label><input type="color" id="inputBg" value="#FFFFFF"><span class="val" id="inputBgv">#FFFFFF</span></div>
-    <div class="row"><label>背景透明</label><input type="range" id="inputBgA" min="30" max="100" value="75"><span class="val" id="inputBgAv">75</span></div>
+    <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
+    <div class="row"><label>栏高</label><input type="range" id="inputH" min="36" max="60" value="55"><span class="val" id="inputHv">55</span></div>
+    <div class="row"><label>栏圆角</label><input type="range" id="inputR" min="4" max="30" value="16"><span class="val" id="inputRv">16</span></div>
     <div class="row"><label>图标颜色</label><input type="color" id="iconC" value="#9BAAB8"><span class="val" id="iconCv">#9BAAB8</span></div>
     <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="17"><span class="val" id="iconFsv">17</span></div>
     <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="22"><span class="val" id="sendSv">22</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
-    <div class="row"><label>外框圆角</label><input type="range" id="wrapR" min="8" max="32" value="20"><span class="val" id="wrapRv">20</span></div>
-    <div class="row"><label>外框背景</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
-    <div class="row"><label>外框透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
-    <div class="row"><label>外框内距</label><input type="range" id="wrapPad" min="4" max="16" value="9"><span class="val" id="wrapPadv">9</span></div>
+    <div class="row"><label>栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
+    <div class="row"><label>栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
+    <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="12"><span class="val" id="wrapPadv">12</span></div>
   </div>
 
   <div class="grp">
@@ -515,8 +507,9 @@
   bindColor('hdrSubC','--hdr-sub-c');
   bind('backFs','--back-fs','px');
   bindColor('backC','--back-c');
-  bind('havaSize','--hava-size','px');
-  bind('havaRadius','--hava-radius','%');
+  const titlePos = document.getElementById('titlePos');
+  function applyTitlePos(v){ document.querySelector('.ch-tb').style.textAlign = v === 'center' ? 'center' : 'left'; }
+  if(titlePos){ titlePos.addEventListener('change', () => applyTitlePos(titlePos.value)); }
   bind('hdrPt','--hdr-pt','px');
 
   bind('optRadius','--opt-radius','px');
@@ -529,25 +522,22 @@
 
   bind('inputH','--input-h','px');
   bind('inputR','--input-r','px');
-  bind('inputBgA','--input-bg-a','',0.01);
   bindColor('iconC','--icon-c');
+  bindCheck('tearOn', v => document.querySelector('.chat-input').classList.toggle('tear', v));
   bind('iconFs','--icon-fs','px');
   bind('sendS','--send-s','px');
   bindColor('sendBg','--send-bg');
   bindColor('placeholderC','--placeholder-c');
-  bind('wrapR','--wrap-r','px');
   bind('wrapPad','--wrap-pad','px');
 
   /* 背景色 + 透明组合（color-mix 需要 base + alpha 两个变量） */
   function updateMixed() {
     const oa = parseFloat(document.getElementById('optBgA').value)/100;
     setVar('--opt-bg', `color-mix(in srgb, ${document.getElementById('optBg').value} ${(oa*100).toFixed(0)}%, transparent)`);
-    const ia = parseFloat(document.getElementById('inputBgA').value)/100;
-    setVar('--input-bg', `color-mix(in srgb, ${document.getElementById('inputBg').value} ${(ia*100).toFixed(0)}%, transparent)`);
     const wa = parseFloat(document.getElementById('wrapBgA').value)/100;
     setVar('--wrap-bg', `color-mix(in srgb, ${document.getElementById('wrapBg').value} ${(wa*100).toFixed(0)}%, transparent)`);
   }
-  ['optBg','optBgA','inputBg','inputBgA','wrapBg','wrapBgA'].forEach(id => {
+  ['optBg','optBgA','wrapBg','wrapBgA'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('input', () => {
@@ -597,6 +587,8 @@
     if(isOff('quoteOn')) hid.push('.quote{display:none;}');
     if(isOff('titleTagOn')) hid.push('#titleTag{display:none;}');
     if(isOff('shareOn')) hid.push('.ch-share{display:none;}');
+    const tearOn = document.getElementById('tearOn');
+    const tearCss = tearOn && tearOn.checked ? `\n/* 撕纸边（同主页导航栏） */\n.chat-input::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 0,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 4px,transparent 4px,transparent 7px);}` : '';
     const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
     const matCss = mat === 'lg'
 ? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
@@ -616,8 +608,7 @@ ${matCss}`;
 /* 顶部栏 */
 .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:${get('--hdr-pt')} ${get('--chat-pad')} 8px;height:${get('--hdr-h')};background:${get('--hdr-bg')};flex-shrink:0;}
 .ch-back{font-size:${get('--back-fs')};color:${get('--back-c')};width:18px;text-align:center;font-weight:600;}
-.ch-hava{width:${get('--hava-size')};height:${get('--hava-size')};border-radius:${get('--hava-radius')};background:linear-gradient(135deg,#9BAAB8,#E6DADA);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;}
-.ch-tb{flex:1;min-width:0;}
+.ch-tb{flex:1;min-width:0;text-align:center;}
 .ch-title{font-size:${get('--hdr-title-fs')};color:${get('--hdr-title-c')};font-weight:600;line-height:1.25;}
 .ch-sub{font-size:8.5px;color:${get('--hdr-sub-c')};line-height:1.3;}
 .ch-follow{font-size:10px;color:#8A8580;border:1px solid #D8D3CD;border-radius:999px;padding:4px 10px;white-space:nowrap;}
@@ -664,14 +655,13 @@ ${foldCss}
 .opt-item.active .opt-pre{color:${get('--opt-accent')};}
 
 /* 输入栏 */
-.chat-input{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:8px ${get('--chat-pad')} 14px;flex-shrink:0;}
-.ci-wrap{flex:1;display:flex;align-items:center;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};border-radius:${get('--wrap-r')};padding:${get('--wrap-pad')};box-shadow:0 4px 16px rgba(60,45,25,0.06);}
-.ci-bar{flex:1;display:flex;align-items:center;background:${op(document.getElementById('inputBg').value, document.getElementById('inputBgA').value/100)};border-radius:${get('--input-r')};height:${get('--input-h')};padding:0 6px 0 12px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(60,45,25,0.05);}
-.ci-mic{font-size:${get('--icon-fs')};color:${get('--icon-c')};filter:grayscale(1);}
-.ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};padding:0 8px;white-space:nowrap;overflow:hidden;}
+.chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px ${get('--chat-pad')} 14px;flex-shrink:0;}
+.ci-wrap{flex:1;display:flex;align-items:center;gap:8px;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};border-radius:${get('--input-r')};height:${get('--input-h')};padding:0 ${get('--wrap-pad')};backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
+.ci-mic{font-size:${get('--icon-fs')};color:${get('--icon-c')};filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
+.ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};padding:0 4px;white-space:nowrap;overflow:hidden;}
 .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:${get('--icon-c')};font-size:${get('--icon-fs')};filter:grayscale(1);flex-shrink:0;}
 .ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
-${hidCss}`;
+${hidCss}${tearCss}`;
     document.getElementById('codeout').textContent = code;
   }
 
