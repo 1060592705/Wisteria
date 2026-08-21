@@ -37,8 +37,8 @@
     --bubble-shadow:0.01;
 
     /* 液态玻璃（左右统一） */
-    --lg-tint:55;--lg-blur:1px;
-    --lg-sat:1.34;--lg-sheen:0.39;--lg-rim:0.87;
+    --lg-tint:45;--lg-blur:1px;
+    --lg-sat:1.34;--lg-con:1.14;--lg-sheen:0.39;--lg-rim:0.87;
     --lg-warp:6;--lg-wave:100;
 
     /* 功能消息 */
@@ -47,7 +47,7 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --ci-h:52px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.34);--ci-w:230px;--ci-x:0px;--ci-y:0px;
+    --ci-h:52px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.34);--ci-w:230px;--ci-x:0px;--ci-y:0px;--bar-h:52px;
     --icon-fs:14px;--icon-c:#9BAAB8;
     --send-s:23px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
@@ -104,9 +104,9 @@
 
 
   /* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形） */
-  .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(var(--lg-tint)*1%)),rgba(255,255,255,calc(var(--lg-tint)*0.36*1%)));backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+  .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(var(--lg-tint)*1%)),rgba(255,255,255,calc(var(--lg-tint)*0.36*1%)));backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
   /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版） */
-  .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat));}
+  .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));}
   .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,var(--lg-sheen)),transparent 58%);pointer-events:none;}
   .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,var(--lg-rim));pointer-events:none;}
 
@@ -126,8 +126,8 @@
   /* 输入栏 */
   .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px var(--chat-pad) 14px;background:var(--wrap-bg);flex-shrink:0;}
   .chat-input.tear::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,var(--wrap-bg) 0,var(--wrap-bg) 4px,transparent 4px,transparent 7px);}
-  .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 var(--wrap-pad);}
-  .ci-ell{flex:0 0 auto;width:var(--ci-w);display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);padding:0 var(--ci-pad);transform:translate(var(--ci-x),var(--ci-y));}
+  .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 var(--wrap-pad);height:var(--bar-h);}
+  .ci-ell{flex:0 0 auto;width:var(--ci-w);display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);max-height:var(--bar-h);padding:0 var(--ci-pad);transform:translate(var(--ci-x),var(--ci-y));}
   .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);white-space:nowrap;overflow:hidden;}
   .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--icon-c);font-size:var(--icon-fs);filter:grayscale(1);flex-shrink:0;}
   .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
@@ -305,6 +305,7 @@
     <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="55"><span class="val" id="lgTintv">55</span></div>
     <div class="row"><label>模糊度</label><input type="range" id="lgBlur" min="0" max="8" step="0.5" value="1"><span class="val" id="lgBlurv">1</span></div>
     <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="134"><span class="val" id="lgSatv">134</span></div>
+    <div class="row"><label>通透对比</label><input type="range" id="lgCon" min="100" max="150" value="114"><span class="val" id="lgConv">114</span></div>
     <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="39"><span class="val" id="lgSheenv">39</span></div>
     <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="87"><span class="val" id="lgRimv">87</span></div>
     <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="6"><span class="val" id="lgWarpv">6</span></div>
@@ -317,7 +318,7 @@
     <div class="row"><label>点纹背景</label><input type="checkbox" id="bgImgOn" checked></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
     <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="0"><span class="val" id="mistAv">0</span></div>
-    <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="72" value="72"><span class="val" id="hdrHv">72</span></div>
+    <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="72"><span class="val" id="hdrHv">72</span></div>
     <div class="row"><label>栏背景</label><input type="color" id="hdrBg" value="#FFFFFF"><span class="val" id="hdrBgv">#FFFFFF</span></div>
     <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="11"><span class="val" id="hdrFsv">11</span></div>
     <div class="row"><label>标题X</label><input type="range" id="ttlX" min="-30" max="30" value="0"><span class="val" id="ttlXv">0</span></div>
@@ -344,6 +345,7 @@
   <div class="grp">
     <h3>✏ 输入栏</h3>
     <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
+    <div class="row"><label>底栏高</label><input type="range" id="barH" min="40" max="64" value="52"><span class="val" id="barHv">52</span></div>
     <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="20" max="56" value="52"><span class="val" id="ciHv">52</span></div>
     <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="230"><span class="val" id="ciWv">230</span></div>
     <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="0"><span class="val" id="ciXv">0</span></div>
@@ -466,6 +468,7 @@
   bind('lgTint','--lg-tint','');
   bind('lgBlur','--lg-blur','px');
   bind('lgSat','--lg-sat','',0.01);
+  bind('lgCon','--lg-con','',0.01);
   bind('lgSheen','--lg-sheen','',0.01);
   bind('lgRim','--lg-rim','',0.01);
   bind('lgWarp','--lg-warp','');
@@ -510,6 +513,7 @@
   bindColor('quoteC','--quote-c');
 
   bind('ciH','--ci-h','px');
+  bind('barH','--bar-h','px');
   bind('ciW','--ci-w','px');
   bind('ciX','--ci-x','px');
   bind('ciY','--ci-y','px');
@@ -589,14 +593,14 @@
     const warpSy = (document.getElementById('lgWarp')||{}).value || '6';
     const matCss = `/* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形）*/
 
-.bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(${get('--lg-tint')}*1%)),rgba(255,255,255,calc(${get('--lg-tint')}*0.36*1%)));backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+.bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(${get('--lg-tint')}*1%)),rgba(255,255,255,calc(${get('--lg-tint')}*0.36*1%)));backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});-webkit-backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
 .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
 .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}
 
 /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版）
    需在页面中放入滤镜定义（放 body 内即可）：
    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="glassWarp" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="${(0.018*waveM).toFixed(4)} ${(0.04*waveM).toFixed(4)}" numOctaves="2" seed="12" result="noise"/><feGaussianBlur in="noise" stdDeviation="1.5" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="${warpSy}" xChannelSelector="R" yChannelSelector="G"/></filter></svg> */
-.bubble.lg{backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});}`;
+.bubble.lg{backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});-webkit-backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});}`;
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
@@ -648,8 +652,8 @@ ${foldCss}
 
 /* 输入栏 */
 .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px ${get('--chat-pad')} 14px;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};flex-shrink:0;}
-.ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 ${get('--wrap-pad')};}
-.ci-ell{flex:0 0 auto;width:${get('--ci-w')};display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};padding:0 ${get('--ci-pad')};transform:translate(${get('--ci-x')},${get('--ci-y')});}
+.ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 ${get('--wrap-pad')};height:${get('--bar-h')};}
+.ci-ell{flex:0 0 auto;width:${get('--ci-w')};display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};max-height:${get('--bar-h')};padding:0 ${get('--ci-pad')};transform:translate(${get('--ci-x')},${get('--ci-y')});}
 .ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};white-space:nowrap;overflow:hidden;}
 .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:${get('--icon-c')};font-size:${get('--icon-fs')};filter:grayscale(1);flex-shrink:0;}
 .ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
