@@ -590,14 +590,12 @@
     const tearOn = document.getElementById('tearOn');
     const tearCss = tearOn && tearOn.checked ? `\n/* 撕纸边（同主页导航栏） */\n.chat-input::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 0,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 4px,transparent 4px,transparent 7px);}` : '';
     const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
-    const matCss = mat === 'lg'
-? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
+    const matCss = mat === 'lg' ? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
+
 .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
 .bubble.lg.yours{background:linear-gradient(135deg,color-mix(in srgb,${get('--your-bg')} 55%,#fff),color-mix(in srgb,${get('--your-bg')} 28%,rgba(255,255,255,0.35)));}
 .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
-.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}`
-: `/* 他气泡（毛玻璃）*/
-${matCss}`;
+.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}` : '';
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
@@ -639,6 +637,8 @@ ${matCss}`;
 .bubble.yours{border-radius:${get('--bubble-radius')} ${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
 .bubble.his{background:rgba(255,255,255,${get('--his-a')});backdrop-filter:blur(${get('--his-blur')});-webkit-backdrop-filter:blur(${get('--his-blur')});border:1px solid rgba(255,255,255,${get('--his-bord')});box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.35);}
 .bubble.yours{background:${op(get('--your-bg'), get('--your-a'))};backdrop-filter:blur(${get('--your-blur')});-webkit-backdrop-filter:blur(${get('--your-blur')});box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')});}
+
+${matCss}
 
 ${foldCss}
 
