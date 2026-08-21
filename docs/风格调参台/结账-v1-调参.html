@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>结账页调参台 · Wisteria</title>
+<style>
+  @font-face{font-family:'BebasNeue';src:url('fonts/BebasNeue-Regular.ttf') format('truetype');font-display:swap;}
+  @font-face{font-family:'Parisienne';src:url('fonts/Parisienne-Regular.ttf') format('truetype');font-display:swap;}
+  @font-face{font-family:'MaShanZheng';src:url('fonts/MaShanZheng-Regular.ttf') format('truetype');font-display:swap;}
+  :root{
+    --paper:#F4F2F0;--deep-paper:#E8E5E1;--pink-main:#D4A5A5;--pink-light:#E6DADA;--pink-dust:#C2B5B5;
+    --blue-grey:#9BAAB8;--ink:#3D3535;--ink-soft:#8A8580;
+    --font-receipt:Menlo,Consolas,monospace;
+    --font-poster:'BebasNeue',Impact,'Arial Narrow',sans-serif;
+    --font-logo:'Parisienne',cursive;
+    --font-hand:'MaShanZheng','PingFang SC',sans-serif;
+
+    /* 页面 */
+    --cc-bg:#F4F2F0;
+    --h-h:58px;--h-bg:#FFFFFF;--h-tfs:14px;
+
+    /* 小票 */
+    --tik-w:292px;--tik-bg:#FFFFFF;--tik-pad:14px;
+    --hd-fs:16px;--hd-ls:2px;--sb-fs:9.5px;
+    --bd-fs:11.5px;--row-gap:5.5px;
+    --dash-c:#B5B2AC;--done-c:#D4A5A5;--muted-c:#8A8580;
+    --sub-fs:10.5px;
+    --pb-h:7px;--pb-fill:#D4A5A5;--pb-bg:#EDEAE4;
+    --stmp-fs:15px;--stmp-r:8px;--stmp-rot:10;--stmp-a:0.88;
+    --kl-fs:13px;--kl-c:#3D3535;--kl-ls:0.5px;
+    --bc-h:22px;--bc-c:#3D3535;--bcn-fs:8px;
+    --zig-h:8px;
+    --note-on:1;--note-fs:11.5px;
+
+    /* 底部定明天 */
+    --ft-bg:#FFFFFF;--tm-fs:12.5px;--tm-c:#3D3535;--opt-fs:11px;
+    --pr-fs:14px;--pr-ls:4px;--pr-bg:#D4A5A5;--pr-c:#FFFFFF;--pr-r:999px;--pr-h:44px;
+  }
+  body{background:#e7dfd0;display:flex;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
+  .stage{display:flex;align-items:center;justify-content:center;flex:1;padding:20px;}
+  .phone{width:362px;height:785px;background:var(--paper);border:12px solid #1a1a1a;border-radius:50px;overflow:hidden;box-shadow:0 14px 34px rgba(60,45,25,.22);flex-shrink:0;position:relative;}
+  .phone-in{height:100%;overflow:hidden;position:relative;background:var(--paper);}
+  .dynamic-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:22px;background:#000;border-radius:999px;z-index:50;}
+
+  /* —— 结账页 —— */
+  .check-page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--cc-bg);}
+  .check-header{position:relative;z-index:2;display:flex;align-items:center;padding:43px 12px 8px;height:var(--h-h);background:var(--h-bg);flex-shrink:0;}
+  .check-header .ht{flex:1;text-align:center;font-size:var(--h-tfs);font-weight:600;color:var(--ink);}
+  .ch-back{position:relative;width:11px;height:18px;color:var(--blue-grey);flex-shrink:0;}
+  .ch-back i{position:absolute;left:0;top:50%;width:11px;height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
+  .ch-back i:first-child{transform:rotate(-56deg);}
+  .ch-back i:last-child{transform:rotate(56deg);}
+
+  .check-body{flex:1;overflow-y:auto;padding:16px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .check-body::-webkit-scrollbar{display:none;}
+  .kaoru-note{display:none;align-self:flex-start;max-width:80%;background:rgba(255,255,255,0.85);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:var(--note-fs);line-height:1.6;color:var(--ink);}
+  .kaoru-note.on{display:block;}
+
+  /* 小票 */
+  .ticket{width:var(--tik-w);background:var(--tik-bg);padding:var(--tik-pad) 14px 26px;font-family:var(--font-receipt);font-size:var(--bd-fs);color:var(--ink);position:relative;box-shadow:0 6px 18px rgba(60,45,25,.10);flex-shrink:0;}
+  .ticket::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--zig-h);background:linear-gradient(-135deg,var(--tik-bg) 50%,transparent 50%) 0 0/13px var(--zig-h) repeat-x,linear-gradient(135deg,var(--tik-bg) 50%,transparent 50%) 6.5px 0/13px var(--zig-h) repeat-x;}
+  .t-head{text-align:center;font-family:var(--font-logo);font-size:var(--hd-fs);letter-spacing:var(--hd-ls);color:var(--ink);margin-bottom:1px;}
+  .t-sub{text-align:center;font-size:var(--sb-fs);letter-spacing:1px;color:var(--blue-grey);margin-bottom:8px;}
+  .t-row{display:flex;justify-content:space-between;margin:var(--row-gap) 0;color:var(--muted-c);}
+  .t-row .k{color:var(--muted-c);}
+  .t-row .v{color:var(--ink);}
+  .t-dash{border-top:1px dashed var(--dash-c);margin:8px 0;}
+  .t-item{display:flex;justify-content:space-between;margin:var(--row-gap) 0;color:var(--ink);}
+  .t-item .st{color:var(--done-c);font-weight:700;}
+  .t-item .st.pending{color:var(--muted-c);font-weight:400;font-size:11px;}
+  .t-subt{font-size:var(--sub-fs);}
+  .t-pbar{height:var(--pb-h);background:var(--pb-bg);border-radius:calc(var(--pb-h)/2);overflow:hidden;margin:7px 0;}
+  .t-pbar i{display:block;height:100%;width:33%;background:repeating-linear-gradient(90deg,var(--pb-fill) 0 6px,var(--pink-light) 6px 8px);}
+  .t-row.tlast{margin-top:6px;}
+  .t-line{margin-top:10px;font-family:var(--kl-font,var(--font-hand));font-size:var(--kl-fs);letter-spacing:var(--kl-ls);color:var(--kl-c);text-align:right;line-height:1.4;}
+  .t-stamp{margin-top:10px;text-align:center;}
+
+  .stamp{display:inline-block;border:3px solid var(--pink-main);color:var(--pink-main);padding:6px 14px;border-radius:var(--stmp-r);letter-spacing:2px;font-family:var(--font-poster);font-size:var(--stmp-fs);opacity:var(--stmp-a);background:rgba(255,255,255,.6);transform:rotate(var(--stmp-rot)deg);}
+  .stamp.paid{transform:rotate(calc(var(--stmp-rot)*-1deg));}
+  .t-bc{height:var(--bc-h);margin-top:10px;background:repeating-linear-gradient(90deg,var(--bc-c) 0 2px,transparent 2px 4px,var(--bc-c) 4px 5px,transparent 5px 9px,var(--bc-c) 9px 12px,transparent 12px 15px);filter:opacity(.8);}
+  .t-bcn{text-align:center;font-size:var(--bcn-fs);letter-spacing:3px;color:var(--muted-c);margin-top:2px;}
+
+  /* 底部：定明天 + 打印 */
+  .check-foot{position:relative;z-index:2;background:var(--ft-bg);flex-shrink:0;padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .check-foot::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,var(--ft-bg) 0,var(--ft-bg) 4px,transparent 4px,transparent 7px);}
+  .tm-row{display:flex;align-items:center;justify-content:space-between;font-size:var(--tm-fs);color:var(--tm-c);font-weight:600;}
+  .tm-row .tm-tag{font-size:10px;color:var(--blue-grey);font-weight:400;margin-right:6px;}
+  .tm-row .tm-val{color:var(--pink-main);font-weight:700;}
+  .opt-row{display:flex;align-items:center;gap:8px;font-size:var(--opt-fs);color:var(--muted-c);}
+  .opt-row .cb{width:17px;height:17px;border:1.5px solid var(--blue-grey);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--pink-main);}
+  .opt-row.on .cb{background:var(--pink-main);border-color:var(--pink-main);color:#fff;}
+  .print-btn{width:100%;height:var(--pr-h);border:none;border-radius:var(--pr-r);background:var(--pr-bg);color:var(--pr-c);font-size:var(--pr-fs);font-weight:700;letter-spacing:var(--pr-ls);cursor:pointer;box-shadow:0 4px 12px rgba(212,165,165,.45);}
+
+  /* demo 模式：隐藏面板，手机居中（总览页 iframe 用） */
+  body.demo aside#panel{display:none;}
+  /* —— 面板 —— */
+  aside#panel{width:246px;background:#37322a;color:#e8e0d0;padding:14px 12px 30px;overflow-y:auto;flex-shrink:0;}
+  aside#panel h2{font-size:14px;margin:0 0 4px;color:#fff;letter-spacing:.5px;}
+  aside#panel .hint{font-size:10px;color:#b8b0a8;line-height:1.5;margin-bottom:8px;}
+  aside#panel h3{font-size:11.5px;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid #4e463c;color:#e3d9c8;}
+  .row{display:flex;align-items:center;gap:6px;margin:5px 0;font-size:11px;}
+  .row label{width:64px;color:#cfc6b6;flex-shrink:0;}
+  .row input[type=range]{flex:1;accent-color:#D4A5A5;min-width:0;}
+  .row input[type=color]{width:24px;height:18px;padding:0;border:1px solid #5a5248;border-radius:3px;background:#444;flex-shrink:0;}
+  .row .val{width:30px;text-align:right;color:#a89e8e;font-size:10px;flex-shrink:0;}
+  .row input[type=checkbox]{accent-color:#D4A5A5;}
+  .row select{flex:1;background:#4e463c;color:#e8e0d0;border:1px solid #5a5248;border-radius:4px;font-size:10.5px;padding:3px;min-width:0;}
+  .btns{display:flex;gap:4px;margin-top:10px;}
+  .btns button{flex:1;padding:6px;border:none;border-radius:5px;background:#c74a4a;color:#fff;font-size:11px;cursor:pointer;}
+  .btns button.sec{background:#544d40;}
+  .codebox{background:#2b2721;border-radius:6px;padding:8px;font-family:monospace;font-size:9.5px;color:#d8cfbd;line-height:1.5;margin-top:8px;white-space:pre-wrap;word-break:break-all;max-height:160px;overflow-y:auto;}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="phone">
+    <div class="phone-in">
+      <div class="dynamic-island"></div>
+      <div class="check-page">
+        <div class="check-header">
+          <span class="ch-back" aria-hidden="true"><i></i><i></i></span>
+          <div class="ht">睡前结账</div>
+          <span style="width:11px"></span>
+        </div>
+        <div class="check-body">
+          <div class="kaoru-note on">唔…今天的事整理好了，结账吗？</div>
+          <div class="ticket">
+            <div class="t-head">Wisteria・General Store</div>
+            <div class="t-sub">Today's Receipt｜2026/08/22・周六</div>
+            <div class="t-row"><span class="k">开店</span><span class="v">12:15（目标起床）</span></div>
+            <div class="t-row"><span class="k">柜员</span><span class="v">Kaoru</span></div>
+            <div class="t-row"><span class="k">单据号</span><span class="v">#26-08-22-027</span></div>
+            <div class="t-dash"></div>
+            <div class="t-item"><span>喝水</span><span class="st">✓</span></div>
+            <div class="t-item"><span>背单词</span><span class="st">✓</span></div>
+            <div class="t-item"><span>单片机第二章</span><span class="st pending">———</span></div>
+            <div class="t-item"><span>14:00 和导师开会</span><span class="st">✓</span></div>
+            <div class="t-item"><span>游泳</span><span class="st pending">未结清</span></div>
+            <div class="t-item"><span>睡前记录</span><span class="st">✓</span></div>
+            <div class="t-dash"></div>
+            <div class="t-row t-subt"><span class="k">已结清</span><span class="v">4 项</span></div>
+            <div class="t-row t-subt"><span class="k">未结清</span><span class="v">2 项</span></div>
+            <div class="t-pbar"><i></i></div>
+            <div class="t-row t-subt"><span class="k">零点结账</span><span class="v">23:30 后</span></div>
+            <div class="t-stamp"><span class="stamp paid">PAID・谢谢</span></div>
+            <div class="t-line">今天也辛苦了。明天见。— Kaoru</div>
+            <div class="t-bc"></div>
+            <div class="t-bcn">26 08 22 027</div>
+          </div>
+        </div>
+        <div class="check-foot">
+          <div class="tm-row"><span class="tm-tag">明天目标起床</span><span class="tm-val">10:30</span></div>
+          <div class="opt-row on"><span class="cb">✓</span>没结清的：游泳 → 带到明天</div>
+          <button class="print-btn">打印・结账</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<aside id="panel">
+  <h2>🧾 结账页调参台</h2>
+  <div class="hint">睡前记录 = 打印仪式。小票保持纸感（不毛玻璃）；章与强调用主脏粉。<br>拖动即实时预览，点【生成 CSS】。</div>
+
+  <h3>页面</h3>
+  <div class="row"><label>页面底色</label><input type="color" id="ccBg" value="#F4F2F0"><span class="val" id="ccBgv">#F4F2F0</span></div>
+  <div class="row"><label>顶栏高</label><input type="range" id="hH" min="50" max="70" value="58"><span class="val" id="hHv">58</span></div>
+  <div class="row"><label>顶栏底色</label><input type="color" id="hBg" value="#FFFFFF"><span class="val" id="hBgv">#FFFFFF</span></div>
+  <div class="row"><label>标题字号</label><input type="range" id="hTfs" min="11" max="18" value="14"><span class="val" id="hTfsv">14</span></div>
+  <div class="row"><label>他气泡</label><input type="checkbox" id="noteOn" checked></div>
+  <div class="row"><label>气泡字号</label><input type="range" id="noteFs" min="9" max="15" step="0.5" value="11.5"><span class="val" id="noteFsv">11.5</span></div>
+
+  <h3>小票</h3>
+  <div class="row"><label>票宽</label><input type="range" id="tikW" min="240" max="330" value="292"><span class="val" id="tikWv">292</span></div>
+  <div class="row"><label>票底色</label><input type="color" id="tikBg" value="#FFFFFF"><span class="val" id="tikBgv">#FFFFFF</span></div>
+  <div class="row"><label>抬头字号</label><input type="range" id="hdFs" min="11" max="22" value="16"><span class="val" id="hdFsv">16</span></div>
+  <div class="row"><label>抬头字距</label><input type="range" id="hdLs" min="0" max="6" step="0.5" value="2"><span class="val" id="hdLsv">2</span></div>
+  <div class="row"><label>正文字号</label><input type="range" id="bdFs" min="9" max="14" step="0.5" value="11.5"><span class="val" id="bdFsv">11.5</span></div>
+  <div class="row"><label>行距</label><input type="range" id="rowGap" min="0" max="10" step="0.5" value="5.5"><span class="val" id="rowGapv">5.5</span></div>
+  <div class="row"><label>虚线颜色</label><input type="color" id="dashC" value="#B5B2AC"><span class="val" id="dashCv">#B5B2AC</span></div>
+  <div class="row"><label>完成色</label><input type="color" id="doneC" value="#D4A5A5"><span class="val" id="doneCv">#D4A5A5</span></div>
+  <div class="row"><label>进度条高</label><input type="range" id="pbH" min="3" max="12" value="7"><span class="val" id="pbHv">7</span></div>
+  <div class="row"><label>进度条色</label><input type="color" id="pbFill" value="#D4A5A5"><span class="val" id="pbFillv">#D4A5A5</span></div>
+  <div class="row"><label>锯齿高</label><input type="range" id="zigH" min="5" max="14" value="8"><span class="val" id="zigHv">8</span></div>
+
+  <h3>章与落款</h3>
+  <div class="row"><label>章类型</label><select id="stampMode"><option value="paid" selected>全清 PAID・谢谢</option><option value="again">未结清 明日再续</option></select></div>
+  <div class="row"><label>章字号</label><input type="range" id="stmpFs" min="10" max="20" value="15"><span class="val" id="stmpFsv">15</span></div>
+  <div class="row"><label>章圆角</label><input type="range" id="stmpR" min="2" max="14" value="8"><span class="val" id="stmpRv">8</span></div>
+  <div class="row"><label>章旋转</label><input type="range" id="stmpRot" min="0" max="15" value="10"><span class="val" id="stmpRotv">10</span></div>
+  <div class="row"><label>章透明度</label><input type="range" id="stmpA" min="40" max="100" value="88"><span class="val" id="stmpAv">88</span></div>
+  <div class="row"><label>落款字体</label><select id="klFont"><option value="hand" selected>手写体（马善政）</option><option value="print">打印体（PingFang）</option></select></div>
+  <div class="row"><label>落款字号</label><input type="range" id="klFs" min="10" max="16" value="13"><span class="val" id="klFsv">13</span></div>
+  <div class="row"><label>落款颜色</label><input type="color" id="klC" value="#3D3535"><span class="val" id="klCv">#3D3535</span></div>
+  <div class="row"><label>条码高</label><input type="range" id="bcH" min="12" max="30" value="22"><span class="val" id="bcHv">22</span></div>
+  <div class="row"><label>条码颜色</label><input type="color" id="bcC" value="#3D3535"><span class="val" id="bcCv">#3D3535</span></div>
+
+  <h3>底部（定明天 + 打印）</h3>
+  <div class="row"><label>底栏底色</label><input type="color" id="ftBg" value="#FFFFFF"><span class="val" id="ftBgv">#FFFFFF</span></div>
+  <div class="row"><label>明天字号</label><input type="range" id="tmFs" min="10" max="16" value="12.5"><span class="val" id="tmFsv">12.5</span></div>
+  <div class="row"><label>打印字号</label><input type="range" id="prFs" min="11" max="18" value="14"><span class="val" id="prFsv">14</span></div>
+  <div class="row"><label>打印字距</label><input type="range" id="prLs" min="0" max="8" step="0.5" value="4"><span class="val" id="prLsv">4</span></div>
+  <div class="row"><label>按钮底色</label><input type="color" id="prBg" value="#D4A5A5"><span class="val" id="prBgv">#D4A5A5</span></div>
+  <div class="row"><label>按钮文字色</label><input type="color" id="prC" value="#FFFFFF"><span class="val" id="prCv">#FFFFFF</span></div>
+  <div class="row"><label>按钮圆角</label><input type="range" id="prR" min="8" max="999" value="999"><span class="val" id="prRv">999</span></div>
+  <div class="row"><label>按钮高</label><input type="range" id="prH" min="36" max="56" value="44"><span class="val" id="prHv">44</span></div>
+
+  <div class="btns"><button id="genBtn">生成 CSS</button><button class="sec" id="copyBtn">复制</button></div>
+  <div class="codebox" id="codeBox"></div>
+</aside>
+
+<script>
+  const phoneEl = document.querySelector('.phone');
+  function setVar(k, v){ phoneEl.style.setProperty(k, v); }
+  function get(k){ return getComputedStyle(phoneEl).getPropertyValue(k).trim() || getComputedStyle(document.documentElement).getPropertyValue(k).trim(); }
+  function bind(id, varName, unit=''){
+    const el = document.getElementById(id);
+    const valEl = document.getElementById(id+'v');
+    if(!el) return;
+    el.addEventListener('input', () => {
+      const v = String(Math.round(parseFloat(el.value) * 100) / 100);
+      setVar(varName, (unit ? v + unit : v));
+      if(valEl) valEl.textContent = el.value;
+    });
+  }
+  function bindColor(id, varName){
+    const el = document.getElementById(id);
+    const valEl = document.getElementById(id+'v');
+    if(!el) return;
+    el.addEventListener('input', () => {
+      setVar(varName, el.value);
+      if(valEl) valEl.textContent = el.value;
+    });
+  }
+  function bindCheck(id, fn){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const apply = () => fn(el.checked);
+    el.addEventListener('change', apply);
+    apply();
+  }
+
+  /* —— 参数绑定 —— */
+  bindColor('ccBg','--cc-bg');
+  bind('hH','--h-h','px');
+  bindColor('hBg','--h-bg');
+  bind('hTfs','--h-tfs','px');
+  bindCheck('noteOn', v => document.querySelector('.kaoru-note').classList.toggle('on', v));
+  bind('noteFs','--note-fs','px');
+
+  bind('tikW','--tik-w','px');
+  bindColor('tikBg','--tik-bg');
+  bind('hdFs','--hd-fs','px');
+  bind('hdLs','--hd-ls','px');
+  bind('bdFs','--bd-fs','px');
+  bind('rowGap','--row-gap','px');
+  bindColor('dashC','--dash-c');
+  bindColor('doneC','--done-c');
+  bind('pbH','--pb-h','px');
+  bindColor('pbFill','--pb-fill');
+  bind('zigH','--zig-h','px');
+
+  const stampOn = document.querySelector('.stamp');
+  bind('stmpFs','--stmp-fs','px');
+  bind('stmpR','--stmp-r','px');
+  bind('stmpRot','--stmp-rot','');
+  /* 透明度：滑条 88 → CSS 0.88 */
+  (function(){
+    const el = document.getElementById('stmpA'), sp = document.getElementById('stmpAv');
+    if(!el) return;
+    const apply = () => { const v = parseFloat(el.value)||0; setVar('--stmp-a', (v/100).toFixed(2)); };
+    el.addEventListener('input', apply);
+    apply();
+  })();
+
+  const stampMode = document.getElementById('stampMode');
+  function applyStamp(){
+    const t = (stampMode && stampMode.value) || 'paid';
+    const st = stampOn;
+    if(st){
+      st.textContent = t === 'paid' ? 'PAID・谢谢' : '明日再续';
+      st.classList.toggle('paid', t === 'paid');
+    }
+  }
+  if(stampMode){ stampMode.addEventListener('change', applyStamp); }
+  applyStamp();
+
+  const klFont = document.getElementById('klFont');
+  function applyKl(){
+    const v = (klFont && klFont.value) || 'hand';
+    setVar('--kl-font', v === 'print' ? "'PingFang SC','Microsoft YaHei',sans-serif" : "var(--font-hand)");
+  }
+  if(klFont){ klFont.addEventListener('change', applyKl); }
+  applyKl();
+  bind('klFs','--kl-fs','px');
+  bindColor('klC','--kl-c');
+  bind('bcH','--bc-h','px');
+  bindColor('bcC','--bc-c');
+
+  bindColor('ftBg','--ft-bg');
+  bind('tmFs','--tm-fs','px');
+  bind('prFs','--pr-fs','px');
+  bind('prLs','--pr-ls','px');
+  bindColor('prBg','--pr-bg');
+  bindColor('prC','--pr-c');
+  bind('prR','--pr-r','px');
+  bind('prH','--pr-h','px');
+
+  /* —— genCode —— */
+  function genCode(){
+    return `/* 结账页 · Wisteria（调参台生成 · 完整 CSS） */
+
+/* 页面 */
+.check-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--cc-bg')};}
+.check-header{position:relative;z-index:2;display:flex;align-items:center;padding:43px 12px 8px;height:${get('--h-h')};background:${get('--h-bg')};flex-shrink:0;}
+.check-header .ht{flex:1;text-align:center;font-size:${get('--h-tfs')};font-weight:600;color:var(--ink);}
+.ch-back{position:relative;width:11px;height:18px;color:var(--blue-grey);flex-shrink:0;}
+.ch-back i{position:absolute;left:0;top:50%;width:11px;height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
+.ch-back i:first-child{transform:rotate(-56deg);}
+.ch-back i:last-child{transform:rotate(56deg);}
+.check-body{flex:1;overflow:auto;padding:16px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.kaoru-note{max-width:80%;background:rgba(255,255,255,0.85);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:${get('--note-fs')};line-height:1.6;color:var(--ink);}
+
+/* 小票（保持纸感） */
+.ticket{width:${get('--tik-w')};background:${get('--tik-bg')};padding:${get('--tik-pad')} 14px 26px;font-family:var(--font-receipt);font-size:${get('--bd-fs')};color:var(--ink);position:relative;box-shadow:0 6px 18px rgba(60,45,25,.10);}
+.ticket::after{content:"";position:absolute;left:0;right:0;bottom:0;height:${get('--zig-h')};background:linear-gradient(-135deg,${get('--tik-bg')} 50%,transparent 50%) 0 0/13px ${get('--zig-h')} repeat-x,linear-gradient(135deg,${get('--tik-bg')} 50%,transparent 50%) 6.5px 0/13px ${get('--zig-h')} repeat-x;}
+.t-head{text-align:center;font-family:var(--font-logo);font-size:${get('--hd-fs')};letter-spacing:${get('--hd-ls')};color:var(--ink);margin-bottom:1px;}
+.t-sub{text-align:center;font-size:${get('--sb-fs')};letter-spacing:1px;color:var(--blue-grey);margin-bottom:8px;}
+.t-row{display:flex;justify-content:space-between;margin:${get('--row-gap')} 0;color:var(--muted-c);}
+.t-dash{border-top:1px dashed ${get('--dash-c')};margin:8px 0;}
+.t-item{display:flex;justify-content:space-between;margin:${get('--row-gap')} 0;color:var(--ink);}
+.t-item .st{color:${get('--done-c')};font-weight:700;}
+.t-item .st.pending{color:var(--muted-c);font-weight:400;font-size:11px;}
+.t-subt{font-size:${get('--sub-fs')};}
+.t-pbar{height:${get('--pb-h')};background:${get('--pb-bg')};border-radius:calc(${get('--pb-h')}/2);overflow:hidden;margin:7px 0;}
+.t-pbar i{display:block;height:100%;width:33%;background:repeating-linear-gradient(90deg,${get('--pb-fill')} 0 6px,var(--pink-light) 6px 8px);}
+.t-stamp{margin-top:10px;text-align:center;}
+.stamp{display:inline-block;border:3px solid var(--pink-main);color:var(--pink-main);padding:6px 14px;border-radius:${get('--stmp-r')};letter-spacing:2px;font-family:var(--font-poster);font-size:${get('--stmp-fs')};opacity:${get('--stmp-a')};background:rgba(255,255,255,.6);transform:rotate(${get('--stmp-rot')}deg);}
+.stamp.paid{transform:rotate(calc(${get('--stmp-rot')}*-1deg));}
+.t-line{margin-top:10px;font-family:${get('--kl-font')};font-size:${get('--kl-fs')};letter-spacing:${get('--kl-ls')};color:${get('--kl-c')};text-align:right;line-height:1.4;}
+.t-bc{height:${get('--bc-h')};margin-top:10px;background:repeating-linear-gradient(90deg,${get('--bc-c')} 0 2px,transparent 2px 4px,${get('--bc-c')} 4px 5px,transparent 5px 9px,${get('--bc-c')} 9px 12px,transparent 12px 15px);filter:opacity(.8);}
+.t-bcn{text-align:center;font-size:${get('--bcn-fs')};letter-spacing:3px;color:var(--muted-c);margin-top:2px;}
+
+/* 底部（定明天 + 打印） */
+.check-foot{position:relative;z-index:2;background:${get('--ft-bg')};flex-shrink:0;padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px;}
+.check-foot::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${get('--ft-bg')} 0,${get('--ft-bg')} 4px,transparent 4px,transparent 7px);}
+.tm-row{display:flex;align-items:center;font-size:${get('--tm-fs')};color:var(--tm-c);font-weight:600;}
+.tm-row .tm-tag{font-size:10px;color:var(--blue-grey);font-weight:400;margin-right:auto;}
+.tm-row .tm-val{color:var(--pink-main);margin-left:6px;}
+.opt-row{display:flex;align-items:center;gap:8px;font-size:${get('--opt-fs')};color:var(--muted-c);}
+.print-btn{width:100%;height:${get('--pr-h')};border:none;border-radius:${get('--pr-r')};background:${get('--pr-bg')};color:${get('--pr-c')};font-size:${get('--pr-fs')};font-weight:700;letter-spacing:${get('--pr-ls')};cursor:pointer;box-shadow:0 4px 12px rgba(212,165,165,.45);}`;
+  }
+
+  document.getElementById('genBtn').addEventListener('click', () => {
+    document.getElementById('codeBox').textContent = genCode();
+  });
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const box = document.getElementById('codeBox');
+    if(!box.textContent) box.textContent = genCode();
+    navigator.clipboard.writeText(box.textContent).then(() => {
+      document.getElementById('copyBtn').textContent = '已复制✓';
+      setTimeout(() => { document.getElementById('copyBtn').textContent = '复制'; }, 1200);
+    });
+  });
+
+  if(new URLSearchParams(location.search).has('demo')) document.body.classList.add('demo');
+</script>
+</body>
+</html>
