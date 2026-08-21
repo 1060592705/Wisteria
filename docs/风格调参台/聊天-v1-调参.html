@@ -41,7 +41,7 @@
     --lg-tint:65;--lg-blur:1.5px;
     --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
     --lg-warp:15;--lg-wave:50;
-    --lg-rimw:8px;--lg-rimb:8px;--lg-disp:12;
+    --lg-rimw:2px;--lg-rimb:11px;--lg-disp:19;
     --lg-disp-l:#E9F3DF;--lg-disp-r:#C0E2D1;
     --lg-sx:12%;--lg-sy:0%;
 
@@ -315,10 +315,10 @@
     <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="10"><span class="val" id="lgRimv">10</span></div>
     <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="15"><span class="val" id="lgWarpv">15</span></div>
     <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
-    <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="8"><span class="val" id="lgRimBv">8</span></div>
-    <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="8"><span class="val" id="lgRimWv">8</span></div>
+    <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="11"><span class="val" id="lgRimBv">11</span></div>
+    <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="2"><span class="val" id="lgRimWv">2</span></div>
     <div class="row"><label>背景取色</label><input type="checkbox" id="dispAutoOn" checked></div>
-    <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="12"><span class="val" id="lgDispv">12</span></div>
+    <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="19"><span class="val" id="lgDispv">19</span></div>
     <div class="row"><label>色散左色</label><input type="color" id="lgDispL" value="#E9F3DF"><span class="val" id="lgDispLv">#E9F3DF</span></div>
     <div class="row"><label>色散右色</label><input type="color" id="lgDispR" value="#C0E2D1"><span class="val" id="lgDispRv">#C0E2D1</span></div>
     <div class="row"><label>高光跟随</label><input type="checkbox" id="shFollowOn" checked></div>
@@ -328,7 +328,7 @@
   <div class="grp">
     <h3>📱 页面与顶部栏</h3>
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
-    <div class="row"><label>聊天背景</label><select id="bgImgSel"><option value="dots" selected>点纹背景（参考1）</option><option value="complex">复杂背景（参考2）</option><option value="none">无（纯色）</option></select></div>
+    <div class="row"><label>聊天背景</label><select id="bgImgSel"><option value="dots">点纹背景（参考1）</option><option value="complex" selected>复杂背景（参考2）</option><option value="none">无（纯色）</option></select></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
     <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="0"><span class="val" id="mistAv">0</span></div>
     <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="75"><span class="val" id="hdrHv">75</span></div>
@@ -615,7 +615,7 @@
     });
     if(dispAutoOn.checked) applyDispAuto();
   });
-  loadDispImg('dots');
+  loadDispImg((bgImgSel && bgImgSel.value) || 'dots');
   bind('sendS','--send-s','px');
   bind('sendX','--send-x','px');
   bind('sendY','--send-y','px');
