@@ -41,6 +41,8 @@
     --lg-tint:65;--lg-blur:1.5px;
     --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
     --lg-warp:15;--lg-wave:50;
+    --lg-rimw:8px;--lg-rimb:5px;--lg-disp:12;
+    --lg-sx:12%;--lg-sy:0%;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -107,8 +109,12 @@
   .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(var(--lg-tint)*1%)),rgba(255,255,255,calc(var(--lg-tint)*0.36*1%)));backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
   /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版） */
   .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));}
-  .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,var(--lg-sheen)),transparent 58%);pointer-events:none;}
-  .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,var(--lg-rim));pointer-events:none;}
+  .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at var(--lg-sx,12%) var(--lg-sy,0%),rgba(255,255,255,var(--lg-sheen)),transparent 58%),radial-gradient(45% 38% at 88% 8%,rgba(251,224,229,var(--lg-disp)),transparent 68%),radial-gradient(45% 38% at 8% 18%,rgba(226,239,241,var(--lg-disp)),transparent 68%);pointer-events:none;}
+  /* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心到边缘的模糊梯度） */
+  .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--lg-rimw);border:1px solid rgba(255,255,255,var(--lg-rim));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));pointer-events:none;}
+  /* 气泡入场（液态张力：上浮 + 弹性着陆） */
+  .bubble.animate{animation:bubbleIn .5s cubic-bezier(.22,1.5,.36,1) both;}
+  @keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(0.94);}to{opacity:1;transform:none;}}
 
   /* 折角（参考图样式：折角 + 折角阴影 + 顶部小圆点） */
   .bubble.fold-tl{-webkit-mask-image:linear-gradient(135deg,transparent calc(var(--fold-size)*0.71),#000 0);mask-image:linear-gradient(135deg,transparent calc(var(--fold-size)*0.71),#000 0);}
@@ -308,6 +314,11 @@
     <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="10"><span class="val" id="lgRimv">10</span></div>
     <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="15"><span class="val" id="lgWarpv">15</span></div>
     <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
+    <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="16" step="0.5" value="5"><span class="val" id="lgRimBv">5</span></div>
+    <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="8"><span class="val" id="lgRimWv">8</span></div>
+    <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="12"><span class="val" id="lgDispv">12</span></div>
+    <div class="row"><label>高光跟随</label><input type="checkbox" id="shFollowOn" checked></div>
+    <div class="row"><label>气泡入场</label><input type="checkbox" id="bubAnimOn" checked></div>
   </div>
 
   <div class="grp">
@@ -434,6 +445,18 @@
   bindCheck('quoteOn', v => document.getElementById('quoteBox').style.display = v ? '' : 'none');
   bindCheck('titleTagOn', v => { const t = document.getElementById('titleTag'); if(t) t.style.display = v ? '' : 'none'; });
   bindCheck('shareOn', v => { const t = document.querySelector('.ch-share'); if(t) t.style.display = v ? '' : 'none'; });
+  bindCheck('bubAnimOn', v => document.querySelectorAll('.bubble').forEach(b => b.classList.toggle('animate', v)));
+  const shFollowOn = document.getElementById('shFollowOn');
+  const phoneEl = document.querySelector('.phone');
+  function onSheenMove(e){
+    const r = phoneEl.getBoundingClientRect();
+    setVar('--lg-sx', Math.round((e.clientX-r.left)/r.width*100)+'%');
+    setVar('--lg-sy', Math.round((e.clientY-r.top)/r.height*100)+'%');
+  }
+  if(shFollowOn) shFollowOn.addEventListener('change', () => {
+    if(shFollowOn.checked) phoneEl.addEventListener('mousemove', onSheenMove);
+    else { phoneEl.removeEventListener('mousemove', onSheenMove); setVar('--lg-sx','12%'); setVar('--lg-sy','0%'); }
+  });
 
   /* 各参数 */
   bind('avaSize','--ava-size','px');
@@ -471,6 +494,9 @@
   bind('lgRim','--lg-rim','',0.01);
   bind('lgWarp','--lg-warp','');
   bind('lgWave','--lg-wave','');
+  bind('lgRimW','--lg-rimw','px');
+  bind('lgRimB','--lg-rimb','px');
+  bind('lgDisp','--lg-disp','');
 
   /* 边缘变形：实时写入 SVG 滤镜 scale / baseFrequency */
   var warpIn = document.getElementById('lgWarp');
@@ -600,16 +626,25 @@
     const pageCss = bgSel === 'none' ? `.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}` : `/* ${bgTip}：url 请替换为实际图片路径 */\n.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')} center/cover no-repeat url('${bgFile}');}`;
     const waveM = Math.round((parseFloat(document.getElementById('lgWave').value)||100))/100;
     const warpSy = (document.getElementById('lgWarp')||{}).value || '6';
-    const matCss = `/* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形）*/
+    const matCss = `/* 液态玻璃（左右统一：多层模糊 + 高光跟随 + 色散光 + 边缘折射环 + 边缘变形）*/
 
 .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(${get('--lg-tint')}*1%)),rgba(255,255,255,calc(${get('--lg-tint')}*0.36*1%)));backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});-webkit-backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
-.bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
-.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}
+
+/* 顶部高光（白斑跟随触控/鼠标，at ${get('--lg-sx')} ${get('--lg-sy')}；右上粉、左上青两缕色散光） */
+.bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at ${get('--lg-sx')} ${get('--lg-sy')},rgba(255,255,255,${get('--lg-sheen')}),transparent 58%),radial-gradient(45% 38% at 88% 8%,rgba(251,224,229,${get('--lg-disp')}),transparent 68%),radial-gradient(45% 38% at 8% 18%,rgba(226,239,241,${get('--lg-disp')}),transparent 68%);pointer-events:none;}
+
+/* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心→边缘的模糊梯度） */
+.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:${get('--lg-rimw')};border:1px solid rgba(255,255,255,${get('--lg-rim')});-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});pointer-events:none;}
 
 /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版）
    需在页面中放入滤镜定义（放 body 内即可）：
    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="glassWarp" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="${(0.018*waveM).toFixed(4)} ${(0.04*waveM).toFixed(4)}" numOctaves="2" seed="12" result="noise"/><feGaussianBlur in="noise" stdDeviation="1.5" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="${warpSy}" xChannelSelector="R" yChannelSelector="G"/></filter></svg> */
 .bubble.lg{backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});-webkit-backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});}`;
+
+    const animCss = (document.getElementById('bubAnimOn')||{}).checked ? `
+/* 气泡入场（液态张力：上浮 + 弹性着陆） */
+.bubble{animation:bubbleIn .5s cubic-bezier(.22,1.5,.36,1) both;}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(0.94);}to{opacity:1;transform:none;}}` : '';
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
@@ -651,7 +686,7 @@ ${pageCss}
 .bubble.yours{border-radius:${get('--bubble-radius')} ${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
 
 
-${matCss}
+${matCss}${animCss}
 
 ${foldCss}
 
