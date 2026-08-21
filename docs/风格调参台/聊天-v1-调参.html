@@ -36,12 +36,10 @@
     --max-w:75%;--indent:10px;
     --bubble-shadow:0.01;
 
-    /* 他气泡（毛玻璃） */
-    --his-a:0.10;--his-blur:1px;--his-bord:0.27;
-    /* 你气泡 */
-    --your-bg:#F3D3D6;--your-a:0.29;--your-blur:4px;
-    /* 液态玻璃 */
+    /* 液态玻璃（左右统一） */
+    --lg-tint:55;--lg-blur:1px;
     --lg-sat:1.34;--lg-sheen:0.39;--lg-rim:0.87;
+    --lg-warp:6;--lg-wave:100;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -103,11 +101,12 @@
   /* 戊款：贴头像上角 4px 小圆，其余 16px（他左上 / 你右上） */
   .bubble.his{border-radius:var(--corner-sm) var(--bubble-radius) var(--bubble-radius) var(--bubble-radius);}
   .bubble.yours{border-radius:var(--bubble-radius) var(--corner-sm) var(--bubble-radius) var(--bubble-radius);}
-  .bubble.his{background:rgba(255,255,255,var(--his-a));backdrop-filter:blur(var(--his-blur));-webkit-backdrop-filter:blur(var(--his-blur));border:1px solid rgba(255,255,255,var(--his-bord));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.35);}
-  .bubble.yours{background:color-mix(in srgb,var(--your-bg) calc(var(--your-a)*100%),transparent);backdrop-filter:blur(var(--your-blur));-webkit-backdrop-filter:blur(var(--your-blur));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow));}
 
-  /* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边） */
-  .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+
+  /* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形） */
+  .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(var(--lg-tint)*1%)),rgba(255,255,255,calc(var(--lg-tint)*0.36*1%)));backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+  /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版） */
+  .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat));}
   .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,var(--lg-sheen)),transparent 58%);pointer-events:none;}
   .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,var(--lg-rim));pointer-events:none;}
 
@@ -259,7 +258,7 @@
 
 <aside id="panel">
   <h2>聊天框调参台</h2>
-  <div class="hint">参考图：方块头像 + 三行信息，气泡材质可选毛玻璃/液态玻璃。拖动滑块实时预览,调好后点「生成 CSS」。</div>
+  <div class="hint">参考图：方块头像 + 三行信息，左右气泡统一液态玻璃（含边缘变形）。拖动滑块实时预览,调好后点「生成 CSS」。</div>
 
   <div class="grp">
     <h3>🗨 消息组结构</h3>
@@ -286,7 +285,6 @@
     <div class="row"><label>大圆角</label><input type="range" id="bubRadius" min="4" max="24" value="20"><span class="val" id="bubRadiusv">20</span></div>
     <div class="row"><label>上角小圆</label><input type="range" id="cornerSm" min="0" max="12" value="3"><span class="val" id="cornerSmv">3</span></div>
     <div class="row"><label>角样式</label><select id="foldPos"><option value="none" selected>上角小圆(戊·定稿)</option><option value="tl">折角·左上(参考图)</option><option value="tr">折角·右上(参考图)</option></select></div>
-    <div class="row"><label>气泡材质</label><select id="bubMat"><option value="glass" selected>毛玻璃（戊款）</option><option value="lg">液态玻璃（参考图）</option></select></div>
     <div class="row"><label>折角大小</label><input type="range" id="foldSize" min="4" max="20" value="9"><span class="val" id="foldSizev">9</span></div>
     <div class="row"><label>折角小圆点</label><input type="checkbox" id="foldDotOn" checked></div>
     <div class="row"><label>折角阴影</label><input type="range" id="foldShade" min="0" max="30" value="8"><span class="val" id="foldShadev">8</span></div>
@@ -303,24 +301,14 @@
   </div>
 
   <div class="grp">
-    <h3>🥛 他气泡（毛玻璃）</h3>
-    <div class="row"><label>透明度</label><input type="range" id="hisA" min="10" max="100" value="10"><span class="val" id="hisAv">10</span></div>
-    <div class="row"><label>模糊度</label><input type="range" id="hisBlur" min="0" max="24" value="1"><span class="val" id="hisBlurv">1</span></div>
-    <div class="row"><label>白描边</label><input type="range" id="hisBord" min="0" max="100" value="27"><span class="val" id="hisBordv">27</span></div>
-  </div>
-
-  <div class="grp">
-    <h3>🍑 你气泡</h3>
-    <div class="row"><label>背景色</label><input type="color" id="yourBg" value="#F3D3D6"><span class="val" id="yourBgv">#F3D3D6</span></div>
-    <div class="row"><label>透明度</label><input type="range" id="yourA" min="10" max="100" value="29"><span class="val" id="yourAv">29</span></div>
-    <div class="row"><label>模糊度</label><input type="range" id="yourBlur" min="0" max="16" value="4"><span class="val" id="yourBlurv">4</span></div>
-  </div>
-
-  <div class="grp">
-    <h3>🌊 液态玻璃</h3>
+    <h3>🌊 液态玻璃（左右统一）</h3>
+    <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="55"><span class="val" id="lgTintv">55</span></div>
+    <div class="row"><label>模糊度</label><input type="range" id="lgBlur" min="0" max="8" step="0.5" value="1"><span class="val" id="lgBlurv">1</span></div>
     <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="134"><span class="val" id="lgSatv">134</span></div>
     <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="39"><span class="val" id="lgSheenv">39</span></div>
     <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="87"><span class="val" id="lgRimv">87</span></div>
+    <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="6"><span class="val" id="lgWarpv">6</span></div>
+    <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="100"><span class="val" id="lgWavev">100</span></div>
   </div>
 
   <div class="grp">
@@ -423,21 +411,19 @@
     });
   }
 
-  /* 折角位置 + 气泡材质 */
+  /* 折角位置（气泡固定液态玻璃，所有气泡加 lg） */
   const foldPos = document.getElementById('foldPos');
-  const bubMat = document.getElementById('bubMat');
   function applyFold() {
     const pos = (foldPos && foldPos.value) || 'none';
-    const lg = bubMat && bubMat.value === 'lg';
     document.querySelectorAll('.bubble').forEach(b => {
-      b.classList.remove('fold-tl','fold-tr','lg');
-      if(lg) b.classList.add('lg');
-      else if(pos === 'tl') b.classList.add('fold-tl');
+      b.classList.remove('fold-tl','fold-tr');
+      b.classList.add('lg');
+      if(pos === 'tl') b.classList.add('fold-tl');
       else if(pos === 'tr') b.classList.add('fold-tr');
     });
   }
   if(foldPos) foldPos.addEventListener('change', applyFold);
-  if(bubMat) bubMat.addEventListener('change', applyFold);
+  applyFold();
 
   /* 开关 */
   bindCheck('badgeOn', v => document.querySelectorAll('.mg-badge').forEach(e => e.style.display = v ? '' : 'none'));
@@ -477,16 +463,31 @@
   bind('bubGap','--bubble-gap','px');
   bind('bubShadow','--bubble-shadow','',0.01);
 
-  bind('hisA','--his-a','',0.01);
-  bind('hisBlur','--his-blur','px');
-  bind('hisBord','--his-bord','',0.01);
-
-  bindColor('yourBg','--your-bg');
-  bind('yourA','--your-a','',0.01);
-  bind('yourBlur','--your-blur','px');
+  bind('lgTint','--lg-tint','');
+  bind('lgBlur','--lg-blur','px');
   bind('lgSat','--lg-sat','',0.01);
   bind('lgSheen','--lg-sheen','',0.01);
   bind('lgRim','--lg-rim','',0.01);
+  bind('lgWarp','--lg-warp','');
+  bind('lgWave','--lg-wave','');
+
+  /* 边缘变形：实时写入 SVG 滤镜 scale / baseFrequency */
+  var warpIn = document.getElementById('lgWarp');
+  var waveIn = document.getElementById('lgWave');
+  function applyLgWarp() {
+    var warpF = document.getElementById('glassWarp');
+    var d = warpF && warpF.querySelector('feDisplacementMap');
+    var t = warpF && warpF.querySelector('feTurbulence');
+    var sc = warpIn ? (parseFloat(warpIn.value) || 0) : 0;
+    if(d) d.setAttribute('scale', sc.toFixed(1));
+    if(t) {
+      var m = (waveIn && (parseFloat(waveIn.value) || 100) / 100) || 1;
+      t.setAttribute('baseFrequency', (0.018*m).toFixed(4) + ' ' + (0.04*m).toFixed(4));
+    }
+  }
+  if(warpIn) warpIn.addEventListener('input', applyLgWarp);
+  if(waveIn) waveIn.addEventListener('input', applyLgWarp);
+  document.addEventListener('DOMContentLoaded', applyLgWarp);
 
   bindColor('chatBg','--chat-bg');
   bindColor('mistC','--mist-c');
@@ -546,8 +547,7 @@
   function genCode() {
     const s = getComputedStyle(root);
     const get = (v) => s.getPropertyValue(v).trim();
-    const mat = (document.getElementById('bubMat')||{}).value || 'glass';
-    const fp = mat === 'lg' ? 'none' : ((document.getElementById('foldPos')||{}).value || 'none');
+    const fp = (document.getElementById('foldPos')||{}).value || 'none';
     const hexRgb = (hex) => {
       const h = hex.replace('#','');
       const full = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
@@ -585,11 +585,18 @@
     const tearCss = tearOn && tearOn.checked ? `\n/* 撕纸边（同主页导航栏） */\n.chat-input::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 0,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 4px,transparent 4px,transparent 7px);}` : '';
     const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
     const pageCss = (document.getElementById('bgImgOn')||{}).checked ? `/* 点纹背景：url 请替换为实际图片路径 */\n.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')} center/cover no-repeat url('chat-bg-dots.png');}` : `.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}`;
-    const matCss = mat === 'lg' ? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
+    const waveM = Math.round((parseFloat(document.getElementById('lgWave').value)||100))/100;
+    const warpSy = (document.getElementById('lgWarp')||{}).value || '6';
+    const matCss = `/* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形）*/
 
-.bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+.bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(${get('--lg-tint')}*1%)),rgba(255,255,255,calc(${get('--lg-tint')}*0.36*1%)));backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
 .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
-.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}` : '';
+.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}
+
+/* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版）
+   需在页面中放入滤镜定义（放 body 内即可）：
+   <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="glassWarp" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="${(0.018*waveM).toFixed(4)} ${(0.04*waveM).toFixed(4)}" numOctaves="2" seed="12" result="noise"/><feGaussianBlur in="noise" stdDeviation="1.5" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="${warpSy}" xChannelSelector="R" yChannelSelector="G"/></filter></svg> */
+.bubble.lg{backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:url(#glassWarp) blur(${get('--lg-blur')}) saturate(${get('--lg-sat')});}`;
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
@@ -629,8 +636,7 @@ ${pageCss}
 .bubble{position:relative;max-width:${get('--max-w')};padding:${get('--pad-y')} ${get('--pad-x')};font-size:${get('--bubble-fs')};line-height:${get('--bubble-lh')};color:${get('--bubble-c')};border-radius:${get('--bubble-radius')};}
 .bubble.his{border-radius:${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
 .bubble.yours{border-radius:${get('--bubble-radius')} ${get('--corner-sm')} ${get('--bubble-radius')} ${get('--bubble-radius')};}
-.bubble.his{background:rgba(255,255,255,${get('--his-a')});backdrop-filter:blur(${get('--his-blur')});-webkit-backdrop-filter:blur(${get('--his-blur')});border:1px solid rgba(255,255,255,${get('--his-bord')});box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.35);}
-.bubble.yours{background:${op(get('--your-bg'), get('--your-a'))};backdrop-filter:blur(${get('--your-blur')});-webkit-backdrop-filter:blur(${get('--your-blur')});box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')});}
+
 
 ${matCss}
 
@@ -657,6 +663,14 @@ ${hidCss}${tearCss}`;
     navigator.clipboard.writeText(t).then(() => alert('已复制到剪贴板'));
   }
 </script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="glassWarp" x="-25%" y="-25%" width="150%" height="150%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018 0.04" numOctaves="2" seed="12" result="noise"/>
+    <feGaussianBlur in="noise" stdDeviation="1.5" result="soft"/>
+    <feDisplacementMap in="SourceGraphic" in2="soft" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 </body>
 </html>
