@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://api.github.com/repos/moeru-ai/airi/git/trees/HEAD?recursive=1\")",
+      "Bash(grep -E '\\\\.\\(vue|tsx|ts\\)$')",
+      "Bash(curl -s --max-time 40 \"https://api.github.com/search/repositories?q=Tidefall\")",
+      "Bash(python -c ' *)",
+      "Bash(pip list *)",
+      "Read(//c/Users/Avril/AppData/Local/Temp/**)",
+      "Bash(rm -f \"C:/Users/Avril/AppData/Local/Temp/_test_vision.jpg\")",
+      "Read(//c/Users/Avril/.claude/**)",
+      "Bash(env)",
+      "Read(//c/Users/Avril/**)",
+      "Read(//c/Users/Avril/.claude-code-router/**)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:claude-code-router.vercel.app)",
+      "WebFetch(domain:console.groq.com)",
+      "WebSearch"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Avril\\AppData\\Local\\Temp"
+    ]
+  }
+}
