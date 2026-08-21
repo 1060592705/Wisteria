@@ -41,7 +41,7 @@
     --lg-tint:65;--lg-blur:1.5px;
     --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
     --lg-warp:15;--lg-wave:50;
-    --lg-rimw:2px;--lg-rimb:11px;--lg-disp:19;
+    --lg-rimw:2px;--lg-rimb:30px;--lg-disp:19;
     --lg-rimwht:0;
     --lg-disp-l:#E9F3DF;--lg-disp-r:#C0E2D1;
     --lg-sx:12%;--lg-sy:0%;
@@ -316,7 +316,7 @@
     <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="10"><span class="val" id="lgRimv">10</span></div>
     <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="15"><span class="val" id="lgWarpv">15</span></div>
     <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
-    <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="11"><span class="val" id="lgRimBv">11</span></div>
+    <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="30"><span class="val" id="lgRimBv">30</span></div>
     <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="2"><span class="val" id="lgRimWv">2</span></div>
     <div class="row"><label>边缘白膜</label><input type="range" id="lgRimWht" min="0" max="60" value="0"><span class="val" id="lgRimWhtv">0</span></div>
     <div class="row"><label>背景取色</label><input type="checkbox" id="dispAutoOn" checked></div>
@@ -558,11 +558,23 @@
     const img = v === 'complex' ? '../../参考资料/图片/聊天页面参考/8fe04dfdcf29da10e52eb60134b4832e.png' : '../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png';
     setVar('--bg-img', `url('${img}')`);
   }
+  /* 背景预设联动：复杂=扩散30/白膜0，浅色=扩散0/白膜60（切完可再手动微调） */
+  function setSlider(id, v){
+    const el = document.getElementById(id), sp = document.getElementById(id + 'v');
+    if(el){ el.value = v; el.dispatchEvent(new Event('input')); }
+    if(sp) sp.textContent = v;
+  }
+  function applyBgPresets(v){
+    if(v === 'complex'){ setSlider('lgRimB', 30); setSlider('lgRimWht', 0); }
+    else { setSlider('lgRimB', 0); setSlider('lgRimWht', 60); }
+  }
   if(bgImgSel) bgImgSel.addEventListener('change', () => {
     applyBgImg();
+    applyBgPresets(bgImgSel.value);
     loadDispImg(bgImgSel.value);
   });
   applyBgImg();
+  applyBgPresets((bgImgSel && bgImgSel.value) || 'dots');
 
   /* 色散光自动取色：从气泡边缘外侧采样当前背景图的实际颜色 */
   const dispAutoOn = document.getElementById('dispAutoOn');
