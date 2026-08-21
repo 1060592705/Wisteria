@@ -76,7 +76,7 @@
   /* 顶部栏 */
   .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:var(--hdr-pt) var(--chat-pad) 8px;height:var(--hdr-h);background:var(--hdr-bg);flex-shrink:0;}
   .ch-back{position:relative;width:var(--back-w);height:var(--back-h);color:var(--back-c);flex-shrink:0;transform:translate(var(--back-x),var(--back-y));}
-  .ch-back i{position:absolute;left:0;top:50%;width:var(--back-w);height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;}
+  .ch-back i{position:absolute;left:0;top:50%;width:var(--back-w);height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
   .ch-back i:first-child{transform:rotate(calc(var(--back-ang)*1deg - 90deg));}
   .ch-back i:last-child{transform:rotate(calc(90deg - var(--back-ang)*1deg));}
   .ch-tb{flex:1;min-width:0;text-align:center;}
@@ -746,7 +746,7 @@ ${pageCss}
 /* 返回箭头（双臂旋转式：开合角度直接由 --back-ang 驱动，标记结构如下）
    <span class="ch-back" aria-hidden="true"><i></i><i></i></span> */
 .ch-back{position:relative;width:${get('--back-w')};height:${get('--back-h')};color:${get('--back-c')};flex-shrink:0;transform:translate(${get('--back-x')},${get('--back-y')});}
-.ch-back i{position:absolute;left:0;top:50%;width:${get('--back-w')};height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;}
+.ch-back i{position:absolute;left:0;top:50%;width:${get('--back-w')};height:1.8px;margin-top:-0.9px;border-radius:1px;background:currentColor;transform-origin:0 50%;}
 .ch-back i:first-child{transform:rotate(calc(${get('--back-ang')}*1deg - 90deg));}
 .ch-back i:last-child{transform:rotate(calc(90deg - ${get('--back-ang')}*1deg));}
 .ch-tb{flex:1;min-width:0;text-align:center;}
