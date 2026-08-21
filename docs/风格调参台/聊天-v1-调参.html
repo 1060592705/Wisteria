@@ -42,6 +42,7 @@
     --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
     --lg-warp:15;--lg-wave:50;
     --lg-rimw:8px;--lg-rimb:8px;--lg-disp:12;
+    --lg-disp-l:#E9F3DF;--lg-disp-r:#C0E2D1;
     --lg-sx:12%;--lg-sy:0%;
 
     /* 功能消息 */
@@ -109,7 +110,7 @@
   .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(var(--lg-tint)*1%)),rgba(255,255,255,calc(var(--lg-tint)*0.36*1%)));backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
   /* 边缘变形（SVG 折射滤镜：Chromium 生效，Safari 自动降级为上方模糊版） */
   .bubble.lg{backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));-webkit-backdrop-filter:url(#glassWarp) blur(var(--lg-blur)) saturate(var(--lg-sat)) contrast(var(--lg-con));}
-  .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at var(--lg-sx,12%) var(--lg-sy,0%),rgba(255,255,255,var(--lg-sheen)),transparent 58%),radial-gradient(45% 38% at 88% 8%,rgba(251,224,229,var(--lg-disp)),transparent 68%),radial-gradient(45% 38% at 8% 18%,rgba(226,239,241,var(--lg-disp)),transparent 68%);pointer-events:none;}
+  .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at var(--lg-sx,12%) var(--lg-sy,0%),rgba(255,255,255,var(--lg-sheen)),transparent 58%),radial-gradient(45% 38% at 88% 8%,color-mix(in srgb,var(--lg-disp-r) calc(var(--lg-disp)*1%),transparent),transparent 68%),radial-gradient(45% 38% at 8% 18%,color-mix(in srgb,var(--lg-disp-l) calc(var(--lg-disp)*1%),transparent),transparent 68%);pointer-events:none;}
   /* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心到边缘的模糊梯度） */
   .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:var(--lg-rimw);border:1px solid rgba(255,255,255,var(--lg-rim));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--lg-rimb)) saturate(var(--lg-sat));pointer-events:none;}
   /* 气泡入场（液态张力：上浮 + 弹性着陆） */
@@ -317,6 +318,8 @@
     <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="8"><span class="val" id="lgRimBv">8</span></div>
     <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="8"><span class="val" id="lgRimWv">8</span></div>
     <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="12"><span class="val" id="lgDispv">12</span></div>
+    <div class="row"><label>色散左色</label><input type="color" id="lgDispL" value="#E9F3DF"><span class="val" id="lgDispLv">#E9F3DF</span></div>
+    <div class="row"><label>色散右色</label><input type="color" id="lgDispR" value="#C0E2D1"><span class="val" id="lgDispRv">#C0E2D1</span></div>
     <div class="row"><label>高光跟随</label><input type="checkbox" id="shFollowOn" checked></div>
     <div class="row"><label>气泡入场</label><input type="checkbox" id="bubAnimOn" checked></div>
   </div>
@@ -497,6 +500,8 @@
   bind('lgRimW','--lg-rimw','px');
   bind('lgRimB','--lg-rimb','px');
   bind('lgDisp','--lg-disp','');
+  bindColor('lgDispL','--lg-disp-l');
+  bindColor('lgDispR','--lg-disp-r');
 
   /* 边缘变形：实时写入 SVG 滤镜 scale / baseFrequency */
   var warpIn = document.getElementById('lgWarp');
@@ -631,7 +636,7 @@
 .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,calc(${get('--lg-tint')}*1%)),rgba(255,255,255,calc(${get('--lg-tint')}*0.36*1%)));backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});-webkit-backdrop-filter:blur(${get('--lg-blur')}) saturate(${get('--lg-sat')}) contrast(${get('--lg-con')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
 
 /* 顶部高光（白斑跟随触控/鼠标，at ${get('--lg-sx')} ${get('--lg-sy')}；右上粉、左上青两缕色散光） */
-.bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at ${get('--lg-sx')} ${get('--lg-sy')},rgba(255,255,255,${get('--lg-sheen')}),transparent 58%),radial-gradient(45% 38% at 88% 8%,rgba(251,224,229,${get('--lg-disp')}),transparent 68%),radial-gradient(45% 38% at 8% 18%,rgba(226,239,241,${get('--lg-disp')}),transparent 68%);pointer-events:none;}
+.bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at ${get('--lg-sx')} ${get('--lg-sy')},rgba(255,255,255,${get('--lg-sheen')}),transparent 58%),radial-gradient(45% 38% at 88% 8%,color-mix(in srgb,${get('--lg-disp-r')} calc(${get('--lg-disp')}*1%),transparent),transparent 68%),radial-gradient(45% 38% at 8% 18%,color-mix(in srgb,${get('--lg-disp-l')} calc(${get('--lg-disp')}*1%),transparent),transparent 68%);pointer-events:none;}
 
 /* 边缘柔滑扩散：边缘环带再叠一层更强模糊（中心→边缘的模糊梯度） */
 .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:${get('--lg-rimw')};border:1px solid rgba(255,255,255,${get('--lg-rim')});-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--lg-rimb')}) saturate(${get('--lg-sat')});pointer-events:none;}
