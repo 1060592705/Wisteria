@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定稿预览 · Wisteria</title>
+<style>
+@font-face{font-family:'LongCang';src:url('fonts/LongCang-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'MaShanZheng';src:url('fonts/MaShanZheng-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'ZhiMangXing';src:url('fonts/ZhiMangXing-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'SpecialElite';src:url('fonts/SpecialElite-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'Parisienne';src:url('fonts/Parisienne-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'GreatVibes';src:url('fonts/GreatVibes-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'BebasNeue';src:url('fonts/BebasNeue-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'AbrilFatface';src:url('fonts/AbrilFatface-Regular.ttf') format('truetype');font-display:swap;}
+@font-face{font-family:'AlfaSlabOne';src:url('fonts/AlfaSlabOne-Regular.ttf') format('truetype');font-display:swap;}
+
+/* ===== 定稿 = B 打印店·灰粉（2026-08-20 用户选定 ①–⑧B；⑧ 气泡保留 A 组暖色）===== */
+:root{
+  --paper:#F4F2F0; --paper-deep:#E8E5E1;
+  --pink-main:#D4A5A5; --pink-light:#E6DADA; --pink-dust:#C2B5B5;
+  --blue-grey:#9BAAB8; --ink:#3D3535; --ink-soft:#8A8580;
+  --font-hand:'PingFang SC','Microsoft YaHei',sans-serif;
+  --font-logo:'Parisienne','Segoe Script',cursive;
+  --font-receipt:Menlo,Consolas,monospace;
+  --font-poster:'BebasNeue',Impact,'Arial Narrow',sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{display:flex;background:#e7dfd0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
+
+/* ===== 画布 ===== */
+#board{flex:1;overflow-y:auto;padding:20px 22px 60px;}
+.board-head{margin-bottom:16px;}
+.board-head h1{font-size:19px;margin-bottom:4px;}
+.board-head p{font-size:12.5px;color:#8a7d6b;line-height:1.7;}
+
+.demo{background:#fffaf2;border:1px solid #e2d8c4;border-radius:14px;padding:12px;margin-bottom:16px;}
+.ctrl-title{font-size:12px;font-weight:600;color:#7a6f60;width:100%;margin-bottom:8px;}
+.variants{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:start;}
+.vs{position:relative;background:var(--paper);border-radius:14px;padding:16px 12px 14px;min-height:150px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:filter .7s;}
+.vs::before{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;
+  background:
+    radial-gradient(circle at 22% 18%,rgba(212,165,165,.16),transparent 46%),
+    radial-gradient(circle at 82% 26%,rgba(155,170,184,.14),transparent 44%),
+    radial-gradient(circle at 65% 88%,rgba(194,181,181,.16),transparent 48%);}
+.vs .tag{position:absolute;top:7px;left:7px;background:rgba(61,53,53,.85);color:#fff;font-size:10.5px;
+  padding:2px 8px;border-radius:10px;z-index:2;letter-spacing:1px;}
+.vs .vname{font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+.vs.pick{cursor:pointer;}
+.vs.pick.selected{outline:3px solid var(--pink-main);outline-offset:-3px;}
+body.night .vs{filter:grayscale(.75) brightness(.68);}
+
+/* 玻璃质感 */
+body.glass-on .glass{
+  background:rgba(255,255,255,.42);
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+  border-color:rgba(255,255,255,.65);
+  box-shadow:0 8px 24px rgba(120,95,60,.12), inset 0 1px 0 rgba(255,255,255,.75);}
+body.glass-on .bubble.kaoru.glass{background:rgba(255,255,255,.6);}
+
+/* ---------- ① 开屏 ---------- */
+.splash{width:100%;height:186px;border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(212,165,165,.20),transparent 55%),
+    radial-gradient(circle at 85% 28%,rgba(194,181,181,.45),transparent 50%),
+    radial-gradient(circle at 62% 92%,rgba(230,218,218,.5),transparent 55%),
+    var(--paper);}
+.splash .logo{font-family:var(--font-logo);font-size:34px;color:var(--ink);}
+.splash .enter{font-size:11px;color:var(--blue-grey);letter-spacing:5px;}
+
+/* ---------- ② 问候行 ---------- */
+.greet-wrap{display:flex;align-items:baseline;justify-content:space-between;width:100%;}
+.greet{font-family:var(--font-hand);font-size:16px;}
+.days{font-size:11px;color:var(--blue-grey);letter-spacing:1px;}
+
+/* ---------- ③ 草稿纸（手撕记事本：左缘圆孔 + 沿孔撕痕；B=打印店干净实线行） ---------- */
+.draft{position:relative;width:100%;padding:12px 12px 12px 26px;
+  border-radius:20px;background:#fffdf8;border:1px solid #e6dece;border-left:1px solid transparent;
+  box-shadow:0 6px 18px rgba(120,95,60,.08);}
+.draft::before{content:"";position:absolute;left:-7px;top:10px;bottom:10px;width:14px;pointer-events:none;
+  background-image:radial-gradient(circle at 7px 0,var(--paper) 4px,rgba(61,53,53,.3) 4.4px,transparent 5px);
+  background-size:14px 26px;background-repeat:repeat-y;}
+.draft::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;
+  background:linear-gradient(-135deg,#fffdf8 50%,transparent 50%) 0 0/14px 8px repeat-x,
+             linear-gradient(135deg,#fffdf8 50%,transparent 50%) 7px 0/14px 8px repeat-x;}
+.todo{height:26px;line-height:26px;font-family:var(--font-hand);font-size:13.5px;color:var(--ink);
+  border-bottom:1px solid var(--paper-deep);}
+.todo .time{color:var(--blue-grey);}
+.todo.done{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:rgba(138,133,128,.7);}
+.todo.done .tick{color:var(--pink-main);text-decoration:none;}
+.add-line{height:26px;line-height:26px;color:#b3aca2;font-family:var(--font-hand);font-size:13.5px;
+  border-bottom:1px solid var(--paper-deep);}
+
+/* ---------- ④ 月历框 ---------- */
+.cal{width:100%;background:#fffdf8;border:1px solid #e6dece;border-radius:14px;padding:10px;
+  box-shadow:0 6px 18px rgba(120,95,60,.08);}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.cal-title{font-weight:600;font-size:12px;}
+.legend{display:flex;gap:7px;font-size:9.5px;color:var(--ink-soft);align-items:center;}
+.dot{display:inline-block;width:5px;height:5px;border-radius:50%;}
+.dot.pink{background:var(--pink-main);} .dot.grey{background:#b9b0a2;}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);font-size:9.5px;color:var(--blue-grey);text-align:center;margin-bottom:3px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2.5px;}
+.cell{height:36px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;color:var(--ink);position:relative;}
+.cell .dot{position:absolute;bottom:3px;}
+.cell.faint{color:#c6bdaa;}
+.cell.today{border:2px solid var(--pink-main);animation:breathe 2.6s ease-in-out infinite;}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(212,165,165,0);}50%{box-shadow:0 0 0 6px rgba(212,165,165,.25);}}
+
+/* ---------- ⑤ 小票（加长版） ---------- */
+.receipt{width:100%;background:#fff;padding:12px 12px 10px;font-family:var(--font-receipt);
+  font-size:12px;color:#4a4a4a;position:relative;border-radius:6px;}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;
+  background:linear-gradient(-135deg,#ffffff 50%,transparent 50%) 0 0/14px 8px repeat-x,
+             linear-gradient(135deg,#ffffff 50%,transparent 50%) 7px 0/14px 8px repeat-x;}
+.receipt .head{text-align:center;font-family:var(--font-poster);font-size:15px;letter-spacing:2px;color:#333;margin-bottom:2px;}
+.receipt .sub{text-align:center;font-family:var(--font-poster);font-size:9.5px;letter-spacing:1px;color:#777;margin-bottom:7px;}
+.rrow{display:flex;justify-content:space-between;margin:2.5px 0;}
+.rrow .k{color:#8a8a8a;}
+.dash{border-top:1px dashed #aaa;margin:6px 0;}
+.check{color:var(--pink-main);font-weight:700;}
+.subtotal{margin-top:5px;}
+.pbar{height:6px;background:#eee;border-radius:3px;overflow:hidden;margin:5px 0;}
+.pbar>i{display:block;height:100%;width:33%;background:repeating-linear-gradient(90deg,var(--pink-main) 0 6px,var(--pink-dust) 6px 8px);}
+.kaoru-line{margin-top:8px;font-family:var(--font-hand);font-size:12.5px;color:var(--ink);}
+.barcode{height:22px;margin-top:7px;background:repeating-linear-gradient(90deg,#333 0 2px,transparent 2px 4px,#333 4px 5px,transparent 5px 9px,#333 9px 12px,transparent 12px 15px);}
+.bcnum{text-align:center;font-size:8.5px;letter-spacing:3px;color:#777;}
+
+/* ---------- ⑥ 红章 ---------- */
+.stamps{display:flex;gap:20px;align-items:center;}
+.stamp{border:3px solid var(--pink-main);color:var(--pink-main);padding:6px 12px;
+  border-radius:8px;letter-spacing:2px;font-family:var(--font-poster);font-size:15px;opacity:.85;
+  background:rgba(255,255,255,.5);transform:rotate(-10deg);}
+.stamp.s2{transform:rotate(8deg);}
+
+/* ---------- ⑦ 状态行 ---------- */
+.status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink);}
+.status::before{content:"";width:6px;height:6px;border-radius:50%;}
+.status.s1::before{background:var(--pink-main);}
+.status.s2::before{background:var(--blue-grey);}
+.status.s3::before{background:#b9b0a2;}
+.status.s3{color:var(--ink-soft);}
+
+/* ---------- ⑧ 气泡（保留 A 组暖色：他的白底玻璃 + 你的 #F3D3D6） ---------- */
+.msgs{width:100%;}
+.m-row{display:flex;margin:3px 0;}
+.m-row.me{justify-content:flex-end;}
+.bubble{max-width:82%;padding:8px 12px;font-size:13px;line-height:1.55;border-radius:16px;}
+.bubble.kaoru{background:#fff;border-bottom-left-radius:6px;color:var(--ink);}
+.bubble.me{background:#F3D3D6;border-bottom-right-radius:6px;color:#3D3535;}
+.m-time{font-size:9.5px;color:var(--blue-grey);margin:1px 2px 6px;}
+.m-time.right{text-align:right;}
+
+/* ---------- ⑨ 消息内选项（竖排、统一色调、不靠颜色区分） ---------- */
+.ctx{width:100%;max-width:86%;font-size:12.5px;color:var(--ink);background:#fff;border-radius:14px;
+  border-bottom-left-radius:4px;padding:8px 12px;line-height:1.55;}
+.opts{width:100%;max-width:86%;}
+.opt{display:flex;align-items:center;gap:8px;padding:9px 2px;font-size:13px;color:var(--ink);}
+.opt .let{width:22px;font-family:var(--font-poster);font-size:11.5px;letter-spacing:.5px;color:var(--ink-soft);}
+/* 甲 朴素竖排 */
+.opts.plain .opt{border-bottom:1px solid var(--paper-deep);}
+.opts.plain .opt:last-child{border-bottom:none;}
+.opts.plain .opt.on{color:var(--pink-main);font-weight:600;}
+/* 乙 字母式 */
+.opts.lettered .opt{border-bottom:1px solid var(--paper-deep);}
+.opts.lettered .opt:last-child{border-bottom:none;}
+.opts.lettered .opt.on{color:var(--pink-main);font-weight:600;}
+.opts.lettered .opt.on .let{color:var(--pink-main);}
+/* 丙 方框行 */
+.opts.boxed{border:1px solid var(--paper-deep);border-radius:14px;background:#fff;padding:5px;}
+.opts.boxed .opt{border:1px solid var(--paper-deep);border-radius:10px;margin:4px 0;padding:9px;justify-content:center;}
+.opts.boxed .opt:first-child{margin-top:0;}
+.opts.boxed .opt:last-child{margin-bottom:0;}
+.opts.boxed .opt.on{border-color:var(--pink-main);color:var(--pink-main);}
+
+/* ---------- ⑩ 聊天页布局款式 ---------- */
+.minichat{width:100%;background:var(--paper);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:7px;}
+.mini-head{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink);}
+.mini-head i{font-style:normal;color:var(--blue-grey);font-size:9.5px;}
+.mavatar{width:24px;height:24px;border-radius:50%;background:var(--pink-dust);color:#fff;font-size:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.frow{display:flex;gap:6px;align-items:flex-start;}
+.fmeta{font-size:9px;color:var(--blue-grey);line-height:1.4;margin-bottom:1px;}
+.fmeta .fname{font-weight:600;color:var(--ink);font-size:10px;margin-right:3px;}
+.ftext{font-size:12px;line-height:1.55;color:var(--ink);}
+.brow{display:flex;gap:6px;align-items:flex-start;}
+.brow.me{justify-content:flex-end;}
+.bcol{display:flex;flex-direction:column;max-width:78%;}
+.bmeta{font-size:9px;color:var(--blue-grey);margin-bottom:2px;}
+.brow.me .bmeta{text-align:right;}
+.bbub{padding:7px 10px;border-radius:12px;font-size:12px;line-height:1.5;color:var(--ink);}
+.bbub.his{background:#fff;border-bottom-left-radius:4px;}
+.bbub.mine{background:#F3D3D6;border-bottom-right-radius:4px;color:#3D3535;}
+.tchip{align-self:center;font-size:8.5px;color:#fff;background:rgba(138,133,128,.55);border-radius:8px;padding:1px 8px;}
+.tbub{position:relative;padding:7px 10px;border-radius:8px;background:#fff;font-size:12px;line-height:1.5;max-width:72%;color:var(--ink);}
+.tbub::before{content:"";position:absolute;top:9px;left:-5px;border:5px solid transparent;border-right-color:#fff;border-left:0;}
+.tbub.mine{background:#F3D3D6;color:#3D3535;}
+.tbub.mine::before{left:auto;right:-5px;border:5px solid transparent;border-left-color:#F3D3D6;border-right:0;}
+.ibar{display:flex;gap:4px;align-items:center;background:#fff;border:1px solid var(--paper-deep);border-radius:14px;padding:3px 6px;margin-top:3px;}
+.ibar input{flex:1;border:none;background:none;font-size:11px;outline:none;padding:4px;min-width:0;}
+.ibtn{width:20px;height:20px;border-radius:50%;background:var(--pink-dust);color:#fff;font-size:9.5px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ibtn.stop{background:var(--ink-soft);}
+
+/* ---------- ⑩丁 对话款（用户参考图：Twitter DM 式） ---------- */
+.dm-chat{width:100%;background:var(--paper);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;gap:8px;}
+.dm-date{position:relative;text-align:center;margin:4px 0 2px;}
+.dm-date::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--paper-deep);}
+.dm-date span{position:relative;display:inline-block;background:var(--paper);padding:0 10px;font-size:9px;color:var(--blue-grey);}
+.dm-row{display:flex;align-items:flex-start;}
+.dm-row.mine{justify-content:flex-end;}
+.dm-col{display:flex;flex-direction:column;max-width:80%;align-items:flex-start;}
+.dm-row.mine .dm-col{align-items:flex-end;}
+.dm-head{display:flex;align-items:center;gap:6px;}
+.dm-avatar{width:36px;height:36px;border-radius:0;background:var(--pink-dust);color:#fff;font-size:11px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dm-sender{font-size:9.5px;color:var(--blue-grey);}
+.dm-sender b{color:var(--ink);font-size:11px;font-weight:600;}
+.dm-bub{padding:8px 11px;font-size:12px;line-height:1.5;max-width:100%;}
+.dm-bub.his{background:#fff;color:var(--ink);border-radius:16px 16px 16px 4px;margin:5px 0 0 0;}
+.dm-bub.mine{background:#F3D3D6;color:#3D3535;border-radius:16px 16px 4px 16px;margin-top:5px;}
+.dm-quote{background:rgba(212,165,165,.14);border-left:3px solid var(--pink-main);padding:4px 8px;margin-bottom:5px;
+  border-radius:0 8px 8px 0;font-size:10.5px;color:var(--ink-soft);}
+.dm-time{font-size:8.5px;color:var(--blue-grey);margin:3px 4px 2px;}
+.dm-row:not(.mine) .dm-time{margin-left:42px;}
+.dm-row.mine .dm-time{text-align:right;}
+.dm-input{display:flex;gap:5px;align-items:center;background:#fff;border:1px solid var(--paper-deep);border-radius:18px;padding:3px 5px;margin-top:4px;}
+.dm-input input{flex:1;border:none;background:none;font-size:11px;outline:none;padding:4px 2px;min-width:0;}
+
+/* ---------- ⑩戊 三行头像款（头像方块 a；行高 a/3：昵称/日期/时间；气泡在头像下方） ---------- */
+.dm3{width:100%;background:var(--paper);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;gap:7px;}
+.dm3-row{display:flex;gap:7px;align-items:flex-start;}
+.dm3-row.mine{flex-direction:row-reverse;}
+.dm3-avatar{width:39px;height:39px;border-radius:0;background:var(--pink-dust);color:#fff;font-size:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dm3-info{height:39px;display:flex;flex-direction:column;}
+.dm3-info>div{height:13px;line-height:13px;}
+.dm3-nick{font-size:11px;font-weight:600;color:var(--ink);}
+.dm3-date{font-size:9.5px;color:var(--blue-grey);}
+.dm3-time{font-size:9.5px;color:var(--blue-grey);}
+.dm3-row.mine .dm3-info{align-items:flex-end;}
+.dm3-bub{padding:8px 11px;font-size:12px;line-height:1.5;max-width:78%;align-self:flex-start;}
+.dm3-bub.his{background:#fff;color:var(--ink);border-radius:4px 16px 16px 16px;}
+.dm3-bub.mine{background:#F3D3D6;color:#3D3535;border-radius:16px 4px 16px 16px;align-self:flex-end;}
+
+/* ---------- ⑪ 记忆页卡片款式 ---------- */
+.memdeck{border:1px solid var(--paper-deep);background:#fff;border-radius:12px;padding:10px;width:100%;}
+.mem-title{font-size:12px;font-weight:600;color:var(--ink);}
+.mem-text{font-size:11px;color:var(--ink-soft);line-height:1.6;margin:4px 0 6px;}
+.dbar{height:5px;background:var(--paper-deep);border-radius:3px;overflow:hidden;}
+.dbar i{display:block;height:100%;width:70%;background:var(--pink-main);opacity:.8;}
+.mem-tags{display:flex;gap:6px;margin-top:6px;font-size:9px;color:var(--blue-grey);}
+.mem-stats{display:flex;gap:5px;margin-bottom:8px;}
+.mstatpill{background:var(--paper-deep);border-radius:9px;padding:2px 8px;font-size:9px;color:var(--ink-soft);}
+.fpills{display:flex;gap:5px;margin-bottom:8px;}
+.fchip{font-size:9.5px;padding:2px 9px;border-radius:10px;border:1px solid var(--paper-deep);color:var(--ink-soft);}
+.fchip.on{border-color:var(--pink-main);color:var(--pink-main);}
+
+/* ---------- ⑫ 数据面板款式 ---------- */
+.panel-glass{border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.42);
+  backdrop-filter:blur(14px) saturate(1.15);-webkit-backdrop-filter:blur(14px) saturate(1.15);
+  border-radius:16px;padding:12px;width:100%;
+  box-shadow:0 8px 24px rgba(120,95,60,.12), inset 0 1px 0 rgba(255,255,255,.75);}
+.srow{margin:7px 0;}
+.slabel{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-bottom:3px;}
+.slabel b{color:var(--ink);font-weight:600;}
+.sbar{height:6px;background:var(--paper-deep);border-radius:3px;overflow:hidden;}
+.sbar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink-main),var(--pink-dust));}
+.hero{background:var(--ink);color:#fff;border-radius:16px;padding:12px 10px;text-align:center;margin-bottom:8px;width:100%;}
+.hero b{font-family:var(--font-poster);font-size:22px;letter-spacing:1px;display:block;line-height:1.1;}
+.hero span{font-size:10px;opacity:.85;}
+.stat2{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
+.scard{background:#fff;border:1px solid var(--paper-deep);border-radius:12px;padding:8px 6px;text-align:center;font-size:10px;color:var(--ink-soft);}
+.scard b{display:block;font-size:14px;color:var(--ink);margin-bottom:1px;}
+
+/* ===== 右侧面板 ===== */
+#panel{width:290px;background:#37322a;color:#e8e2d6;padding:18px 16px;overflow-y:auto;height:100vh;flex-shrink:0;}
+#panel h2{font-size:16px;margin-bottom:4px;color:#f3ece0;}
+#panel .hint{font-size:11.5px;color:#b3a995;line-height:1.7;margin-bottom:14px;}
+.grp{margin-bottom:16px;}
+.grp h3{font-size:12.5px;color:#d8cfbd;border-bottom:1px solid #544d40;padding-bottom:5px;margin-bottom:8px;letter-spacing:1px;}
+.sw{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-bottom:8px;cursor:pointer;}
+.sw input{accent-color:#e98694;}
+button{width:100%;padding:9px;border:none;border-radius:8px;background:#c74a4a;color:#fff;font-size:13px;cursor:pointer;margin-top:4px;}
+.note{font-size:11px;color:#9d9380;line-height:1.7;margin-top:12px;}
+#tip{position:fixed;z-index:99;pointer-events:none;background:#2b2721;color:#f0e9da;font-size:12px;padding:5px 9px;border-radius:6px;opacity:0;transition:opacity .15s;}
+</style>
+</head>
+<body class="glass-on">
+
+<main id="board">
+  <header class="board-head">
+    <h1>Wisteria 定稿预览</h1>
+    <p>①–⑧ 已定型（全 B 打印店·灰粉；⑧ 气泡保留 A 组暖色）。⑨–⑫ 已全部选定（粉框标出，仍可点击改选）：⑨ 乙・字母式、⑩ 戊・三行头像款、⑪ 甲・卡组衰减、⑫ 乙・Hero统计卡——款式来源标在每张卡下方。<a href="页面预览.html">→ 打开页面预览（整页拼装）</a></p>
+  </header>
+
+  <!-- ① 开屏 -->
+  <section class="demo">
+    <div class="ctrl-title">① 开屏（自动进入）— B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="splash"><div class="logo">Wisteria</div><div class="enter">自 动 进 入</div></div>
+    </div></div>
+  </section>
+
+  <!-- ② 问候行 -->
+  <section class="demo">
+    <div class="ctrl-title">② 问候行 — B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="greet-wrap"><div class="greet">早。睡够了吗。</div><div class="days">第 27 天</div></div>
+    </div></div>
+  </section>
+
+  <!-- ③ 草稿纸 -->
+  <section class="demo">
+    <div class="ctrl-title">③ 草稿纸（圆孔撕纸 + 打印体实线行）— B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="draft">
+        <div class="todo">☐ 喝水</div>
+        <div class="todo done">☐ 背单词 <span class="tick">✓</span></div>
+        <div class="todo">☐ <span class="time">14:00</span> 和导师开会</div>
+        <div class="add-line">随手写一行…</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ④ 月历框 -->
+  <section class="demo">
+    <div class="ctrl-title">④ 月历框 — B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="cal glass">
+        <div class="cal-head"><div class="cal-title">2026 年 8 月</div>
+          <div class="legend"><span class="dot pink"></span>吃了 <span class="dot grey"></span>没吃</div></div>
+        <div class="cal-week"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+        <div class="cal-grid">
+          <span class="cell faint">27</span><span class="cell faint">28</span><span class="cell faint">29</span><span class="cell faint">30</span><span class="cell faint">31</span><span class="cell faint">1</span><span class="cell faint">2</span>
+          <span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9<span class="dot grey"></span></span>
+          <span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13<span class="dot pink"></span></span><span class="cell">14</span><span class="cell">15</span><span class="cell">16</span>
+          <span class="cell">17<span class="dot grey"></span></span><span class="cell">18<span class="dot pink"></span></span><span class="cell">19<span class="dot pink"></span></span><span class="cell today">20<span class="dot pink"></span></span><span class="cell">21</span><span class="cell">22</span><span class="cell">23</span>
+          <span class="cell">24</span><span class="cell">25</span><span class="cell">26</span><span class="cell">27</span><span class="cell">28</span><span class="cell">29</span><span class="cell">30</span>
+          <span class="cell faint">31</span><span class="cell faint">1</span><span class="cell faint">2</span><span class="cell faint">3</span><span class="cell faint">4</span><span class="cell faint">5</span><span class="cell faint">6</span>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ⑤ 小票 -->
+  <section class="demo">
+    <div class="ctrl-title">⑤ 结账小票（加长版）— B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="receipt">
+        <div class="head">WISTERIA・GENERAL STORE</div>
+        <div class="sub">Today's Receipt｜2026/08/20・周四</div>
+        <div class="rrow"><span class="k">开店</span><span>08:30（目标起床）</span></div>
+        <div class="rrow"><span class="k">柜员</span><span>Kaoru</span></div>
+        <div class="rrow"><span class="k">单据号</span><span>#26-08-20-027</span></div>
+        <div class="dash"></div>
+        <div class="rrow"><span>喝水</span><span class="check">✓</span></div>
+        <div class="rrow"><span>背单词</span><span class="check">✓</span></div>
+        <div class="rrow"><span>单片机第二章</span><span></span></div>
+        <div class="rrow"><span>14:00 和导师开会</span><span></span></div>
+        <div class="rrow"><span>游泳</span><span></span></div>
+        <div class="rrow"><span>睡前记录</span><span></span></div>
+        <div class="dash"></div>
+        <div class="rrow subtotal"><span class="k">已结清</span><span>2 项</span></div>
+        <div class="rrow"><span class="k">未结清</span><span>4 项</span></div>
+        <div class="pbar"><i></i></div>
+        <div class="rrow"><span class="k">零点结账</span><span>22:30 后</span></div>
+        <div class="kaoru-line">今天也辛苦了。明天见。— Kaoru</div>
+        <div class="barcode"></div>
+        <div class="bcnum">26 08 20 027</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ⑥ 红章 -->
+  <section class="demo">
+    <div class="ctrl-title">⑥ 章两枚 — B ✓</div>
+    <div class="variants"><div class="vs">
+      <div class="stamps"><div class="stamp">PAID・谢谢</div><div class="stamp s2">明日再续</div></div>
+    </div></div>
+  </section>
+
+  <!-- ⑦ 状态行 -->
+  <section class="demo">
+    <div class="ctrl-title">⑦ 状态行 — B ✓</div>
+    <div class="variants"><div class="vs">
+      <div style="display:flex;flex-direction:column;gap:9px;align-items:flex-start;">
+        <div class="status s1">他在</div><div class="status s2">他安静地想事情</div><div class="status s3">他睡了</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ⑧ 气泡（A 组暖色） -->
+  <section class="demo">
+    <div class="ctrl-title">⑧ 聊天气泡 — A 暖色 ✓（他的白底玻璃 + 你的 #F3D3D6）</div>
+    <div class="variants"><div class="vs">
+      <div class="msgs">
+        <div class="m-row"><div class="bubble kaoru glass">该吃啦，药在老地方。</div></div>
+        <div class="m-time">14:32</div>
+        <div class="m-row me"><div class="bubble me">吃过了。</div></div>
+        <div class="m-time right">14:33</div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ⑨ 消息内选项（待选版式） -->
+  <section class="demo">
+    <div class="ctrl-title">⑨ 消息内选项（竖排 / 统一色调；吃药・起床确认・结账带去明天…都用它）— 已选 乙・字母式</div>
+    <div class="variants">
+      <div class="vs pick" data-pick="⑨ 甲・朴素竖排"><span class="tag">甲</span>
+        <div class="ctx">该吃啦，药在老地方。</div>
+        <div class="opts plain">
+          <div class="opt on">吃了</div>
+          <div class="opt">没吃</div>
+          <div class="opt">去结账</div>
+        </div><div class="vname">朴素竖排：细实线分隔，选中文字变灰玫瑰</div></div>
+      <div class="vs pick selected" data-pick="⑨ 乙・字母式"><span class="tag">乙</span>
+        <div class="ctx">该吃啦，药在老地方。</div>
+        <div class="opts lettered">
+          <div class="opt on"><span class="let">A.</span>吃了</div>
+          <div class="opt"><span class="let">B.</span>没吃</div>
+          <div class="opt"><span class="let">C.</span>去结账</div>
+        </div><div class="vname">字母式：A./B./C. 前缀，打印店表单感</div></div>
+      <div class="vs pick" data-pick="⑨ 丙・方框行"><span class="tag">丙</span>
+        <div class="ctx">该吃啦，药在老地方。</div>
+        <div class="opts boxed">
+          <div class="opt on">吃了</div>
+          <div class="opt">没吃</div>
+          <div class="opt">去结账</div>
+        </div><div class="vname">方框行：整块卡片内分行，选中整行描边</div></div>
+    </div>
+  </section>
+
+  <!-- ⑩ 聊天页布局（开源款式） -->
+  <section class="demo">
+    <div class="ctrl-title">⑩ 聊天页布局 — 已选 戊・三行头像款（颜色沿用 ⑧：他的白底玻璃 + 你的 #F3D3D6）</div>
+    <div class="variants">
+      <div class="vs pick" data-pick="⑩ 甲・排版式"><span class="tag">甲</span>
+        <div class="minichat">
+          <div class="mini-head"><span class="mavatar">薰</span><span>Kaoru <i>・他在</i></span></div>
+          <div class="frow"><span class="mavatar">薰</span><div><div class="fmeta"><span class="fname">Kaoru</span>14:32</div><div class="ftext">该吃啦，药在老地方。</div></div></div>
+          <div class="frow"><span class="mavatar">佳</span><div><div class="fmeta"><span class="fname">佳钰</span>14:33</div><div class="ftext">吃过了。</div></div></div>
+          <div class="ibar"><input placeholder="给薰写点什么…"><span class="ibtn">➤</span></div>
+        </div><div class="vname">排版式（SillyTavern）：无气泡、头像+名字+时间同排，像排版好的对话稿</div></div>
+      <div class="vs pick" data-pick="⑩ 乙・头像款"><span class="tag">乙</span>
+        <div class="minichat">
+          <div class="mini-head"><span class="mavatar">薰</span><span>Kaoru <i>・他在</i></span></div>
+          <div class="brow"><span class="mavatar">薰</span><div class="bcol"><div class="bmeta">Kaoru ・ 14:32</div><div class="bbub his">该吃啦，药在老地方。</div></div></div>
+          <div class="brow me"><div class="bcol"><div class="bmeta">14:33</div><div class="bbub mine">吃过了。</div></div><span class="mavatar">佳</span></div>
+          <div class="ibar"><input placeholder="给薰写点什么…"><span class="ibtn stop">■</span><span class="ibtn">➤</span></div>
+        </div><div class="vname">头像款（BaiShou）：名字+时间在气泡上方、两侧头像、发送/停止互换</div></div>
+      <div class="vs pick" data-pick="⑩ 丙・微信款"><span class="tag">丙</span>
+        <div class="minichat">
+          <div class="mini-head"><span class="mavatar">薰</span><span>Kaoru <i>・他在</i></span></div>
+          <div class="tchip">14:32</div>
+          <div class="brow"><span class="mavatar">薰</span><div class="tbub">该吃啦，药在老地方。</div></div>
+          <div class="brow me"><div class="tbub mine">吃过了。</div><span class="mavatar">佳</span></div>
+          <div class="ibar"><span class="ibtn">语</span><input placeholder="给薰写点什么…"><span class="ibtn">颜</span><span class="ibtn">➤</span></div>
+        </div><div class="vname">微信款（ZeroChat）：三角尖气泡、时间分组胶囊、语音/表情/发送排</div></div>
+      <div class="vs pick" data-pick="⑩ 丁・对话款"><span class="tag">丁</span>
+        <div class="dm-chat">
+          <div class="dm-date"><span>4月 23日 · 21:33 PM</span></div>
+          <div class="dm-row">
+            <div class="dm-col">
+              <div class="dm-head"><span class="dm-avatar">薰</span><span class="dm-sender"><b>Kaoru</b> 回復訊息</span></div>
+              <div class="dm-time">21:33 PM · 已读</div>
+              <div class="dm-bub his glass">
+                <div class="dm-quote">回复 佳钰「药还没吃」</div>
+                该吃啦，药在老地方。
+              </div>
+            </div>
+          </div>
+          <div class="dm-row mine">
+            <div class="dm-col">
+              <div class="dm-head"><span class="dm-avatar">佳</span></div>
+              <div class="dm-time">21:34 PM · 已读</div>
+              <div class="dm-bub mine">吃过了。</div>
+            </div>
+          </div>
+          <div class="dm-input"><span class="ibtn">☺</span><input placeholder="发送私信..."><span class="ibtn">➤</span></div>
+        </div><div class="vname">对话款（你给的参考图）：直角方块头像与名字同行、时间在昵称下方、气泡在底、引用块、已读</div></div>
+      <div class="vs pick selected" data-pick="⑩ 戊・三行头像款"><span class="tag">戊</span>
+        <div class="dm3">
+          <div class="dm3-row">
+            <span class="dm3-avatar">薰</span>
+            <div class="dm3-info">
+              <div class="dm3-nick">Kaoru</div>
+              <div class="dm3-date">April 23</div>
+              <div class="dm3-time">2:31 PM</div>
+            </div>
+          </div>
+          <div class="dm3-bub his glass">该吃啦，药在老地方。</div>
+          <div class="dm3-row mine">
+            <span class="dm3-avatar">佳</span>
+            <div class="dm3-info">
+              <div class="dm3-nick"></div>
+              <div class="dm3-date">April 23</div>
+              <div class="dm3-time">2:32 PM</div>
+            </div>
+          </div>
+          <div class="dm3-bub mine">吃过了。</div>
+          <div class="dm-input"><span class="ibtn">☺</span><input placeholder="发送私信..."><span class="ibtn">➤</span></div>
+        </div><div class="vname">三行头像款：方块头像 a×a，旁侧三行（昵称/日期/时间，行高 a/3），气泡在头像下方、贴聊天区边缘、无尖角、贴头像的上角 4px 小圆其余 16px 圆角；右侧说话者第一行为空</div></div>
+    </div>
+  </section>
+
+  <!-- ⑪ 记忆页卡片（开源款式） -->
+  <section class="demo">
+    <div class="ctrl-title">⑪ 记忆页卡片（他的记忆，可看可改可删）— 已选 甲・卡组衰减</div>
+    <div class="variants">
+      <div class="vs pick selected" data-pick="⑪ 甲・卡组衰减"><span class="tag">甲</span>
+        <div class="memdeck">
+          <div class="mem-stats"><span class="mstatpill">记忆 128</span><span class="mstatpill">持久 12</span><span class="mstatpill">卡片 37</span></div>
+          <div class="mem-title">佳钰讨厌黏腻的表达</div>
+          <div class="mem-text">审美"干爽"：结构可解析、有秩序；反感戏剧性表白。</div>
+          <div class="dbar"><i></i></div>
+          <div class="mem-tags"><span>#偏好</span><span>#提过 3 次</span></div>
+        </div><div class="vname">卡组+衰减条（InternalBeyond）：记得多深一眼可见，淡出仍可唤起</div></div>
+      <div class="vs pick" data-pick="⑪ 乙・胶囊筛选"><span class="tag">乙</span>
+        <div style="width:100%;">
+          <div class="fpills"><span class="fchip on">全部</span><span class="fchip">持久</span><span class="fchip">卡片</span></div>
+          <div class="memdeck">
+            <div class="mem-title">佳钰讨厌黏腻的表达</div>
+            <div class="mem-text">审美"干爽"：结构可解析、有秩序；反感戏剧性表白。</div>
+            <div class="mem-tags"><span>#偏好</span></div>
+          </div>
+        </div><div class="vname">胶囊筛选+卡片（Aura 记忆室）：类型筛选置顶、卡片更素</div></div>
+    </div>
+  </section>
+
+  <!-- ⑫ 数据面板（开源款式） -->
+  <section class="demo">
+    <div class="ctrl-title">⑫ 数据面板（月历全页顶部卡 / 周分析统计块）— 已选 乙・Hero统计卡</div>
+    <div class="variants">
+      <div class="vs pick" data-pick="⑫ 甲・玻璃数值条"><span class="tag">甲</span>
+        <div class="panel-glass">
+          <div class="srow"><div class="slabel"><span>连续记录</span><b>27 天</b></div><div class="sbar"><i style="width:90%"></i></div></div>
+          <div class="srow"><div class="slabel"><span>本周完成</span><b>82%</b></div><div class="sbar"><i style="width:82%"></i></div></div>
+          <div class="srow"><div class="slabel"><span>入睡最晚</span><b>04:12</b></div><div class="sbar"><i style="width:55%"></i></div></div>
+        </div><div class="vname">玻璃数值条（Tidefall）：毛玻璃卡内标签+进度条+数值</div></div>
+      <div class="vs pick selected" data-pick="⑫ 乙・Hero统计卡"><span class="tag">乙</span>
+        <div style="width:100%;">
+          <div class="hero"><b>27 DAYS</b><span>连续记录・第 4 周</span></div>
+          <div class="stat2">
+            <div class="scard"><b>12</b>早于目标起床</div>
+            <div class="scard"><b>3</b>共同纪念日</div>
+          </div>
+        </div><div class="vname">Hero+统计双卡（BaiShou 回顾页）：深底大字横幅 + 小统计卡</div></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 右侧面板 -->
+<aside id="panel">
+  <h2>定稿预览</h2>
+  <div class="hint">①–⑧ 已定型，⑨–⑫ 已选定（⑨ 乙 / ⑩ 戊 / ⑪ 甲 / ⑫ 乙）。仍可点击改选。款式来源标注在每张卡下方。</div>
+
+  <div class="grp">
+    <h3>开关</h3>
+    <label class="sw"><input type="checkbox" id="glass-on" checked> 玻璃质感</label>
+    <label class="sw"><input type="checkbox" id="night-on"> 夜里模式预览</label>
+  </div>
+
+  <button id="copy-picks">复制我的选择</button>
+  <div class="note">款式定下后：回填定稿文档 → 恢复滚轮微调 / 拖动 / 层检查器做最终细调 → 开工 Flutter。</div>
+</aside>
+
+<div id="tip"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ⑨ 选择 */
+$$('.vs.pick').forEach(v => v.addEventListener('click', () => {
+  const demo = v.closest('.demo');
+  demo.querySelectorAll('.vs.pick').forEach(x => x.classList.remove('selected'));
+  v.classList.toggle('selected');
+}));
+
+/* 开关 */
+$('#glass-on').addEventListener('change', e => document.body.classList.toggle('glass-on', e.target.checked));
+$('#night-on').addEventListener('change', e => document.body.classList.toggle('night', e.target.checked));
+
+/* 复制选择 */
+let tipTimer;
+function showTip(text) {
+  const t = $('#tip');
+  t.textContent = text;
+  t.style.left = (window.innerWidth / 2 - 130) + 'px';
+  t.style.top = '50px';
+  t.style.opacity = 1;
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(() => t.style.opacity = 0, 2500);
+}
+$('#copy-picks').addEventListener('click', () => {
+  const picks = [...$$('.demo')].map(d => {
+    const s = d.querySelector('.vs.pick.selected');
+    return s ? s.dataset.pick : null;
+  }).filter(Boolean);
+  const txt = '我的款式选择：' + (picks.length ? picks.join('；') : '（还没选）');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => showTip('✓ 已复制：' + txt)).catch(() => showTip(txt));
+  } else showTip(txt);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月历预览 · Wisteria</title>
+<style>
+  @font-face{font-family:'SavoyeLet';src:url('../../参考资料/字体/savoyeletplain-01/savoyeletplain-01.ttf') format('truetype');}
+  @font-face{font-family:'ZhaoHua';src:url('../../参考资料/字体/朝华打字机_字库星球/朝华打字机_字库星球/朝華打字機/朝華打字機.ttf') format('truetype');}
+
+  :root{--paper:#F4F2F0;--deep-paper:#E8E5E1;--pink-main:#D4A5A5;--slate:#9BAAB8;--ink:#3D3535;--ink-soft:#8A8580;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#e7dfd0;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'ZhaoHua','PingFang SC',sans-serif;color:var(--ink);}
+
+  /* 手机框 */
+  .phone{width:362px;height:785px;background:var(--paper);border:12px solid #1a1a1a;border-radius:50px;overflow:hidden;box-shadow:0 14px 34px rgba(60,45,25,.22);position:relative;}
+  .dynamic-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:96px;height:26px;background:#1a1a1a;border-radius:13px;z-index:100;}
+
+  /* 月历容器 */
+  .cal-wrap{padding:28px 14px 16px;height:100%;overflow-y:auto;}
+
+  /* 三页堆叠 */
+  .folder-stack{position:relative;height:420px;margin:0;}
+  .folder-sheet{position:absolute;width:100%;border-radius:17px;padding:20px 6px 12px;box-shadow:2px 4px 12px rgba(60,45,25,.12);height:380px;}
+  .sheet-1{top:0;left:0;background:#F5EEED;z-index:3;}
+  .sheet-2{top:-7px;left:8px;background:#FAF8F5;z-index:2;}
+  .sheet-3{top:-14px;left:16px;background:#d8dadf;z-index:1;}
+  .folder-tab{position:absolute;top:-14px;padding:3px 0;width:100px;text-align:center;border-radius:10px 10px 0 0;font-family:'SavoyeLet',cursive;font-size:16.5px;color:var(--ink);line-height:1.2;}
+  .sheet-1 .folder-tab{right:68px;background:#f5eeed;}
+  .sheet-2 .folder-tab{right:40px;background:#faf8f5;}
+  .sheet-3 .folder-tab{right:20px;background:#d8dadf;}
+
+  /* 星期栏 */
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:9px;color:#8A8580;margin-bottom:10px;letter-spacing:.3px;}
+
+  /* 日期网格 */
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0px 0px;text-align:center;}
+  .cal-cell{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .cal-circle{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:transparent;color:#8A8580;border:0px solid #E8E5E1;transition:transform .1s;font-family:'SavoyeLet',cursive;box-sizing:border-box;}
+  .cal-circle.taken{background:#D4A5A5;color:#fff;border-color:#D4A5A5;}
+  .cal-circle.today{box-shadow:0 0 0 1.5px var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="dynamic-island"></div>
+  <div class="cal-wrap">
+    <div class="folder-stack">
+      <div class="folder-sheet sheet-3" id="sheet3">
+        <div class="folder-tab">October.</div>
+        <div class="cal-weekdays">
+          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div class="cal-grid" id="grid3"></div>
+      </div>
+      <div class="folder-sheet sheet-2" id="sheet2">
+        <div class="folder-tab">September.</div>
+        <div class="cal-weekdays">
+          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div class="cal-grid" id="grid2"></div>
+      </div>
+      <div class="folder-sheet sheet-1" id="sheet1">
+        <div class="folder-tab">August.</div>
+        <div class="cal-weekdays">
+          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div class="cal-grid" id="grid1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function renderMonth(year, month, takenDays, gridId) {
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // 前面补空白
+  for(let i = 0; i < startOffset; i++) {
+    grid.innerHTML += '<div class="cal-cell"></div>';
+  }
+
+  // 日期格
+  for(let d = 1; d <= daysInMonth; d++) {
+    let cls = 'cal-circle';
+    if(takenDays.includes(d)) cls += ' taken';
+    if(gridId === 'grid1' && d === 21) cls += ' today';
+
+    grid.innerHTML += `
+      <div class="cal-cell">
+        <div class="${cls}">${d}</div>
+      </div>
+    `;
+  }
+
+  // 补满 42 格（6行×7列）
+  const total = startOffset + daysInMonth;
+  const target = 42;
+  const remainder = target - total;
+  for(let i = 0; i < remainder; i++) {
+    grid.innerHTML += '<div class="cal-cell"></div>';
+  }
+}
+
+/* 渲染三个月 */
+renderMonth(2026, 7, [1,2,4,5,7,8,11,12,14,15,18,19,21], 'grid1'); // August
+renderMonth(2026, 8, [], 'grid2'); // September
+renderMonth(2026, 9, [], 'grid3'); // October
+</script>
+
+</body>
+</html>

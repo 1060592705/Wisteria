@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone {
+            width: 100%;
+            max-width: 414px;
+            height: 100vh;
+            max-height: 896px;
+            background: #f0f8ff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 手绘网格背景 */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(180, 210, 230, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(180, 210, 230, 0.4) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 手绘装饰元素 */
+        .doodle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .doodle-fish-1 {
+            top: 60px;
+            left: 20%;
+            opacity: 0.3;
+        }
+
+        .doodle-fish-2 {
+            top: 140px;
+            left: 55%;
+            opacity: 0.25;
+        }
+
+        .doodle-cat {
+            top: 220px;
+            left: 15%;
+            opacity: 0.35;
+        }
+
+        .doodle-cloud-cat {
+            top: 320px;
+            right: 20%;
+            opacity: 0.3;
+        }
+
+        .doodle-star-1 {
+            top: 180px;
+            left: 8%;
+            opacity: 0.35;
+        }
+
+        .doodle-star-2 {
+            top: 100px;
+            right: 15%;
+            opacity: 0.3;
+        }
+
+        .doodle-star-3 {
+            top: 380px;
+            left: 70%;
+            opacity: 0.25;
+        }
+
+        .doodle-text-1 {
+            top: 130px;
+            left: 12%;
+            font-family: "Comic Sans MS", cursive;
+            font-size: 18px;
+            color: rgba(150, 180, 200, 0.5);
+            transform: rotate(-5deg);
+        }
+
+        .doodle-text-2 {
+            top: 160px;
+            right: 10%;
+            font-family: "Comic Sans MS", cursive;
+            font-size: 16px;
+            color: rgba(150, 180, 200, 0.45);
+            transform: rotate(3deg);
+        }
+
+        .doodle-text-3 {
+            top: 340px;
+            left: 25%;
+            font-family: "Comic Sans MS", cursive;
+            font-size: 14px;
+            color: rgba(150, 180, 200, 0.4);
+            transform: rotate(-2deg);
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px 0;
+            height: 44px;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-icons svg {
+            fill: #1a1a1a;
+        }
+
+        .battery-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-left: 2px;
+        }
+
+        /* 菜单按钮 */
+        .menu-btn {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            z-index: 10;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        /* 内容区域 */
+        .content {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        .content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 封面区域 */
+        .cover-area {
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 50px;
+        }
+
+        .change-cover {
+            background: rgba(100, 100, 110, 0.6);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .change-cover svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        /* 头像 */
+        .avatar-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: -50px;
+            position: relative;
+            z-index: 6;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .avatar svg {
+            width: 90%;
+            height: 90%;
+        }
+
+        /* 用户名 */
+        .username {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+
+        /* 标签 */
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 0 20px;
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tag-location {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .tag-location svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
+
+        .tag-role {
+            background: white;
+            color: #333;
+            border: 1.5px solid #e0e0e0;
+        }
+
+        /* 个性签名 */
+        .bio {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: #999;
+            font-style: italic;
+            padding: 0 40px;
+        }
+
+        /* 统计卡片 */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 28px;
+            padding: 0 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 18px 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+
+        .stat-num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* 功能入口 */
+        .feature-list {
+            margin-top: 24px;
+            padding: 0 20px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255,255,255,0.9);
+            cursor: pointer;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #666;
+            fill: none;
+            stroke-width: 1.8;
+        }
+
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* 底部导航 */
+        .tab-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.9);
+            z-index: 20;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        .tab-item svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tab-item span {
+            font-size: 11px;
+        }
+
+        .tab-item.active svg {
+            fill: #7c6bff;
+        }
+
+        .tab-item.active span {
+            color: #7c6bff;
+            font-weight: 600;
+        }
+
+        .tab-item:not(.active) svg {
+            fill: #999;
+        }
+
+        .tab-item:not(.active) span {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone">
+    <!-- 手绘背景 -->
+    <div class="bg-pattern"></div>
+    
+    <!-- 装饰元素 -->
+    <div class="doodle doodle-fish-1">
+        <svg width="60" height="30" viewBox="0 0 60 30" fill="none" stroke="#8bb8d8" stroke-width="1.5" stroke-linecap="round">
+            <path d="M45 15c0-8-8-12-18-12s-20 4-20 12 10 12 20 12 18-4 18-12z"/>
+            <path d="M45 15l10-6v12l-10-6z"/>
+            <circle cx="12" cy="13" r="1.5" fill="#8bb8d8"/>
+            <path d="M20 22q3 2 6 0" stroke-width="1"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-fish-2">
+        <svg width="50" height="28" viewBox="0 0 50 28" fill="none" stroke="#8bb8d8" stroke-width="1.5" stroke-linecap="round">
+            <path d="M38 14c0-7-7-10-15-10s-17 3-17 10 8 10 17 10 15-3 15-10z"/>
+            <path d="M38 14l8-5v10l-8-5z"/>
+            <circle cx="10" cy="12" r="1.2" fill="#8bb8d8"/>
+            <path d="M3 14h4" stroke-width="1"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-cat">
+        <svg width="70" height="60" viewBox="0 0 70 60" fill="none" stroke="#8bb8d8" stroke-width="1.5" stroke-linecap="round">
+            <ellipse cx="35" cy="35" rx="18" ry="14"/>
+            <path d="M22 24l-6-10 8 4M48 24l6-10-8 4"/>
+            <circle cx="30" cy="32" r="1.5" fill="#8bb8d8"/>
+            <circle cx="40" cy="32" r="1.5" fill="#8bb8d8"/>
+            <path d="M33 36q2 2 4 0"/>
+            <ellipse cx="35" cy="48" rx="22" ry="8" stroke-dasharray="3 3" opacity="0.5"/>
+            <path d="M18 38l-4 6M52 38l4 6"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-cloud-cat">
+        <svg width="80" height="55" viewBox="0 0 80 55" fill="none" stroke="#8bb8d8" stroke-width="1.5" stroke-linecap="round">
+            <path d="M55 25c0-8-6-14-14-14-4 0-8 2-10 5-2-3-5-5-9-5-7 0-12 5-12 12 0 1 0 2 .2 3-5 1-8 5-8 10 0 6 5 10 11 10h38c6 0 11-4 11-10 0-5-4-9-9-10z" fill="rgba(200,220,240,0.3)"/>
+            <circle cx="32" cy="28" r="1.5" fill="#8bb8d8"/>
+            <circle cx="40" cy="28" r="1.5" fill="#8bb8d8"/>
+            <path d="M34 32q2 1.5 4 0"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-star-1">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="#e8d5a3" opacity="0.6">
+            <path d="M15 2l3.5 9.5L28 12l-7.5 6.5L23 28 15 22.5 7 28l2.5-9.5L2 12l9.5-.5z"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-star-2">
+        <svg width="25" height="25" viewBox="0 0 25 25" fill="#c5ddf0" opacity="0.6">
+            <path d="M12.5 1l3 8.5L24 12.5l-7 5.5 2.5 8.5-7-5-7 5 2.5-8.5-7-5.5 8.5-3z"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-star-3">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="#d4e5f7" opacity="0.5">
+            <path d="M10 1l2.5 6.5L19 10l-6.5 2.5L14 19l-4-3.5-4 3.5 1.5-6.5L1 10l6.5-2.5z"/>
+        </svg>
+    </div>
+    
+    <div class="doodle doodle-text-1">Balance</div>
+    <div class="doodle doodle-text-2">Blue Blue</div>
+    <div class="doodle doodle-text-3">Fish</div>
+
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-time">0:46</div>
+        <div class="status-icons">
+            <svg width="18" height="14" viewBox="0 0 18 14">
+                <path d="M0 3c3-2.5 9-2.5 12 0M2 7c2.5-1.5 7.5-1.5 10 0M4.5 10.5c1.5-1 4.5-1 6 0" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M14 0c2.5 2 2.5 10 0 12" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg width="26" height="13" viewBox="0 0 26 13">
+                <rect x="1" y="1" width="20" height="10" rx="2.5" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+                <rect x="3" y="3" width="16" height="6" rx="1" fill="#1a1a1a"/>
+                <path d="M23 4.5v3.5c1.5 0 2.5-1 2.5-1.75S24.5 4.5 23 4.5z" fill="#1a1a1a"/>
+            </svg>
+            <span class="battery-text">100%</span>
+        </div>
+    </div>
+
+    <!-- 菜单按钮 -->
+    <div class="menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="content">
+        <!-- 封面 -->
+        <div class="cover-area">
+            <button class="change-cover">
+                <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/><path d="M20 6h-2.5l-1.5-2h-7L7.5 6H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+                Change Cover
+            </button>
+        </div>
+
+        <!-- 头像 -->
+        <div class="avatar-wrap">
+            <div class="avatar">
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 背景圆 -->
+                    <circle cx="60" cy="60" r="58" fill="#f8fbff" stroke="#e0ecf7" stroke-width="2"/>
+                    <!-- 耳朵 -->
+                    <path d="M38 38L32 20L48 30Z" fill="#e8e8e8" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+                    <path d="M82 38L88 20L72 30Z" fill="#e8e8e8" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+                    <path d="M36 36L33 24L44 32Z" fill="#ffd1dc"/>
+                    <path d="M84 36L87 24L76 32Z" fill="#ffd1dc"/>
+                    <!-- 脸 -->
+                    <ellipse cx="60" cy="62" rx="28" ry="24" fill="white" stroke="#555" stroke-width="2.5"/>
+                    <!-- 灰色刘海/斑点 -->
+                    <path d="M60 38c-8 0-15 4-18 10 4-2 8-1 12 1 4-2 10-3 14-1-3-6-5-10-8-10z" fill="#c0c0c0"/>
+                    <!-- 眼睛 -->
+                    <circle cx="50" cy="60" r="2.5" fill="#555"/>
+                    <circle cx="70" cy="60" r="2.5" fill="#555"/>
+                    <!-- 腮红 -->
+                    <ellipse cx="44" cy="66" rx="4" ry="2.5" fill="#ffd1dc" opacity="0.6"/>
+                    <ellipse cx="76" cy="66" rx="4" ry="2.5" fill="#ffd1dc" opacity="0.6"/>
+                    <!-- 嘴 -->
+                    <path d="M56 68q4 3 8 0" stroke="#555" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <!-- 围巾 -->
+                    <path d="M35 78c5 8 30 8 50 0" stroke="#a8d4f0" stroke-width="8" stroke-linecap="round" fill="none"/>
+                    <path d="M35 78c5 8 30 8 50 0" stroke="#d4e9f7" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="4 4"/>
+                    <path d="M75 80l8 12-6 2-4-10" fill="#a8d4f0" stroke="#8bb8d8" stroke-width="1.5"/>
+                    <!-- 头顶雪花/水滴 -->
+                    <path d="M50 22l2 6M60 18v8M70 22l-2 6" stroke="#a8d4f0" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="60" cy="16" r="3" fill="#d4e9f7" stroke="#a8d4f0" stroke-width="1.5"/>
+                    <circle cx="52" cy="28" r="2" fill="#d4e9f7"/>
+                    <circle cx="68" cy="26" r="1.5" fill="#d4e9f7"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 用户名 -->
+        <div class="username">讨厌坏天气</div>
+
+        <!-- 标签 -->
+        <div class="tags">
+            <div class="tag tag-location">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Shanghai
+            </div>
+            <div class="tag tag-role">Creative Director</div>
+        </div>
+
+        <!-- 个性签名 -->
+        <div class="bio">点击输入个性签名...</div>
+
+        <!-- 统计 -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-num">4</div>
+                <div class="stat-label">好友数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">4</div>
+                <div class="stat-label">身份数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">8</div>
+                <div class="stat-label">聊天天数</div>
+            </div>
+        </div>
+
+        <!-- 功能入口 -->
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" stroke="#888" fill="none" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="feature-text">聊天美化</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+            </svg>
+            <span>聊天</span>
+        </div>
+        <div class="tab-item">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+            </svg>
+            <span>动态</span>
+        </div>
+        <div class="tab-item active">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            <span>个人主页</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

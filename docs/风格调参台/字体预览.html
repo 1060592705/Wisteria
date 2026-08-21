@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字体预览 · Halu Kaolu · Wisteria</title>
+<style>
+  @font-face{font-family:'Parisienne';src:url('fonts/Parisienne-Regular.ttf') format('truetype');}
+  @font-face{font-family:'SavoyeLet';src:url('../../参考资料/字体/savoyeletplain-01/savoyeletplain-01.ttf') format('truetype');}
+  @font-face{font-family:'SnellBT';src:url('../../参考资料/字体/Snell-BT-Regular.otf') format('opentype');}
+  @font-face{font-family:'SnellRoundhand';src:url('../../参考资料/字体/Snell-Roundhand-Bold-Script.otf') format('opentype');}
+  @font-face{font-family:'Angelica';src:url('../../参考资料/字体/angelica.ttf') format('truetype');}
+  @font-face{font-family:'BeauRivage';src:url('../../参考资料/字体/Beau Rivage_字库星球/Beau_Rivage/BeauRivage-Regular.ttf') format('truetype');}
+  @font-face{font-family:'Caramel';src:url('../../参考资料/字体/Caramel_字库星球/Caramel/Caramel-Regular.ttf') format('truetype');}
+  @font-face{font-family:'DTNightingale';src:url('../../参考资料/字体/DT Nightingale_字库星球/DT Nightingale/DTNightingale-Light.ttf') format('truetype');}
+  @font-face{font-family:'Foglihten';src:url('../../参考资料/字体/FoglithenNo07_字库星球/FoglihtenNo07_TTF版本/FoglihtenNo07.ttf') format('truetype');}
+  @font-face{font-family:'MissFajardose';src:url('../../参考资料/字体/Miss Fajardose_字库星球/Miss_Fajardose/MissFajardose-Regular.ttf') format('truetype');}
+  @font-face{font-family:'SymphonieCAT';src:url('../../参考资料/字体/SymphonieCAT_字库星球/SymphonieCAT/SymphonieCAT.ttf') format('truetype');}
+  @font-face{font-family:'CrazyCurlz';src:url('../../参考资料/字体/CrazyCurlz.ttf') format('truetype');}
+  @font-face{font-family:'FolkRough';src:url('../../参考资料/字体/Folk Rough Offc W00 Regular.ttf') format('truetype');}
+  @font-face{font-family:'Letterine';src:url('../../参考资料/字体/letterine/Letterine Esagerate Regular.otf') format('opentype');}
+  @font-face{font-family:'RASCAL';src:url('../../参考资料/字体/rascal/RASCAL__.TTF') format('truetype');}
+  @font-face{font-family:'Report1942';src:url('../../参考资料/字体/1942 Report_字库星球/1942 Report_字库星球/1942-report/1942.ttf') format('truetype');}
+  @font-face{font-family:'Bentham';src:url('../../参考资料/字体/Bentham_字库星球/Bentham_字库星球/Bentham/Bentham-Regular.ttf') format('truetype');}
+  @font-face{font-family:'Manufacturing';src:url('../../参考资料/字体/Manufacturing Consent_字库星球/Manufacturing Consent_字库星球/Manufacturing_Consent/ManufacturingConsent-Regular.ttf') format('truetype');}
+
+  @font-face{font-family:'TaiwanMing';src:url('../../参考资料/字体/台湾明体_字库星球/台湾明体_字库星球/台湾明体_字库星球/TaiWanMingTicwTeXMing-2.ttf') format('truetype');}
+  @font-face{font-family:'ZhaoHua';src:url('../../参考资料/字体/朝华打字机_字库星球/朝华打字机_字库星球/朝華打字機/朝華打字機.ttf') format('truetype');}
+  @font-face{font-family:'HuiWen';src:url('../../参考资料/字体/汇文明朝体_字库星球/汇文明朝体_字库星球/汇文明朝体.otf') format('opentype');}
+  @font-face{font-family:'SkyHeart';src:url('../../参考资料/字体/空心晴宋体2.0.0_字库星球/空心晴宋体2.0.0_字库星球/空心晴宋体2.0.0_字库星球/空心晴宋体2.0.0/SkyHeartClearSerifSC-Regular.ttf') format('truetype');}
+
+  :root{--paper:#F4F2F0;--ink:#3D3535;--ink-soft:#8A8580;--pink-main:#D4A5A5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);padding:24px 20px 40px;line-height:1.6;}
+  h1{font-size:17px;margin-bottom:4px;}
+  .sub{font-size:11.5px;color:var(--ink-soft);margin-bottom:18px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+  .card{background:#fff;border:1px solid #e2d8c4;border-radius:10px;padding:14px 12px;transition:box-shadow .15s;cursor:pointer;}
+  .card:hover{box-shadow:0 4px 12px rgba(120,95,60,.1);}
+  .card.sel{border-color:var(--pink-main);box-shadow:0 0 0 2px rgba(212,165,165,.25);}
+  .fname{font-size:9.5px;color:var(--ink-soft);margin-bottom:6px;display:flex;justify-content:space-between;}
+  .fsize{font-size:8.5px;color:#b5a898;}
+  .sample{font-size:28px;color:var(--ink);line-height:1.15;word-break:break-all;}
+  .sample-zh{font-size:18px;margin-top:8px;color:var(--ink-soft);line-height:1.4;}
+  .divider{height:1px;background:#ddd8d0;margin:18px 0 14px;}
+  .zh-section h2{font-size:14px;margin-bottom:10px;}
+  .zh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+  .zh-card{background:#fff;border:1px solid #e2d8c4;border-radius:10px;padding:14px 12px;}
+  .zh-name{font-size:9.5px;color:var(--ink-soft);margin-bottom:6px;}
+  .zh-sample{font-size:16px;color:var(--ink);line-height:1.6;}
+  .tip{font-size:10px;color:var(--ink-soft);margin-top:16px;text-align:center;}
+</style>
+</head>
+<body>
+
+<h1>Halu Kaolu — 字体候选</h1>
+<div class="sub">点击卡片选中（边框变脏粉）。刷新即可看到所有字体渲染效果。</div>
+
+<div class="grid" id="enGrid">
+  <div class="card" data-f="Parisienne"><div class="fname">Parisienne <span class="fsize">当前在用</span></div><div class="sample" style="font-family:'Parisienne',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="SavoyeLet"><div class="fname">Savoye LET Plain</div><div class="sample" style="font-family:'SavoyeLet',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="SnellBT"><div class="fname">Snell BT Regular</div><div class="sample" style="font-family:'SnellBT',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="SnellRoundhand"><div class="fname">Snell Roundhand Bold Script</div><div class="sample" style="font-family:'SnellRoundhand',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Angelica"><div class="fname">Angelica</div><div class="sample" style="font-family:'Angelica',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="BeauRivage"><div class="fname">Beau Rivage</div><div class="sample" style="font-family:'BeauRivage',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Caramel"><div class="fname">Caramel</div><div class="sample" style="font-family:'Caramel',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="DTNightingale"><div class="fname">DT Nightingale Light</div><div class="sample" style="font-family:'DTNightingale',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Foglihten"><div class="fname">Foglihten No.07</div><div class="sample" style="font-family:'Foglihten',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="MissFajardose"><div class="fname">Miss Fajardose</div><div class="sample" style="font-family:'MissFajardose',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="SymphonieCAT"><div class="fname">Symphonie CAT</div><div class="sample" style="font-family:'SymphonieCAT',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="CrazyCurlz"><div class="fname">Crazy Curlz</div><div class="sample" style="font-family:'CrazyCurlz',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="FolkRough"><div class="fname">Folk Rough</div><div class="sample" style="font-family:'FolkRough',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Letterine"><div class="fname">Letterine Esagerate</div><div class="sample" style="font-family:'Letterine',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="RASCAL"><div class="fname">RASCAL</div><div class="sample" style="font-family:'RASCAL',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Report1942"><div class="fname">1942 Report</div><div class="sample" style="font-family:'Report1942',cursive;">Halu Kaolu</div></div>
+  <div class="card" data-f="Bentham"><div class="fname">Bentham</div><div class="sample" style="font-family:'Bentham',serif;">Halu Kaolu</div></div>
+  <div class="card" data-f="Manufacturing"><div class="fname">Manufacturing Consent</div><div class="sample" style="font-family:'Manufacturing',serif;">Halu Kaolu</div></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="zh-section">
+<h1>中文正文候选</h1>
+<div class="sub">当前在用：PingFang SC（系统字体）。以下为替换候选。</div>
+<div class="zh-grid">
+  <div class="zh-card"><div class="zh-name">台湾明体</div><div class="zh-sample" style="font-family:'TaiwanMing','PingFang SC',serif;">我就是为了与你相遇<br>才出生于世的。</div></div>
+  <div class="zh-card"><div class="zh-name">朝华打字机</div><div class="zh-sample" style="font-family:'ZhaoHua','PingFang SC',sans-serif;">我就是为了与你相遇<br>才出生于世的。</div></div>
+  <div class="zh-card"><div class="zh-name">汇文明朝体</div><div class="zh-sample" style="font-family:'HuiWen','PingFang SC',serif;">我就是为了与你相遇<br>才出生于世的。</div></div>
+  <div class="zh-card"><div class="zh-name">空心晴宋体</div><div class="zh-sample" style="font-family:'SkyHeart','PingFang SC',serif;">我就是为了与你相遇<br>才出生于世的。</div></div>
+</div>
+</div>
+
+<div class="tip">选中喜欢的字体后告诉我名字，我正式接进 页面预览.html。</div>
+
+<script>
+  document.querySelectorAll('.card').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.card').forEach(x => x.classList.remove('sel'));
+      c.classList.add('sel');
+    });
+  });
+</script>
+
+</body>
+</html>

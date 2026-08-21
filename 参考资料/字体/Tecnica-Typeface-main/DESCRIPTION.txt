@@ -1,0 +1,6 @@
+Tecnica Typeface is a bitmap-inspired typographic system based on precise dot grids, balancing technical accuracy with functional legibility. Built for digital layouts, interfaces, and developer workflows.
+
+The system consists of two distinct sub-families:
+
+- Tecnica A: Optimized for high-resolution screens, low text density, and medium to large text sizes. It features weights 53, 53 Scan, 55, 55 Scan, Fixed and Fixed Scan.
+- Tecnica B: Optimized for low-resolution screens, high text density, small to medium text sizes, and technical print media. It features weights 73, 73 Scan, 75, 75 Scan, Fixed and Fixed Scan.

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>底部导航预览 · Wisteria</title>
+<style>
+  @font-face{font-family:'SavoyeLet';src:url('../../参考资料/字体/savoyeletplain-01/savoyeletplain-01.ttf') format('truetype');font-display:swap;}
+  @font-face{font-family:'ZhaoHua';src:url('../../参考资料/字体/朝华打字机_字库星球/朝华打字机_字库星球/朝華打字機/朝華打字機.ttf') format('truetype');font-display:swap;}
+
+  :root{--paper:#F4F2F0;--deep-paper:#E8E5E1;--pink-main:#D4A5A5;--slate:#9BAAB8;--ink:#3D3535;--ink-soft:#8A8580;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#e7dfd0;padding:24px;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
+  h1{font-size:18px;margin-bottom:6px;text-align:center;}
+  .sub{font-size:11px;color:var(--ink-soft);text-align:center;margin-bottom:20px;}
+
+  .wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;}
+
+  /* 手机框 */
+  .phone{width:362px;height:785px;background:var(--paper);border:12px solid #1a1a1a;border-radius:50px;overflow:hidden;box-shadow:0 14px 34px rgba(60,45,25,.22);position:relative;flex-shrink:0;}
+  .dynamic-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:96px;height:26px;background:#1a1a1a;border-radius:13px;z-index:100;}
+  .screen{height:100%;position:relative;background:var(--paper);display:flex;flex-direction:column;}
+  .page{flex:1;position:relative;overflow:hidden;}
+
+  /* 模拟页面内容 */
+  .mock-art{position:absolute;left:-20px;top:0;width:340px;opacity:.55;}
+  .mock-title{position:absolute;left:24px;top:130px;font-family:'SavoyeLet',cursive;font-size:42px;color:var(--ink);}
+  .mock-sub{position:absolute;left:24px;top:178px;font-family:'ZhaoHua','PingFang SC',sans-serif;font-size:10px;color:var(--ink-soft);line-height:1.6;}
+
+  /* ===== 款式 A：索引标签式 ===== */
+  .tabbar-a{position:relative;height:66px;background:var(--deep-paper);display:flex;justify-content:center;align-items:flex-end;padding-bottom:8px;gap:6px;}
+  .tabbar-a::before{content:'';position:absolute;top:-10px;left:0;right:0;height:10px;background:var(--deep-paper);}
+  .tab-a{position:relative;padding:6px 16px 10px;font-family:'ZhaoHua','PingFang SC',sans-serif;font-size:10px;color:var(--ink-soft);cursor:pointer;transition:all .2s;border-radius:10px 10px 0 0;background:transparent;margin-bottom:-8px;}
+  .tab-a .icon{display:block;text-align:center;font-size:17px;margin-bottom:2px;}
+  .tab-a.active{background:var(--paper);color:var(--ink);box-shadow:0 -2px 6px rgba(60,45,25,.08);transform:translateY(-6px);}
+
+  /* ===== 款式 B：和纸胶带式 ===== */
+  .tabbar-b{position:relative;height:64px;display:flex;justify-content:space-around;align-items:center;padding:0 8px 8px;}
+  .tabbar-b::before{content:'';position:absolute;bottom:12px;left:16px;right:16px;height:36px;background:rgba(212,165,165,.25);border-radius:18px;transform:rotate(-.5deg);}
+  .tab-b{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'ZhaoHua','PingFang SC',sans-serif;font-size:9px;color:var(--ink-soft);cursor:pointer;transition:all .2s;padding:6px 14px;border-radius:16px;}
+  .tab-b .icon{font-size:18px;}
+  .tab-b.active{color:var(--ink);background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(60,45,25,.08);}
+
+  /* ===== 款式 C：打字机收据式 ===== */
+  .tabbar-c{position:relative;height:72px;background:#fff;display:flex;justify-content:space-around;align-items:flex-start;padding-top:14px;}
+  .tabbar-c::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg, #fff 0, #fff 4px, transparent 4px, transparent 7px);}
+  .tab-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'ZhaoHua','PingFang SC',sans-serif;font-size:9px;color:var(--ink-soft);cursor:pointer;transition:all .2s;letter-spacing:.5px;}
+  .tab-c .icon{font-size:17px;}
+  .tab-c.active{color:var(--ink);}
+  .tab-c.active::after{content:'';position:absolute;bottom:-6px;width:20px;height:2px;background:var(--pink-main);border-radius:1px;}
+
+  /* ===== 款式 D：邮票圆标式 ===== */
+  .tabbar-d{position:relative;height:60px;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px;}
+  .tab-d{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'ZhaoHua','PingFang SC',sans-serif;font-size:9px;color:var(--ink-soft);cursor:pointer;transition:all .2s;}
+  .tab-d .dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:1.5px solid var(--deep-paper);background:transparent;transition:all .2s;}
+  .tab-d.active .dot{background:var(--pink-main);border-color:var(--pink-main);color:#fff;}
+  .tab-d.active{color:var(--ink);}
+
+  /* 标签 */
+  .label{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--ink-soft);background:rgba(255,255,255,.6);padding:2px 10px;border-radius:10px;font-family:'ZhaoHua','PingFang SC',sans-serif;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<h1>底部导航栏 · 四款候选</h1>
+<div class="sub">点击每个款式里的 Tab 可切换选中态体验手感</div>
+
+<div class="wrap">
+
+  <!-- ===== 款式 A：索引标签式 ===== -->
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="screen">
+      <div class="page">
+        <div class="mock-title">Halu Kaolu</div>
+        <div class="mock-sub">我就是为了与你相遇<br>才出生于世的。</div>
+      </div>
+      <div class="tabbar-a" id="barA">
+        <div class="tab-a active" data-i="0"><span class="icon">⌂</span>主页</div>
+        <div class="tab-a" data-i="1"><span class="icon">✉</span>聊天</div>
+        <div class="tab-a" data-i="2"><span class="icon">✎</span>日记</div>
+        <div class="tab-a" data-i="3"><span class="icon">☰</span>设置</div>
+      </div>
+    </div>
+    <div class="label">款式 A · 索引标签</div>
+  </div>
+
+  <!-- ===== 款式 B：和纸胶带式 ===== -->
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="screen">
+      <div class="page">
+        <div class="mock-title">Halu Kaolu</div>
+        <div class="mock-sub">我就是为了与你相遇<br>才出生于世的。</div>
+      </div>
+      <div class="tabbar-b" id="barB">
+        <div class="tab-b active" data-i="0"><span class="icon">⌂</span>主页</div>
+        <div class="tab-b" data-i="1"><span class="icon">✉</span>聊天</div>
+        <div class="tab-b" data-i="2"><span class="icon">✎</span>日记</div>
+        <div class="tab-b" data-i="3"><span class="icon">☰</span>设置</div>
+      </div>
+    </div>
+    <div class="label">款式 B · 和纸胶带</div>
+  </div>
+
+  <!-- ===== 款式 C：打字机收据式 ===== -->
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="screen">
+      <div class="page">
+        <div class="mock-title">Halu Kaolu</div>
+        <div class="mock-sub">我就是为了与你相遇<br>才出生于世的。</div>
+      </div>
+      <div class="tabbar-c" id="barC">
+        <div class="tab-c active" data-i="0"><span class="icon">⌂</span>主页</div>
+        <div class="tab-c" data-i="1"><span class="icon">✉</span>聊天</div>
+        <div class="tab-c" data-i="2"><span class="icon">✎</span>日记</div>
+        <div class="tab-c" data-i="3"><span class="icon">☰</span>设置</div>
+      </div>
+    </div>
+    <div class="label">款式 C · 打字机收据</div>
+  </div>
+
+  <!-- ===== 款式 D：邮票圆标式 ===== -->
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="screen">
+      <div class="page">
+        <div class="mock-title">Halu Kaolu</div>
+        <div class="mock-sub">我就是为了与你相遇<br>才出生于世的。</div>
+      </div>
+      <div class="tabbar-d" id="barD">
+        <div class="tab-d active" data-i="0"><span class="dot">⌂</span>主页</div>
+        <div class="tab-d" data-i="1"><span class="dot">✉</span>聊天</div>
+        <div class="tab-d" data-i="2"><span class="dot">✎</span>日记</div>
+        <div class="tab-d" data-i="3"><span class="dot">☰</span>设置</div>
+      </div>
+    </div>
+    <div class="label">款式 D · 邮票圆标</div>
+  </div>
+
+</div>
+
+<script>
+  function bindBar(id, cls) {
+    const bar = document.getElementById(id);
+    if(!bar) return;
+    bar.querySelectorAll('.' + cls).forEach(tab => {
+      tab.addEventListener('click', () => {
+        bar.querySelectorAll('.' + cls).forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  }
+  bindBar('barA','tab-a');
+  bindBar('barB','tab-b');
+  bindBar('barC','tab-c');
+  bindBar('barD','tab-d');
+</script>
+
+</body>
+</html>
