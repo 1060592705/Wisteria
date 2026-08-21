@@ -47,8 +47,8 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --ci-h:35px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.79);--ci-w:230px;--ci-x:-4px;--ci-y:-7px;--bar-h:63px;
-    --send-s:24px;--send-bg:#9BAAB8;--send-c:#FFFFFF;--send-x:0px;--send-y:0px;
+    --ci-h:35px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.79);--ci-w:255px;--ci-x:-7px;--ci-y:-7px;--bar-h:63px;
+    --send-s:31px;--send-bg:#9BAAB8;--send-c:#FFFFFF;--send-x:-3px;--send-y:-7px;
     --placeholder-c:#B8B0A8;
     --wrap-bg:rgba(255,255,255,0.93);--wrap-pad:15px;
   }
@@ -344,13 +344,13 @@
     <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
     <div class="row"><label>底栏高</label><input type="range" id="barH" min="40" max="64" value="63"><span class="val" id="barHv">63</span></div>
     <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="20" max="56" value="35"><span class="val" id="ciHv">35</span></div>
-    <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="230"><span class="val" id="ciWv">230</span></div>
-    <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="-4"><span class="val" id="ciXv">-4</span></div>
+    <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="255"><span class="val" id="ciWv">255</span></div>
+    <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="-7"><span class="val" id="ciXv">-7</span></div>
     <div class="row"><label>椭圆Y</label><input type="range" id="ciY" min="-14" max="14" value="-7"><span class="val" id="ciYv">-7</span></div>
-    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="24"><span class="val" id="sendSv">24</span></div>
+    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="31"><span class="val" id="sendSv">31</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
-    <div class="row"><label>发送X</label><input type="range" id="sendX" min="-30" max="30" value="0"><span class="val" id="sendXv">0</span></div>
-    <div class="row"><label>发送Y</label><input type="range" id="sendY" min="-14" max="14" value="0"><span class="val" id="sendYv">0</span></div>
+    <div class="row"><label>发送X</label><input type="range" id="sendX" min="-30" max="30" value="-3"><span class="val" id="sendXv">-3</span></div>
+    <div class="row"><label>发送Y</label><input type="range" id="sendY" min="-14" max="14" value="-7"><span class="val" id="sendYv">-7</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
     <div class="row"><label>底栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
     <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="93"><span class="val" id="wrapBgAv">93</span></div>
