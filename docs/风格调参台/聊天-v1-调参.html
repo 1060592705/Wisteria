@@ -10,13 +10,13 @@
 
     /* 页面与顶部 */
     --chat-bg:#F4F2F0;
-    --mist-c:#E6DADA;--mist-a:0;
-    --hdr-h:72px;--hdr-bg:#FFFFFF;
-    --hdr-title-fs:11px;--hdr-title-c:#3D3535;
+    --mist-c:#E6DADA;--mist-a:0.1;
+    --hdr-h:75px;--hdr-bg:#FFFFFF;
+    --hdr-title-fs:12px;--hdr-title-c:#3D3535;
     --hdr-sub-c:#9BAAB8;
     --back-fs:18px;--back-c:#9BAAB8;
     --chat-pad:10px;
-    --hdr-pt:44px;--title-x:0px;--title-y:0px;
+    --hdr-pt:43px;--title-x:-13px;--title-y:0px;
 
     /* 消息组结构 */
     --ava-size:37px;--ava-radius:3px;--ava-bw:0px;--ava-bc:#FFFFFF;
@@ -24,8 +24,8 @@
     --meta-fs:9px;--meta-c:#8A8580;--meta-gap:0px;--meta-lh:1.25;
     --reply-c:#8A8580;
     --badge-c:#8A8580;
-    --group-gap:17px;--bubble-gap:6px;
-    --bub-mt:4px;
+    --group-gap:14px;--bubble-gap:8px;
+    --bub-mt:8px;
 
     /* 气泡本体 */
     --bubble-radius:20px;
@@ -37,9 +37,9 @@
     --bubble-shadow:0.01;
 
     /* 液态玻璃（左右统一） */
-    --lg-tint:45;--lg-blur:1px;
-    --lg-sat:1.34;--lg-con:1.14;--lg-sheen:0.39;--lg-rim:0.87;
-    --lg-warp:6;--lg-wave:100;
+    --lg-tint:28;--lg-blur:1px;
+    --lg-sat:1.41;--lg-con:1.12;--lg-sheen:0.22;--lg-rim:0.77;
+    --lg-warp:2;--lg-wave:115;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -47,11 +47,11 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --ci-h:52px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.34);--ci-w:230px;--ci-x:0px;--ci-y:0px;--bar-h:52px;
+    --ci-h:35px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.79);--ci-w:230px;--ci-x:-4px;--ci-y:-7px;--bar-h:63px;
     --icon-fs:14px;--icon-c:#9BAAB8;
-    --send-s:23px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
+    --send-s:24px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
-    --wrap-bg:rgba(255,255,255,1);--wrap-pad:16px;
+    --wrap-bg:rgba(255,255,255,0.93);--wrap-pad:15px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#e7dfd0;display:flex;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
@@ -277,7 +277,7 @@
     <div class="row"><label>徽标颜色</label><input type="color" id="badgeC" value="#8A8580"><span class="val" id="badgeCv">#8A8580</span></div>
     <div class="row"><label>回复标签</label><input type="checkbox" id="replyOn"></div>
     <div class="row"><label>回复颜色</label><input type="color" id="replyC" value="#8A8580"><span class="val" id="replyCv">#8A8580</span></div>
-    <div class="row"><label>组间距</label><input type="range" id="groupGap" min="6" max="40" value="18"><span class="val" id="groupGapv">18</span></div>
+    <div class="row"><label>组间距</label><input type="range" id="groupGap" min="6" max="40" value="14"><span class="val" id="groupGapv">14</span></div>
   </div>
 
   <div class="grp">
@@ -295,21 +295,21 @@
     <div class="row"><label>文字颜色</label><input type="color" id="bubC" value="#3D3535"><span class="val" id="bubCv">#3D3535</span></div>
     <div class="row"><label>最大宽度</label><input type="range" id="maxW" min="40" max="92" value="78"><span class="val" id="maxWv">78</span></div>
     <div class="row"><label>气泡缩进</label><input type="range" id="indent" min="0" max="30" value="10"><span class="val" id="indentv">10</span></div>
-    <div class="row"><label>气泡间距</label><input type="range" id="bubGap" min="2" max="14" value="6"><span class="val" id="bubGapv">6</span></div>
-    <div class="row"><label>头像气泡距</label><input type="range" id="bubMt" min="0" max="20" value="4"><span class="val" id="bubMtv">4</span></div>
+    <div class="row"><label>气泡间距</label><input type="range" id="bubGap" min="2" max="14" value="8"><span class="val" id="bubGapv">8</span></div>
+    <div class="row"><label>头像气泡距</label><input type="range" id="bubMt" min="0" max="20" value="8"><span class="val" id="bubMtv">8</span></div>
     <div class="row"><label>阴影浓度</label><input type="range" id="bubShadow" min="0" max="20" value="1"><span class="val" id="bubShadowv">1</span></div>
   </div>
 
   <div class="grp">
     <h3>🌊 液态玻璃（左右统一）</h3>
-    <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="55"><span class="val" id="lgTintv">55</span></div>
+    <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="28"><span class="val" id="lgTintv">28</span></div>
     <div class="row"><label>模糊度</label><input type="range" id="lgBlur" min="0" max="8" step="0.5" value="1"><span class="val" id="lgBlurv">1</span></div>
-    <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="134"><span class="val" id="lgSatv">134</span></div>
-    <div class="row"><label>通透对比</label><input type="range" id="lgCon" min="100" max="150" value="114"><span class="val" id="lgConv">114</span></div>
-    <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="39"><span class="val" id="lgSheenv">39</span></div>
-    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="87"><span class="val" id="lgRimv">87</span></div>
-    <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="6"><span class="val" id="lgWarpv">6</span></div>
-    <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="100"><span class="val" id="lgWavev">100</span></div>
+    <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="141"><span class="val" id="lgSatv">141</span></div>
+    <div class="row"><label>通透对比</label><input type="range" id="lgCon" min="100" max="150" value="112"><span class="val" id="lgConv">112</span></div>
+    <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="22"><span class="val" id="lgSheenv">22</span></div>
+    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="77"><span class="val" id="lgRimv">77</span></div>
+    <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="2"><span class="val" id="lgWarpv">2</span></div>
+    <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="115"><span class="val" id="lgWavev">115</span></div>
   </div>
 
   <div class="grp">
@@ -317,11 +317,11 @@
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
     <div class="row"><label>点纹背景</label><input type="checkbox" id="bgImgOn" checked></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
-    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="0"><span class="val" id="mistAv">0</span></div>
-    <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="72"><span class="val" id="hdrHv">72</span></div>
+    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="10"><span class="val" id="mistAv">10</span></div>
+    <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="75"><span class="val" id="hdrHv">75</span></div>
     <div class="row"><label>栏背景</label><input type="color" id="hdrBg" value="#FFFFFF"><span class="val" id="hdrBgv">#FFFFFF</span></div>
-    <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="11"><span class="val" id="hdrFsv">11</span></div>
-    <div class="row"><label>标题X</label><input type="range" id="ttlX" min="-30" max="30" value="0"><span class="val" id="ttlXv">0</span></div>
+    <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="12"><span class="val" id="hdrFsv">12</span></div>
+    <div class="row"><label>标题X</label><input type="range" id="ttlX" min="-30" max="30" value="-13"><span class="val" id="ttlXv">-13</span></div>
     <div class="row"><label>标题Y</label><input type="range" id="ttlY" min="-14" max="14" value="0"><span class="val" id="ttlYv">0</span></div>
     <div class="row"><label>标题颜色</label><input type="color" id="hdrTc" value="#3D3535"><span class="val" id="hdrTcv">#3D3535</span></div>
     <div class="row"><label>副标题</label><input type="checkbox" id="hdrSubOn"></div>
@@ -330,7 +330,7 @@
     <div class="row"><label>返回箭头</label><input type="range" id="backFs" min="12" max="22" value="18"><span class="val" id="backFsv">18</span></div>
     <div class="row"><label>箭头颜色</label><input type="color" id="backC" value="#9BAAB8"><span class="val" id="backCv">#9BAAB8</span></div>
     <div class="row"><label>昵称位置</label><select id="titlePos"><option value="center" selected>居中</option><option value="left">靠左</option></select></div>
-    <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="52" value="44"><span class="val" id="hdrPtv">44</span></div>
+    <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="52" value="43"><span class="val" id="hdrPtv">43</span></div>
     <div class="row"><label>醒状态标签</label><input type="checkbox" id="titleTagOn"></div>
     <div class="row"><label>分享按钮</label><input type="checkbox" id="shareOn"></div>
   </div>
@@ -345,22 +345,22 @@
   <div class="grp">
     <h3>✏ 输入栏</h3>
     <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
-    <div class="row"><label>底栏高</label><input type="range" id="barH" min="40" max="64" value="52"><span class="val" id="barHv">52</span></div>
-    <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="20" max="56" value="52"><span class="val" id="ciHv">52</span></div>
+    <div class="row"><label>底栏高</label><input type="range" id="barH" min="40" max="64" value="63"><span class="val" id="barHv">63</span></div>
+    <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="20" max="56" value="35"><span class="val" id="ciHv">35</span></div>
     <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="230"><span class="val" id="ciWv">230</span></div>
-    <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="0"><span class="val" id="ciXv">0</span></div>
-    <div class="row"><label>椭圆Y</label><input type="range" id="ciY" min="-14" max="14" value="0"><span class="val" id="ciYv">0</span></div>
+    <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="-4"><span class="val" id="ciXv">-4</span></div>
+    <div class="row"><label>椭圆Y</label><input type="range" id="ciY" min="-14" max="14" value="-7"><span class="val" id="ciYv">-7</span></div>
     <div class="row"><label>图标颜色</label><input type="color" id="iconC" value="#9BAAB8"><span class="val" id="iconCv">#9BAAB8</span></div>
     <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="14"><span class="val" id="iconFsv">14</span></div>
-    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="23"><span class="val" id="sendSv">23</span></div>
+    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="24"><span class="val" id="sendSv">24</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
     <div class="row"><label>底栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
-    <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
+    <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="93"><span class="val" id="wrapBgAv">93</span></div>
     <div class="row"><label>椭圆背景色</label><input type="color" id="ciBg" value="#E8E5E1"><span class="val" id="ciBgv">#E8E5E1</span></div>
-    <div class="row"><label>椭圆背景透明</label><input type="range" id="ciBgA" min="0" max="100" value="34"><span class="val" id="ciBgAv">34</span></div>
+    <div class="row"><label>椭圆背景透明</label><input type="range" id="ciBgA" min="0" max="100" value="79"><span class="val" id="ciBgAv">79</span></div>
     <div class="row"><label>椭圆内距</label><input type="range" id="ciPad" min="4" max="16" value="16"><span class="val" id="ciPadv">16</span></div>
-    <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="16"><span class="val" id="wrapPadv">16</span></div>
+    <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="15"><span class="val" id="wrapPadv">15</span></div>
   </div>
 
   <div class="grp">
