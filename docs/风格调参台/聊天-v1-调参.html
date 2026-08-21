@@ -17,6 +17,7 @@
     --back-fs:18px;--back-c:#9BAAB8;
     --hava-size:33px;--hava-radius:50%;
     --chat-pad:10px;
+    --hdr-pt:24px;
 
     /* 消息组结构 */
     --ava-size:37px;--ava-radius:3px;--ava-bw:0px;--ava-bc:#FFFFFF;
@@ -25,6 +26,7 @@
     --reply-c:#8A8580;
     --badge-c:#8A8580;
     --group-gap:17px;--bubble-gap:6px;
+    --bub-mt:4px;
 
     /* 气泡本体 */
     --bubble-radius:20px;
@@ -39,6 +41,8 @@
     --his-a:0.28;--his-blur:11px;--his-bord:0.27;
     /* 你气泡 */
     --your-bg:#F3D3D6;--your-a:0.95;--your-blur:2px;
+    /* 液态玻璃 */
+    --lg-sat:1.5;--lg-sheen:0.6;--lg-rim:0.5;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -50,6 +54,7 @@
     --icon-fs:17px;--icon-c:#9BAAB8;
     --send-s:22px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
+    --wrap-r:20px;--wrap-bg:rgba(255,255,255,1);--wrap-pad:9px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#e7dfd0;display:flex;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
@@ -66,7 +71,7 @@
     background:radial-gradient(circle at 28% 18%,var(--mist-c),transparent 58%),radial-gradient(circle at 78% 72%,var(--mist-c),transparent 55%);}
 
   /* 顶部栏 */
-  .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:10px var(--chat-pad) 8px;height:var(--hdr-h);background:var(--hdr-bg);flex-shrink:0;}
+  .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:var(--hdr-pt) var(--chat-pad) 8px;height:var(--hdr-h);background:var(--hdr-bg);flex-shrink:0;}
   .ch-back{font-size:var(--back-fs);color:var(--back-c);width:18px;text-align:center;font-weight:600;}
   .ch-hava{width:var(--hava-size);height:var(--hava-size);border-radius:var(--hava-radius);background:linear-gradient(135deg,#9BAAB8,#E6DADA);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;}
   .ch-tb{flex:1;min-width:0;}
@@ -93,7 +98,7 @@
   .msg-group.yours .mg-info{align-items:flex-end;}
 
   /* 气泡 */
-  .mg-bubbles{display:flex;flex-direction:column;gap:var(--bubble-gap);align-items:flex-start;padding-left:calc(var(--chat-pad) + var(--indent));}
+  .mg-bubbles{display:flex;flex-direction:column;gap:var(--bubble-gap);align-items:flex-start;margin-top:var(--bub-mt);padding-left:calc(var(--chat-pad) + var(--indent));}
   .msg-group.yours .mg-bubbles{align-items:flex-end;padding-left:0;padding-right:calc(var(--chat-pad) + var(--indent));}
   .bubble{position:relative;max-width:var(--max-w);padding:var(--pad-y) var(--pad-x);font-size:var(--bubble-fs);line-height:var(--bubble-lh);color:var(--bubble-c);border-radius:var(--bubble-radius);}
   /* 戊款：贴头像上角 4px 小圆，其余 16px（他左上 / 你右上） */
@@ -101,6 +106,12 @@
   .bubble.yours{border-radius:var(--bubble-radius) var(--corner-sm) var(--bubble-radius) var(--bubble-radius);}
   .bubble.his{background:rgba(255,255,255,var(--his-a));backdrop-filter:blur(var(--his-blur));-webkit-backdrop-filter:blur(var(--his-blur));border:1px solid rgba(255,255,255,var(--his-bord));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.35);}
   .bubble.yours{background:color-mix(in srgb,var(--your-bg) calc(var(--your-a)*100%),transparent);backdrop-filter:blur(var(--your-blur));-webkit-backdrop-filter:blur(var(--your-blur));box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow));}
+
+  /* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边） */
+  .bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));-webkit-backdrop-filter:blur(var(--his-blur)) saturate(var(--lg-sat));border:none;box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow)),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+  .bubble.lg.yours{background:linear-gradient(135deg,color-mix(in srgb,var(--your-bg) 55%,#fff),color-mix(in srgb,var(--your-bg) 28%,rgba(255,255,255,0.35)));}
+  .bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,var(--lg-sheen)),transparent 58%);pointer-events:none;}
+  .bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,var(--lg-rim));pointer-events:none;}
 
   /* 折角（参考图样式：折角 + 折角阴影 + 顶部小圆点） */
   .bubble.fold-tl{-webkit-mask-image:linear-gradient(135deg,transparent calc(var(--fold-size)*0.71),#000 0);mask-image:linear-gradient(135deg,transparent calc(var(--fold-size)*0.71),#000 0);}
@@ -124,6 +135,7 @@
 
   /* 输入栏 */
   .chat-input{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:8px var(--chat-pad) 14px;flex-shrink:0;}
+  .ci-wrap{flex:1;display:flex;align-items:center;background:var(--wrap-bg);border-radius:var(--wrap-r);padding:var(--wrap-pad);box-shadow:0 4px 16px rgba(60,45,25,0.06);}
   .ci-bar{flex:1;display:flex;align-items:center;background:var(--input-bg);border-radius:var(--input-r);height:var(--input-h);padding:0 6px 0 12px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(60,45,25,0.05);}
   .ci-mic{font-size:var(--icon-fs);color:var(--icon-c);filter:grayscale(1);}
   .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);padding:0 8px;white-space:nowrap;overflow:hidden;}
@@ -161,7 +173,7 @@
           <div class="ch-back">‹</div>
           <div class="ch-hava">薰</div>
           <div class="ch-tb">
-            <div class="ch-title">薰 <span style="font-size:9px;color:#9BAAB8;font-weight:400;">· 他醒了</span></div>
+            <div class="ch-title">薰 <span id="titleTag" style="font-size:9px;color:#9BAAB8;font-weight:400;">· 他醒了</span></div>
             <div class="ch-sub" id="hdrSub">#1314 #Memories</div>
           </div>
           <div class="ch-follow" id="hdrFollow">已关注</div>
@@ -247,12 +259,14 @@
         </div>
 
         <div class="chat-input">
-          <div class="ci-bar">
+          <div class="ci-wrap">
+            <div class="ci-bar">
             <div class="ci-mic">🎤</div>
             <div class="ci-field">给薰写点什么…</div>
             <div class="ci-ic">☺</div>
             <div class="ci-ic">📷</div>
             <div class="ci-send">↑</div>
+            </div>
           </div>
         </div>
       </div>
@@ -262,7 +276,7 @@
 
 <aside id="panel">
   <h2>聊天框调参台</h2>
-  <div class="hint">参考图：方块头像 + 三行信息 + 折角气泡。拖动滑块实时预览,调好后点「生成 CSS」。</div>
+  <div class="hint">参考图：方块头像 + 三行信息，气泡材质可选毛玻璃/液态玻璃。拖动滑块实时预览,调好后点「生成 CSS」。</div>
 
   <div class="grp">
     <h3>🗨 消息组结构</h3>
@@ -288,6 +302,7 @@
     <div class="row"><label>大圆角</label><input type="range" id="bubRadius" min="4" max="24" value="20"><span class="val" id="bubRadiusv">20</span></div>
     <div class="row"><label>上角小圆</label><input type="range" id="cornerSm" min="0" max="12" value="3"><span class="val" id="cornerSmv">3</span></div>
     <div class="row"><label>角样式</label><select id="foldPos"><option value="none" selected>上角小圆(戊·定稿)</option><option value="tl">折角·左上(参考图)</option><option value="tr">折角·右上(参考图)</option></select></div>
+    <div class="row"><label>气泡材质</label><select id="bubMat"><option value="glass" selected>毛玻璃（戊款）</option><option value="lg">液态玻璃（参考图）</option></select></div>
     <div class="row"><label>折角大小</label><input type="range" id="foldSize" min="4" max="20" value="9"><span class="val" id="foldSizev">9</span></div>
     <div class="row"><label>折角小圆点</label><input type="checkbox" id="foldDotOn" checked></div>
     <div class="row"><label>折角阴影</label><input type="range" id="foldShade" min="0" max="30" value="8"><span class="val" id="foldShadev">8</span></div>
@@ -299,6 +314,7 @@
     <div class="row"><label>最大宽度</label><input type="range" id="maxW" min="40" max="92" value="78"><span class="val" id="maxWv">78</span></div>
     <div class="row"><label>气泡缩进</label><input type="range" id="indent" min="0" max="30" value="10"><span class="val" id="indentv">10</span></div>
     <div class="row"><label>气泡间距</label><input type="range" id="bubGap" min="2" max="14" value="6"><span class="val" id="bubGapv">6</span></div>
+    <div class="row"><label>头像气泡距</label><input type="range" id="bubMt" min="0" max="20" value="4"><span class="val" id="bubMtv">4</span></div>
     <div class="row"><label>阴影浓度</label><input type="range" id="bubShadow" min="0" max="20" value="1"><span class="val" id="bubShadowv">1</span></div>
   </div>
 
@@ -317,6 +333,13 @@
   </div>
 
   <div class="grp">
+    <h3>🌊 液态玻璃</h3>
+    <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="150"><span class="val" id="lgSatv">150</span></div>
+    <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="60"><span class="val" id="lgSheenv">60</span></div>
+    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="50"><span class="val" id="lgRimv">50</span></div>
+  </div>
+
+  <div class="grp">
     <h3>📱 页面与顶部栏</h3>
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
@@ -332,6 +355,9 @@
     <div class="row"><label>箭头颜色</label><input type="color" id="backC" value="#9BAAB8"><span class="val" id="backCv">#9BAAB8</span></div>
     <div class="row"><label>栏头像大小</label><input type="range" id="havaSize" min="24" max="44" value="33"><span class="val" id="havaSizev">33</span></div>
     <div class="row"><label>栏头像圆角</label><input type="range" id="havaRadius" min="0" max="50" value="50"><span class="val" id="havaRadiusv">50</span></div>
+    <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="40" value="24"><span class="val" id="hdrPtv">24</span></div>
+    <div class="row"><label>醒状态标签</label><input type="checkbox" id="titleTagOn"></div>
+    <div class="row"><label>分享按钮</label><input type="checkbox" id="shareOn"></div>
   </div>
 
   <div class="grp">
@@ -358,6 +384,10 @@
     <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="22"><span class="val" id="sendSv">22</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
+    <div class="row"><label>外框圆角</label><input type="range" id="wrapR" min="8" max="32" value="20"><span class="val" id="wrapRv">20</span></div>
+    <div class="row"><label>外框背景</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
+    <div class="row"><label>外框透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
+    <div class="row"><label>外框内距</label><input type="range" id="wrapPad" min="4" max="16" value="9"><span class="val" id="wrapPadv">9</span></div>
   </div>
 
   <div class="grp">
@@ -410,16 +440,21 @@
     });
   }
 
-  /* 折角位置 */
+  /* 折角位置 + 气泡材质 */
   const foldPos = document.getElementById('foldPos');
-  function applyFold(pos) {
+  const bubMat = document.getElementById('bubMat');
+  function applyFold() {
+    const pos = (foldPos && foldPos.value) || 'none';
+    const lg = bubMat && bubMat.value === 'lg';
     document.querySelectorAll('.bubble').forEach(b => {
-      b.classList.remove('fold-tl','fold-tr');
-      if(pos === 'tl') b.classList.add('fold-tl');
-      if(pos === 'tr') b.classList.add('fold-tr');
+      b.classList.remove('fold-tl','fold-tr','lg');
+      if(lg) b.classList.add('lg');
+      else if(pos === 'tl') b.classList.add('fold-tl');
+      else if(pos === 'tr') b.classList.add('fold-tr');
     });
   }
-  if(foldPos) foldPos.addEventListener('change', () => applyFold(foldPos.value));
+  if(foldPos) foldPos.addEventListener('change', applyFold);
+  if(bubMat) bubMat.addEventListener('change', applyFold);
 
   /* 开关 */
   bindCheck('badgeOn', v => document.querySelectorAll('.mg-badge').forEach(e => e.style.display = v ? '' : 'none'));
@@ -428,6 +463,8 @@
   bindCheck('hdrSubOn', v => document.getElementById('hdrSub').style.display = v ? '' : 'none');
   bindCheck('hdrFollowOn', v => document.getElementById('hdrFollow').style.display = v ? '' : 'none');
   bindCheck('quoteOn', v => document.getElementById('quoteBox').style.display = v ? '' : 'none');
+  bindCheck('titleTagOn', v => { const t = document.getElementById('titleTag'); if(t) t.style.display = v ? '' : 'none'; });
+  bindCheck('shareOn', v => { const t = document.querySelector('.ch-share'); if(t) t.style.display = v ? '' : 'none'; });
 
   /* 各参数 */
   bind('avaSize','--ava-size','px');
@@ -441,6 +478,7 @@
   bindColor('badgeC','--badge-c');
   bindColor('replyC','--reply-c');
   bind('groupGap','--group-gap','px');
+  bind('bubMt','--bub-mt','px');
 
   bind('bubRadius','--bubble-radius','px');
   bind('cornerSm','--corner-sm','px');
@@ -463,6 +501,9 @@
   bindColor('yourBg','--your-bg');
   bind('yourA','--your-a','',0.01);
   bind('yourBlur','--your-blur','px');
+  bind('lgSat','--lg-sat','',0.01);
+  bind('lgSheen','--lg-sheen','',0.01);
+  bind('lgRim','--lg-rim','',0.01);
 
   bindColor('chatBg','--chat-bg');
   bindColor('mistC','--mist-c');
@@ -476,6 +517,7 @@
   bindColor('backC','--back-c');
   bind('havaSize','--hava-size','px');
   bind('havaRadius','--hava-radius','%');
+  bind('hdrPt','--hdr-pt','px');
 
   bind('optRadius','--opt-radius','px');
   bind('optBgA','--opt-bg-a','',0.01);
@@ -493,6 +535,8 @@
   bind('sendS','--send-s','px');
   bindColor('sendBg','--send-bg');
   bindColor('placeholderC','--placeholder-c');
+  bind('wrapR','--wrap-r','px');
+  bind('wrapPad','--wrap-pad','px');
 
   /* 背景色 + 透明组合（color-mix 需要 base + alpha 两个变量） */
   function updateMixed() {
@@ -500,8 +544,10 @@
     setVar('--opt-bg', `color-mix(in srgb, ${document.getElementById('optBg').value} ${(oa*100).toFixed(0)}%, transparent)`);
     const ia = parseFloat(document.getElementById('inputBgA').value)/100;
     setVar('--input-bg', `color-mix(in srgb, ${document.getElementById('inputBg').value} ${(ia*100).toFixed(0)}%, transparent)`);
+    const wa = parseFloat(document.getElementById('wrapBgA').value)/100;
+    setVar('--wrap-bg', `color-mix(in srgb, ${document.getElementById('wrapBg').value} ${(wa*100).toFixed(0)}%, transparent)`);
   }
-  ['optBg','optBgA','inputBg','inputBgA'].forEach(id => {
+  ['optBg','optBgA','inputBg','inputBgA','wrapBg','wrapBgA'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('input', () => {
@@ -516,14 +562,15 @@
   function genCode() {
     const s = getComputedStyle(root);
     const get = (v) => s.getPropertyValue(v).trim();
-    const fp = (document.getElementById('foldPos')||{}).value || 'none';
+    const mat = (document.getElementById('bubMat')||{}).value || 'glass';
+    const fp = mat === 'lg' ? 'none' : ((document.getElementById('foldPos')||{}).value || 'none');
     const hexRgb = (hex) => {
       const h = hex.replace('#','');
       const full = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
       const n = parseInt(full,16);
       return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);
     };
-    const op = (hex, a) => `rgba(${hexRgb(hex)},${(+a).toFixed(2)})`;
+    const op = (hex, a) => `rgba(${hexRgb(hex)},${(+a).toFixed(2).replace(/\.?0+$/,'')})`;
     const isOff = (id) => { const el = document.getElementById(id); return el && !el.checked; };
     let foldCss = '';
     if(fp === 'tl') foldCss = `/* 折角（左上，参考图：mask 切角 + 折页三角 + 顶部小圆点） */
@@ -548,7 +595,17 @@
     if(isOff('hdrSubOn')) hid.push('.ch-sub{display:none;}');
     if(isOff('hdrFollowOn')) hid.push('.ch-follow{display:none;}');
     if(isOff('quoteOn')) hid.push('.quote{display:none;}');
-    const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏） */\n' + hid.join('\n') + '\n' : '';
+    if(isOff('titleTagOn')) hid.push('#titleTag{display:none;}');
+    if(isOff('shareOn')) hid.push('.ch-share{display:none;}');
+    const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
+    const matCss = mat === 'lg'
+? `/* 液态玻璃（参考图：饱和模糊 + 顶部高光 + 白描边）*/
+.bubble.lg{background:linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.20));backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});-webkit-backdrop-filter:blur(${get('--his-blur')}) saturate(${get('--lg-sat')});border:none;box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')}),inset 0 1px 0 rgba(255,255,255,0.8),inset 0 -1px 0 rgba(255,255,255,0.30);}
+.bubble.lg.yours{background:linear-gradient(135deg,color-mix(in srgb,${get('--your-bg')} 55%,#fff),color-mix(in srgb,${get('--your-bg')} 28%,rgba(255,255,255,0.35)));}
+.bubble.lg::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(140% 70% at 12% 0%,rgba(255,255,255,${get('--lg-sheen')}),transparent 58%);pointer-events:none;}
+.bubble.lg::after{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,${get('--lg-rim')});pointer-events:none;}`
+: `/* 他气泡（毛玻璃）*/
+${matCss}`;
 
     const code = `/* 聊天页 · Wisteria（调参台生成 · 完整 CSS） */
 
@@ -557,7 +614,7 @@
 .chat-mist{position:absolute;inset:0;pointer-events:none;opacity:${get('--mist-a')};background:radial-gradient(circle at 28% 18%,${get('--mist-c')},transparent 58%),radial-gradient(circle at 78% 72%,${get('--mist-c')},transparent 55%);}
 
 /* 顶部栏 */
-.chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:10px ${get('--chat-pad')} 8px;height:${get('--hdr-h')};background:${get('--hdr-bg')};flex-shrink:0;}
+.chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:${get('--hdr-pt')} ${get('--chat-pad')} 8px;height:${get('--hdr-h')};background:${get('--hdr-bg')};flex-shrink:0;}
 .ch-back{font-size:${get('--back-fs')};color:${get('--back-c')};width:18px;text-align:center;font-weight:600;}
 .ch-hava{width:${get('--hava-size')};height:${get('--hava-size')};border-radius:${get('--hava-radius')};background:linear-gradient(135deg,#9BAAB8,#E6DADA);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;}
 .ch-tb{flex:1;min-width:0;}
@@ -582,7 +639,7 @@
 .mg-name{font-size:${get('--name-fs')};color:${get('--name-c')};font-weight:600;}
 .mg-reply{font-size:${get('--meta-fs')};color:${get('--reply-c')};}
 .mg-l2,.mg-l3{font-size:${get('--meta-fs')};color:${get('--meta-c')};line-height:1.25;}
-.mg-bubbles{display:flex;flex-direction:column;gap:${get('--bubble-gap')};align-items:flex-start;padding-left:calc(${get('--chat-pad')} + ${get('--indent')});}
+.mg-bubbles{display:flex;flex-direction:column;gap:${get('--bubble-gap')};align-items:flex-start;margin-top:${get('--bub-mt')};padding-left:calc(${get('--chat-pad')} + ${get('--indent')});}
 .msg-group.yours .mg-bubbles{align-items:flex-end;padding-left:0;padding-right:calc(${get('--chat-pad')} + ${get('--indent')});}
 
 /* 气泡（戊款：贴头像上角小圆 + 其余大圆，他左上 / 你右上） */
@@ -608,6 +665,7 @@ ${foldCss}
 
 /* 输入栏 */
 .chat-input{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:8px ${get('--chat-pad')} 14px;flex-shrink:0;}
+.ci-wrap{flex:1;display:flex;align-items:center;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};border-radius:${get('--wrap-r')};padding:${get('--wrap-pad')};box-shadow:0 4px 16px rgba(60,45,25,0.06);}
 .ci-bar{flex:1;display:flex;align-items:center;background:${op(document.getElementById('inputBg').value, document.getElementById('inputBgA').value/100)};border-radius:${get('--input-r')};height:${get('--input-h')};padding:0 6px 0 12px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(60,45,25,0.05);}
 .ci-mic{font-size:${get('--icon-fs')};color:${get('--icon-c')};filter:grayscale(1);}
 .ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};padding:0 8px;white-space:nowrap;overflow:hidden;}
