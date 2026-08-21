@@ -11,7 +11,7 @@
     /* 页面与顶部 */
     --chat-bg:#F4F2F0;
     --bg-img:url('../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png');
-    --mist-c:#E6DADA;--mist-a:0.1;
+    --mist-c:#E6DADA;--mist-a:0;
     --hdr-h:75px;--hdr-bg:#FFFFFF;
     --hdr-title-fs:12px;--hdr-title-c:#3D3535;
     --hdr-sub-c:#9BAAB8;
@@ -38,9 +38,9 @@
     --bubble-shadow:0.01;
 
     /* 液态玻璃（左右统一） */
-    --lg-tint:28;--lg-blur:1px;
-    --lg-sat:1.41;--lg-con:1.12;--lg-sheen:0.22;--lg-rim:0.77;
-    --lg-warp:2;--lg-wave:115;
+    --lg-tint:65;--lg-blur:1.5px;
+    --lg-sat:1.41;--lg-con:1.06;--lg-sheen:0.22;--lg-rim:0.1;
+    --lg-warp:15;--lg-wave:50;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -300,14 +300,14 @@
 
   <div class="grp">
     <h3>🌊 液态玻璃（左右统一）</h3>
-    <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="28"><span class="val" id="lgTintv">28</span></div>
-    <div class="row"><label>模糊度</label><input type="range" id="lgBlur" min="0" max="8" step="0.5" value="1"><span class="val" id="lgBlurv">1</span></div>
+    <div class="row"><label>玻璃浓度</label><input type="range" id="lgTint" min="0" max="100" value="65"><span class="val" id="lgTintv">65</span></div>
+    <div class="row"><label>模糊度</label><input type="range" id="lgBlur" min="0" max="8" step="0.5" value="1.5"><span class="val" id="lgBlurv">1.5</span></div>
     <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="141"><span class="val" id="lgSatv">141</span></div>
-    <div class="row"><label>通透对比</label><input type="range" id="lgCon" min="100" max="150" value="112"><span class="val" id="lgConv">112</span></div>
+    <div class="row"><label>通透对比</label><input type="range" id="lgCon" min="100" max="150" value="106"><span class="val" id="lgConv">106</span></div>
     <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="22"><span class="val" id="lgSheenv">22</span></div>
-    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="77"><span class="val" id="lgRimv">77</span></div>
-    <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="2"><span class="val" id="lgWarpv">2</span></div>
-    <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="115"><span class="val" id="lgWavev">115</span></div>
+    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="10"><span class="val" id="lgRimv">10</span></div>
+    <div class="row"><label>边缘变形</label><input type="range" id="lgWarp" min="0" max="20" value="15"><span class="val" id="lgWarpv">15</span></div>
+    <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
   </div>
 
   <div class="grp">
@@ -315,7 +315,7 @@
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
     <div class="row"><label>聊天背景</label><select id="bgImgSel"><option value="dots" selected>点纹背景（参考1）</option><option value="complex">复杂背景（参考2）</option><option value="none">无（纯色）</option></select></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
-    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="10"><span class="val" id="mistAv">10</span></div>
+    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="0"><span class="val" id="mistAv">0</span></div>
     <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="75"><span class="val" id="hdrHv">75</span></div>
     <div class="row"><label>栏背景</label><input type="color" id="hdrBg" value="#FFFFFF"><span class="val" id="hdrBgv">#FFFFFF</span></div>
     <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="12"><span class="val" id="hdrFsv">12</span></div>
