@@ -10,13 +10,13 @@
 
     /* 页面与顶部 */
     --chat-bg:#F4F2F0;
-    --mist-c:#E6DADA;--mist-a:0.15;
+    --mist-c:#E6DADA;--mist-a:0;
     --hdr-h:72px;--hdr-bg:#FFFFFF;
-    --hdr-title-fs:12px;--hdr-title-c:#3D3535;
+    --hdr-title-fs:11px;--hdr-title-c:#3D3535;
     --hdr-sub-c:#9BAAB8;
     --back-fs:18px;--back-c:#9BAAB8;
     --chat-pad:10px;
-    --hdr-pt:24px;
+    --hdr-pt:44px;--title-x:0px;--title-y:0px;
 
     /* 消息组结构 */
     --ava-size:37px;--ava-radius:3px;--ava-bw:0px;--ava-bc:#FFFFFF;
@@ -37,11 +37,11 @@
     --bubble-shadow:0.01;
 
     /* 他气泡（毛玻璃） */
-    --his-a:0.28;--his-blur:11px;--his-bord:0.27;
+    --his-a:0.10;--his-blur:1px;--his-bord:0.27;
     /* 你气泡 */
-    --your-bg:#F3D3D6;--your-a:0.95;--your-blur:2px;
+    --your-bg:#F3D3D6;--your-a:0.29;--your-blur:4px;
     /* 液态玻璃 */
-    --lg-sat:1.5;--lg-sheen:0.6;--lg-rim:0.5;
+    --lg-sat:1.34;--lg-sheen:0.39;--lg-rim:0.87;
 
     /* 功能消息 */
     --opt-radius:20px;--opt-bg:rgba(255,255,255,0.30);
@@ -49,11 +49,11 @@
     --quote-radius:10px;--quote-bg:rgba(255,255,255,0.45);--quote-c:#8A8580;
 
     /* 输入栏 */
-    --ci-h:36px;--ci-pad:12px;--ci-bg:rgba(232,229,225,1);
-    --icon-fs:17px;--icon-c:#9BAAB8;
-    --send-s:22px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
+    --ci-h:52px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.34);--ci-w:230px;--ci-x:0px;--ci-y:0px;
+    --icon-fs:14px;--icon-c:#9BAAB8;
+    --send-s:23px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
     --placeholder-c:#B8B0A8;
-    --wrap-bg:rgba(255,255,255,1);--wrap-pad:12px;
+    --wrap-bg:rgba(255,255,255,1);--wrap-pad:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#e7dfd0;display:flex;height:100vh;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
@@ -74,7 +74,7 @@
   .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:var(--hdr-pt) var(--chat-pad) 8px;height:var(--hdr-h);background:var(--hdr-bg);flex-shrink:0;}
   .ch-back{font-size:var(--back-fs);color:var(--back-c);width:18px;text-align:center;font-weight:600;}
   .ch-tb{flex:1;min-width:0;text-align:center;}
-  .ch-title{font-size:var(--hdr-title-fs);color:var(--hdr-title-c);font-weight:600;line-height:1.25;}
+  .ch-title{font-size:var(--hdr-title-fs);color:var(--hdr-title-c);font-weight:600;line-height:1.25;transform:translate(var(--title-x),var(--title-y));}
   .ch-sub{font-size:8.5px;color:var(--hdr-sub-c);line-height:1.3;}
   .ch-follow{font-size:10px;color:var(--ink-soft);border:1px solid #D8D3CD;border-radius:999px;padding:4px 10px;white-space:nowrap;}
   .ch-share{font-size:14px;color:var(--ink-soft);transform:scaleX(-1);}
@@ -123,20 +123,12 @@
   .quote{display:flex;gap:6px;align-items:center;background:var(--quote-bg);border-radius:var(--quote-radius);padding:7px 10px;font-size:10px;color:var(--quote-c);max-width:82%;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
   .quote::before{content:'⌐';font-size:12px;line-height:1;color:var(--quote-c);}
 
-  /* 功能消息：选项列表（字母式） */
-  .opt-card{background:var(--opt-bg);border-radius:var(--opt-radius);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 3px 12px rgba(60,45,25,var(--bubble-shadow));padding:10px 14px;max-width:var(--max-w);font-size:var(--bubble-fs);color:var(--bubble-c);}
-  .opt-title{margin-bottom:6px;line-height:var(--bubble-lh);}
-  .opt-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--opt-line-c);cursor:pointer;}
-  .opt-pre{font-family:'Bebas Neue','Arial Black',sans-serif;color:var(--opt-pre-c);font-size:15px;letter-spacing:1px;min-width:16px;}
-  .opt-item.active{color:var(--opt-accent);}
-  .opt-item.active .opt-pre{color:var(--opt-accent);}
 
   /* 输入栏 */
   .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px var(--chat-pad) 14px;background:var(--wrap-bg);flex-shrink:0;}
   .chat-input.tear::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,var(--wrap-bg) 0,var(--wrap-bg) 4px,transparent 4px,transparent 7px);}
-  .ci-wrap{flex:1;display:flex;align-items:center;gap:8px;padding:0 var(--wrap-pad);}
-  .ci-ell{flex:1;display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);padding:0 var(--ci-pad);}
-  .ci-mic{font-size:var(--icon-fs);color:var(--icon-c);filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
+  .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 var(--wrap-pad);}
+  .ci-ell{flex:0 0 auto;width:var(--ci-w);display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);padding:0 var(--ci-pad);transform:translate(var(--ci-x),var(--ci-y));}
   .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);white-space:nowrap;overflow:hidden;}
   .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--icon-c);font-size:var(--icon-fs);filter:grayscale(1);flex-shrink:0;}
   .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
@@ -230,11 +222,6 @@
             <div class="mg-bubbles">
               <div class="quote" id="quoteBox">⌐ 唔…昨晚刷视频刷过头了。</div>
               <div class="bubble his">好,那我先把吃药和早餐给你排上。药在床头柜,记得先喝口水。</div>
-              <div class="opt-card">
-                <div class="opt-title">吃药时间到啦——药在床头柜上,记得饭后吃。</div>
-                <div class="opt-item"><span class="opt-pre">A.</span>吃了</div>
-                <div class="opt-item active"><span class="opt-pre">B.</span>没吃,等会儿再吃</div>
-              </div>
             </div>
           </div>
 
@@ -258,12 +245,10 @@
 
         <div class="chat-input tear">
           <div class="ci-wrap">
-            <div class="ci-mic">🎤</div>
             <div class="ci-ell">
               <div class="ci-field">给薰写点什么…</div>
             </div>
             <div class="ci-ic">☺</div>
-            <div class="ci-ic">📷</div>
             <div class="ci-send">↑</div>
           </div>
         </div>
@@ -319,23 +304,23 @@
 
   <div class="grp">
     <h3>🥛 他气泡（毛玻璃）</h3>
-    <div class="row"><label>透明度</label><input type="range" id="hisA" min="10" max="100" value="28"><span class="val" id="hisAv">28</span></div>
-    <div class="row"><label>模糊度</label><input type="range" id="hisBlur" min="0" max="24" value="11"><span class="val" id="hisBlurv">11</span></div>
+    <div class="row"><label>透明度</label><input type="range" id="hisA" min="10" max="100" value="10"><span class="val" id="hisAv">10</span></div>
+    <div class="row"><label>模糊度</label><input type="range" id="hisBlur" min="0" max="24" value="1"><span class="val" id="hisBlurv">1</span></div>
     <div class="row"><label>白描边</label><input type="range" id="hisBord" min="0" max="100" value="27"><span class="val" id="hisBordv">27</span></div>
   </div>
 
   <div class="grp">
     <h3>🍑 你气泡</h3>
     <div class="row"><label>背景色</label><input type="color" id="yourBg" value="#F3D3D6"><span class="val" id="yourBgv">#F3D3D6</span></div>
-    <div class="row"><label>透明度</label><input type="range" id="yourA" min="10" max="100" value="95"><span class="val" id="yourAv">95</span></div>
-    <div class="row"><label>模糊度</label><input type="range" id="yourBlur" min="0" max="16" value="2"><span class="val" id="yourBlurv">2</span></div>
+    <div class="row"><label>透明度</label><input type="range" id="yourA" min="10" max="100" value="29"><span class="val" id="yourAv">29</span></div>
+    <div class="row"><label>模糊度</label><input type="range" id="yourBlur" min="0" max="16" value="4"><span class="val" id="yourBlurv">4</span></div>
   </div>
 
   <div class="grp">
     <h3>🌊 液态玻璃</h3>
-    <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="150"><span class="val" id="lgSatv">150</span></div>
-    <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="60"><span class="val" id="lgSheenv">60</span></div>
-    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="50"><span class="val" id="lgRimv">50</span></div>
+    <div class="row"><label>饱和度</label><input type="range" id="lgSat" min="100" max="250" value="134"><span class="val" id="lgSatv">134</span></div>
+    <div class="row"><label>顶部高光</label><input type="range" id="lgSheen" min="0" max="100" value="39"><span class="val" id="lgSheenv">39</span></div>
+    <div class="row"><label>白描边</label><input type="range" id="lgRim" min="0" max="100" value="87"><span class="val" id="lgRimv">87</span></div>
   </div>
 
   <div class="grp">
@@ -343,10 +328,12 @@
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
     <div class="row"><label>点纹背景</label><input type="checkbox" id="bgImgOn" checked></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
-    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="15"><span class="val" id="mistAv">15</span></div>
+    <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="0"><span class="val" id="mistAv">0</span></div>
     <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="72" value="72"><span class="val" id="hdrHv">72</span></div>
     <div class="row"><label>栏背景</label><input type="color" id="hdrBg" value="#FFFFFF"><span class="val" id="hdrBgv">#FFFFFF</span></div>
-    <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="12"><span class="val" id="hdrFsv">12</span></div>
+    <div class="row"><label>标题字号</label><input type="range" id="hdrFs" min="11" max="18" value="11"><span class="val" id="hdrFsv">11</span></div>
+    <div class="row"><label>标题X</label><input type="range" id="ttlX" min="-30" max="30" value="0"><span class="val" id="ttlXv">0</span></div>
+    <div class="row"><label>标题Y</label><input type="range" id="ttlY" min="-14" max="14" value="0"><span class="val" id="ttlYv">0</span></div>
     <div class="row"><label>标题颜色</label><input type="color" id="hdrTc" value="#3D3535"><span class="val" id="hdrTcv">#3D3535</span></div>
     <div class="row"><label>副标题</label><input type="checkbox" id="hdrSubOn"></div>
     <div class="row"><label>副标题色</label><input type="color" id="hdrSubC" value="#9BAAB8"><span class="val" id="hdrSubCv">#9BAAB8</span></div>
@@ -354,19 +341,13 @@
     <div class="row"><label>返回箭头</label><input type="range" id="backFs" min="12" max="22" value="18"><span class="val" id="backFsv">18</span></div>
     <div class="row"><label>箭头颜色</label><input type="color" id="backC" value="#9BAAB8"><span class="val" id="backCv">#9BAAB8</span></div>
     <div class="row"><label>昵称位置</label><select id="titlePos"><option value="center" selected>居中</option><option value="left">靠左</option></select></div>
-    <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="40" value="24"><span class="val" id="hdrPtv">24</span></div>
+    <div class="row"><label>栏内下移</label><input type="range" id="hdrPt" min="8" max="52" value="44"><span class="val" id="hdrPtv">44</span></div>
     <div class="row"><label>醒状态标签</label><input type="checkbox" id="titleTagOn"></div>
     <div class="row"><label>分享按钮</label><input type="checkbox" id="shareOn"></div>
   </div>
 
   <div class="grp">
     <h3>🛎 功能消息</h3>
-    <div class="row"><label>选项卡圆角</label><input type="range" id="optRadius" min="4" max="20" value="20"><span class="val" id="optRadiusv">20</span></div>
-    <div class="row"><label>选项卡背景</label><input type="color" id="optBg" value="#FFFFFF"><span class="val" id="optBgv">#FFFFFF</span></div>
-    <div class="row"><label>选项卡透明</label><input type="range" id="optBgA" min="30" max="100" value="30"><span class="val" id="optBgAv">30</span></div>
-    <div class="row"><label>前缀颜色</label><input type="color" id="optPreC" value="#9BAAB8"><span class="val" id="optPreCv">#9BAAB8</span></div>
-    <div class="row"><label>分隔线颜色</label><input type="color" id="optLineC" value="#E8E5E1"><span class="val" id="optLineCv">#E8E5E1</span></div>
-    <div class="row"><label>选中色</label><input type="color" id="optAccent" value="#C2B5B5"><span class="val" id="optAccentv">#C2B5B5</span></div>
     <div class="row"><label>引用条</label><input type="checkbox" id="quoteOn" checked></div>
     <div class="row"><label>引用条圆角</label><input type="range" id="quoteRadius" min="4" max="16" value="10"><span class="val" id="quoteRadiusv">10</span></div>
     <div class="row"><label>引用条文字色</label><input type="color" id="quoteC" value="#8A8580"><span class="val" id="quoteCv">#8A8580</span></div>
@@ -375,18 +356,21 @@
   <div class="grp">
     <h3>✏ 输入栏</h3>
     <div class="row"><label>撕纸边</label><input type="checkbox" id="tearOn" checked></div>
-    <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="24" max="52" value="36"><span class="val" id="ciHv">36</span></div>
+    <div class="row"><label>椭圆高</label><input type="range" id="ciH" min="20" max="56" value="52"><span class="val" id="ciHv">52</span></div>
+    <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="230"><span class="val" id="ciWv">230</span></div>
+    <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="0"><span class="val" id="ciXv">0</span></div>
+    <div class="row"><label>椭圆Y</label><input type="range" id="ciY" min="-14" max="14" value="0"><span class="val" id="ciYv">0</span></div>
     <div class="row"><label>图标颜色</label><input type="color" id="iconC" value="#9BAAB8"><span class="val" id="iconCv">#9BAAB8</span></div>
-    <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="17"><span class="val" id="iconFsv">17</span></div>
-    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="22"><span class="val" id="sendSv">22</span></div>
+    <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="14"><span class="val" id="iconFsv">14</span></div>
+    <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="23"><span class="val" id="sendSv">23</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
     <div class="row"><label>底栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
     <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="100"><span class="val" id="wrapBgAv">100</span></div>
     <div class="row"><label>椭圆背景色</label><input type="color" id="ciBg" value="#E8E5E1"><span class="val" id="ciBgv">#E8E5E1</span></div>
-    <div class="row"><label>椭圆背景透明</label><input type="range" id="ciBgA" min="0" max="100" value="100"><span class="val" id="ciBgAv">100</span></div>
-    <div class="row"><label>椭圆内距</label><input type="range" id="ciPad" min="4" max="16" value="12"><span class="val" id="ciPadv">12</span></div>
-    <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="12"><span class="val" id="wrapPadv">12</span></div>
+    <div class="row"><label>椭圆背景透明</label><input type="range" id="ciBgA" min="0" max="100" value="34"><span class="val" id="ciBgAv">34</span></div>
+    <div class="row"><label>椭圆内距</label><input type="range" id="ciPad" min="4" max="16" value="16"><span class="val" id="ciPadv">16</span></div>
+    <div class="row"><label>栏内距</label><input type="range" id="wrapPad" min="4" max="16" value="16"><span class="val" id="wrapPadv">16</span></div>
   </div>
 
   <div class="grp">
@@ -518,16 +502,16 @@
   function applyTitlePos(v){ document.querySelector('.ch-tb').style.textAlign = v === 'center' ? 'center' : 'left'; }
   if(titlePos){ titlePos.addEventListener('change', () => applyTitlePos(titlePos.value)); }
   bind('hdrPt','--hdr-pt','px');
+  bind('ttlX','--title-x','px');
+  bind('ttlY','--title-y','px');
 
-  bind('optRadius','--opt-radius','px');
-  bind('optBgA','--opt-bg-a','',0.01);
-  bindColor('optPreC','--opt-pre-c');
-  bindColor('optLineC','--opt-line-c');
-  bindColor('optAccent','--opt-accent');
   bind('quoteRadius','--quote-radius','px');
   bindColor('quoteC','--quote-c');
 
   bind('ciH','--ci-h','px');
+  bind('ciW','--ci-w','px');
+  bind('ciX','--ci-x','px');
+  bind('ciY','--ci-y','px');
   bindColor('iconC','--icon-c');
   bindCheck('tearOn', v => document.querySelector('.chat-input').classList.toggle('tear', v));
   bindCheck('bgImgOn', v => document.querySelector('.chat-page').classList.toggle('bgimg', v));
@@ -542,14 +526,12 @@
 
   /* 背景色 + 透明组合（color-mix 需要 base + alpha 两个变量） */
   function updateMixed() {
-    const oa = parseFloat(document.getElementById('optBgA').value)/100;
-    setVar('--opt-bg', `color-mix(in srgb, ${document.getElementById('optBg').value} ${(oa*100).toFixed(0)}%, transparent)`);
     const wa = parseFloat(document.getElementById('wrapBgA').value)/100;
     setVar('--wrap-bg', `color-mix(in srgb, ${document.getElementById('wrapBg').value} ${(wa*100).toFixed(0)}%, transparent)`);
     const ca = parseFloat(document.getElementById('ciBgA').value)/100;
     setVar('--ci-bg', `color-mix(in srgb, ${document.getElementById('ciBg').value} ${(ca*100).toFixed(0)}%, transparent)`);
   }
-  ['optBg','optBgA','wrapBg','wrapBgA','ciBg','ciBgA'].forEach(id => {
+  ['wrapBg','wrapBgA','ciBg','ciBgA'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('input', () => {
@@ -619,7 +601,7 @@ ${pageCss}
 .chat-header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding:${get('--hdr-pt')} ${get('--chat-pad')} 8px;height:${get('--hdr-h')};background:${get('--hdr-bg')};flex-shrink:0;}
 .ch-back{font-size:${get('--back-fs')};color:${get('--back-c')};width:18px;text-align:center;font-weight:600;}
 .ch-tb{flex:1;min-width:0;text-align:center;}
-.ch-title{font-size:${get('--hdr-title-fs')};color:${get('--hdr-title-c')};font-weight:600;line-height:1.25;}
+.ch-title{font-size:${get('--hdr-title-fs')};color:${get('--hdr-title-c')};font-weight:600;line-height:1.25;transform:translate(${get('--title-x')},${get('--title-y')});}
 .ch-sub{font-size:8.5px;color:${get('--hdr-sub-c')};line-height:1.3;}
 .ch-follow{font-size:10px;color:#8A8580;border:1px solid #D8D3CD;border-radius:999px;padding:4px 10px;white-space:nowrap;}
 .ch-share{font-size:14px;color:#8A8580;transform:scaleX(-1);}
@@ -658,19 +640,10 @@ ${foldCss}
 .quote{display:flex;gap:6px;align-items:center;background:${get('--quote-bg')};border-radius:${get('--quote-radius')};padding:7px 10px;font-size:10px;color:${get('--quote-c')};max-width:82%;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 .quote::before{content:'⌐';font-size:12px;line-height:1;color:${get('--quote-c')};}
 
-/* 功能消息：选项列表（字母式） */
-.opt-card{background:${op(document.getElementById('optBg').value, document.getElementById('optBgA').value/100)};border-radius:${get('--opt-radius')};backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 3px 12px rgba(60,45,25,${get('--bubble-shadow')});padding:10px 14px;max-width:${get('--max-w')};font-size:${get('--bubble-fs')};color:${get('--bubble-c')};}
-.opt-title{margin-bottom:6px;line-height:${get('--bubble-lh')};}
-.opt-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid ${get('--opt-line-c')};cursor:pointer;}
-.opt-pre{font-family:'Bebas Neue','Arial Black',sans-serif;color:${get('--opt-pre-c')};font-size:15px;letter-spacing:1px;min-width:16px;}
-.opt-item.active{color:${get('--opt-accent')};}
-.opt-item.active .opt-pre{color:${get('--opt-accent')};}
-
 /* 输入栏 */
 .chat-input{position:relative;z-index:2;display:flex;align-items:center;padding:8px ${get('--chat-pad')} 14px;background:${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)};flex-shrink:0;}
-.ci-wrap{flex:1;display:flex;align-items:center;gap:8px;padding:0 ${get('--wrap-pad')};}
-.ci-ell{flex:1;display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};padding:0 ${get('--ci-pad')};}
-.ci-mic{font-size:${get('--icon-fs')};color:${get('--icon-c')};filter:grayscale(1);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(232,229,225,0.8);}
+.ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 ${get('--wrap-pad')};}
+.ci-ell{flex:0 0 auto;width:${get('--ci-w')};display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};padding:0 ${get('--ci-pad')};transform:translate(${get('--ci-x')},${get('--ci-y')});}
 .ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};white-space:nowrap;overflow:hidden;}
 .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:${get('--icon-c')};font-size:${get('--icon-fs')};filter:grayscale(1);flex-shrink:0;}
 .ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
