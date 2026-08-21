@@ -10,6 +10,7 @@
 
     /* 页面与顶部 */
     --chat-bg:#F4F2F0;
+    --bg-img:url('../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png');
     --mist-c:#E6DADA;--mist-a:0.1;
     --hdr-h:75px;--hdr-bg:#FFFFFF;
     --hdr-title-fs:12px;--hdr-title-c:#3D3535;
@@ -63,7 +64,7 @@
 
   /* 聊天页 */
   .chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--chat-bg);}
-  .chat-page.bgimg{background:var(--chat-bg) center/cover no-repeat url('../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png');}
+  .chat-page.bgimg{background:var(--chat-bg) center/cover no-repeat var(--bg-img);}
   .chat-mist{position:absolute;inset:0;pointer-events:none;opacity:var(--mist-a);
     background:radial-gradient(circle at 28% 18%,var(--mist-c),transparent 58%),radial-gradient(circle at 78% 72%,var(--mist-c),transparent 55%);}
 
@@ -312,7 +313,7 @@
   <div class="grp">
     <h3>📱 页面与顶部栏</h3>
     <div class="row"><label>页面底色</label><input type="color" id="chatBg" value="#F4F2F0"><span class="val" id="chatBgv">#F4F2F0</span></div>
-    <div class="row"><label>点纹背景</label><input type="checkbox" id="bgImgOn" checked></div>
+    <div class="row"><label>聊天背景</label><select id="bgImgSel"><option value="dots" selected>点纹背景（参考1）</option><option value="complex">复杂背景（参考2）</option><option value="none">无（纯色）</option></select></div>
     <div class="row"><label>色雾颜色</label><input type="color" id="mistC" value="#E6DADA"><span class="val" id="mistCv">#E6DADA</span></div>
     <div class="row"><label>色雾浓度</label><input type="range" id="mistA" min="0" max="100" value="10"><span class="val" id="mistAv">10</span></div>
     <div class="row"><label>栏高</label><input type="range" id="hdrH" min="44" max="92" value="75"><span class="val" id="hdrHv">75</span></div>
@@ -515,7 +516,15 @@
   bind('ciX','--ci-x','px');
   bind('ciY','--ci-y','px');
   bindCheck('tearOn', v => document.querySelector('.chat-input').classList.toggle('tear', v));
-  bindCheck('bgImgOn', v => document.querySelector('.chat-page').classList.toggle('bgimg', v));
+  const bgImgSel = document.getElementById('bgImgSel');
+  function applyBgImg() {
+    const v = (bgImgSel && bgImgSel.value) || 'dots';
+    document.querySelector('.chat-page').classList.toggle('bgimg', v !== 'none');
+    const img = v === 'complex' ? '../../参考资料/图片/聊天页面参考/8fe04dfdcf29da10e52eb60134b4832e.png' : '../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png';
+    setVar('--bg-img', `url('${img}')`);
+  }
+  if(bgImgSel) bgImgSel.addEventListener('change', applyBgImg);
+  applyBgImg();
   bind('sendS','--send-s','px');
   bind('sendX','--send-x','px');
   bind('sendY','--send-y','px');
@@ -585,7 +594,10 @@
     const tearOn = document.getElementById('tearOn');
     const tearCss = tearOn && tearOn.checked ? `\n/* 撕纸边（同主页导航栏） */\n.chat-input::before{content:'';position:absolute;top:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(135deg,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 0,${op(document.getElementById('wrapBg').value, document.getElementById('wrapBgA').value/100)} 4px,transparent 4px,transparent 7px);}` : '';
     const hidCss = hid.length ? '\n/* 已关闭的显示项（保持隐藏）*/\n' + hid.join('\n') + '\n' : '';
-    const pageCss = (document.getElementById('bgImgOn')||{}).checked ? `/* 点纹背景：url 请替换为实际图片路径 */\n.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')} center/cover no-repeat url('chat-bg-dots.png');}` : `.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}`;
+    const bgSel = (document.getElementById('bgImgSel')||{}).value || 'dots';
+    const bgFile = bgSel === 'complex' ? 'chat-bg-complex.png' : 'chat-bg-dots.png';
+    const bgTip = bgSel === 'complex' ? '复杂背景' : '点纹背景';
+    const pageCss = bgSel === 'none' ? `.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')};}` : `/* ${bgTip}：url 请替换为实际图片路径 */\n.chat-page{position:absolute;inset:0;display:flex;flex-direction:column;background:${get('--chat-bg')} center/cover no-repeat url('${bgFile}');}`;
     const waveM = Math.round((parseFloat(document.getElementById('lgWave').value)||100))/100;
     const warpSy = (document.getElementById('lgWarp')||{}).value || '6';
     const matCss = `/* 液态玻璃（左右统一：饱和模糊 + 顶部高光 + 白描边 + 边缘变形）*/
