@@ -317,6 +317,7 @@
     <div class="row"><label>波纹密度</label><input type="range" id="lgWave" min="50" max="250" value="50"><span class="val" id="lgWavev">50</span></div>
     <div class="row"><label>边缘扩散</label><input type="range" id="lgRimB" min="0" max="30" step="0.5" value="8"><span class="val" id="lgRimBv">8</span></div>
     <div class="row"><label>边缘环厚</label><input type="range" id="lgRimW" min="2" max="14" value="8"><span class="val" id="lgRimWv">8</span></div>
+    <div class="row"><label>背景取色</label><input type="checkbox" id="dispAutoOn" checked></div>
     <div class="row"><label>色散光</label><input type="range" id="lgDisp" min="0" max="30" value="12"><span class="val" id="lgDispv">12</span></div>
     <div class="row"><label>色散左色</label><input type="color" id="lgDispL" value="#E9F3DF"><span class="val" id="lgDispLv">#E9F3DF</span></div>
     <div class="row"><label>色散右色</label><input type="color" id="lgDispR" value="#C0E2D1"><span class="val" id="lgDispRv">#C0E2D1</span></div>
@@ -554,8 +555,67 @@
     const img = v === 'complex' ? '../../参考资料/图片/聊天页面参考/8fe04dfdcf29da10e52eb60134b4832e.png' : '../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png';
     setVar('--bg-img', `url('${img}')`);
   }
-  if(bgImgSel) bgImgSel.addEventListener('change', applyBgImg);
+  if(bgImgSel) bgImgSel.addEventListener('change', () => {
+    applyBgImg();
+    loadDispImg(bgImgSel.value);
+  });
   applyBgImg();
+
+  /* 色散光自动取色：从气泡边缘外侧采样当前背景图的实际颜色 */
+  const dispAutoOn = document.getElementById('dispAutoOn');
+  const dispCon = document.createElement('canvas');
+  const dispCtx = dispCon.getContext('2d');
+  const dispImg = new Image();
+  function loadDispImg(v){
+    dispImg.src = v === 'complex' ? '../../参考资料/图片/聊天页面参考/8fe04dfdcf29da10e52eb60134b4832e.png' : '../../参考资料/图片/聊天页面参考/f4250f51bcd320038ac19d6f739a7a84.png';
+  }
+  function sampleAvg(ix, iy, w, h){
+    try {
+      if(dispCtx.canvas.width < 1) return null;
+      const dx = Math.max(0, Math.round(ix)), dy = Math.max(0, Math.round(iy));
+      const dw = Math.min(dispCtx.canvas.width - dx, Math.round(w));
+      const dh = Math.min(dispCtx.canvas.height - dy, Math.round(h));
+      if(dw < 1 || dh < 1) return null;
+      const d = dispCtx.getImageData(dx, dy, dw, dh).data;
+      let r = 0, g = 0, b = 0, n = 0;
+      for(let i = 0; i < d.length; i += 4){ r += d[i]; g += d[i+1]; b += d[i+2]; n++; }
+      return 'rgb(' + Math.round(r/n) + ',' + Math.round(g/n) + ',' + Math.round(b/n) + ')';
+    } catch(e) { return null; }
+  }
+  function applyDispAuto(){
+    if(!dispAutoOn || !dispAutoOn.checked || dispCtx.canvas.width < 1) return;
+    const page = document.querySelector('.chat-page');
+    const iw = dispCtx.canvas.width, ih = dispCtx.canvas.height;
+    const pr = page.getBoundingClientRect();
+    const sc = Math.max(pr.width/iw, pr.height/ih);
+    const dx = (pr.width - iw*sc)/2, dy = (pr.height - ih*sc)/2;
+    document.querySelectorAll('.bubble').forEach(b => {
+      const r = b.getBoundingClientRect();
+      const x0 = (r.left - pr.left - dx)/sc, y0 = (r.top - pr.top - dy)/sc;
+      const x1 = (r.right - pr.left - dx)/sc, y1 = (r.bottom - pr.top - dy)/sc;
+      const cB = y0 + (y1 - y0) * 0.3;
+      const cL = sampleAvg(x0 - 8, cB, 6, 6);
+      const cR = sampleAvg(x1 + 2, cB, 6, 6);
+      if(cL) b.style.setProperty('--lg-disp-l', cL);
+      if(cR) b.style.setProperty('--lg-disp-r', cR);
+    });
+  }
+  dispImg.onload = () => {
+    try {
+      dispCon.width = dispImg.naturalWidth;
+      dispCon.height = dispImg.naturalHeight;
+      dispCtx.drawImage(dispImg, 0, 0);
+    } catch(e) { return; }
+    applyDispAuto();
+  };
+  if(dispAutoOn) dispAutoOn.addEventListener('change', () => {
+    document.querySelectorAll('.bubble').forEach(b => {
+      b.style.removeProperty('--lg-disp-l');
+      b.style.removeProperty('--lg-disp-r');
+    });
+    if(dispAutoOn.checked) applyDispAuto();
+  });
+  loadDispImg('dots');
   bind('sendS','--send-s','px');
   bind('sendX','--send-x','px');
   bind('sendY','--send-y','px');
