@@ -48,8 +48,7 @@
 
     /* 输入栏 */
     --ci-h:35px;--ci-pad:16px;--ci-bg:rgba(232,229,225,0.79);--ci-w:230px;--ci-x:-4px;--ci-y:-7px;--bar-h:63px;
-    --icon-fs:14px;--icon-c:#9BAAB8;
-    --send-s:24px;--send-bg:#9BAAB8;--send-c:#FFFFFF;
+    --send-s:24px;--send-bg:#9BAAB8;--send-c:#FFFFFF;--send-x:0px;--send-y:0px;
     --placeholder-c:#B8B0A8;
     --wrap-bg:rgba(255,255,255,0.93);--wrap-pad:15px;
   }
@@ -129,8 +128,7 @@
   .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 var(--wrap-pad);height:var(--bar-h);}
   .ci-ell{flex:0 0 auto;width:var(--ci-w);display:flex;align-items:center;background:var(--ci-bg);border-radius:999px;height:var(--ci-h);max-height:var(--bar-h);padding:0 var(--ci-pad);transform:translate(var(--ci-x),var(--ci-y));}
   .ci-field{flex:1;font-size:12px;color:var(--placeholder-c);white-space:nowrap;overflow:hidden;}
-  .ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--icon-c);font-size:var(--icon-fs);filter:grayscale(1);flex-shrink:0;}
-  .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+  .ci-send{width:var(--send-s);height:var(--send-s);border-radius:50%;background:var(--send-bg);color:var(--send-c);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;transform:translate(var(--send-x),var(--send-y));}
 
   /* 调参面板 */
   #panel{width:280px;background:#37322a;color:#e8e2d6;padding:16px;overflow-y:auto;height:100vh;flex-shrink:0;font-size:12px;}
@@ -247,7 +245,6 @@
             <div class="ci-ell">
               <div class="ci-field">给薰写点什么…</div>
             </div>
-            <div class="ci-ic">☺</div>
             <div class="ci-send">↑</div>
           </div>
         </div>
@@ -350,10 +347,10 @@
     <div class="row"><label>椭圆宽</label><input type="range" id="ciW" min="160" max="320" value="230"><span class="val" id="ciWv">230</span></div>
     <div class="row"><label>椭圆X</label><input type="range" id="ciX" min="-30" max="30" value="-4"><span class="val" id="ciXv">-4</span></div>
     <div class="row"><label>椭圆Y</label><input type="range" id="ciY" min="-14" max="14" value="-7"><span class="val" id="ciYv">-7</span></div>
-    <div class="row"><label>图标颜色</label><input type="color" id="iconC" value="#9BAAB8"><span class="val" id="iconCv">#9BAAB8</span></div>
-    <div class="row"><label>图标大小</label><input type="range" id="iconFs" min="10" max="20" value="14"><span class="val" id="iconFsv">14</span></div>
     <div class="row"><label>发送钮大小</label><input type="range" id="sendS" min="22" max="40" value="24"><span class="val" id="sendSv">24</span></div>
     <div class="row"><label>发送钮颜色</label><input type="color" id="sendBg" value="#9BAAB8"><span class="val" id="sendBgv">#9BAAB8</span></div>
+    <div class="row"><label>发送X</label><input type="range" id="sendX" min="-30" max="30" value="0"><span class="val" id="sendXv">0</span></div>
+    <div class="row"><label>发送Y</label><input type="range" id="sendY" min="-14" max="14" value="0"><span class="val" id="sendYv">0</span></div>
     <div class="row"><label>占位文字色</label><input type="color" id="placeholderC" value="#B8B0A8"><span class="val" id="placeholderCv">#B8B0A8</span></div>
     <div class="row"><label>底栏背景色</label><input type="color" id="wrapBg" value="#FFFFFF"><span class="val" id="wrapBgv">#FFFFFF</span></div>
     <div class="row"><label>底栏背景透明</label><input type="range" id="wrapBgA" min="0" max="100" value="93"><span class="val" id="wrapBgAv">93</span></div>
@@ -517,11 +514,11 @@
   bind('ciW','--ci-w','px');
   bind('ciX','--ci-x','px');
   bind('ciY','--ci-y','px');
-  bindColor('iconC','--icon-c');
   bindCheck('tearOn', v => document.querySelector('.chat-input').classList.toggle('tear', v));
   bindCheck('bgImgOn', v => document.querySelector('.chat-page').classList.toggle('bgimg', v));
-  bind('iconFs','--icon-fs','px');
   bind('sendS','--send-s','px');
+  bind('sendX','--send-x','px');
+  bind('sendY','--send-y','px');
   bindColor('sendBg','--send-bg');
   bindColor('placeholderC','--placeholder-c');
   bind('wrapPad','--wrap-pad','px');
@@ -655,8 +652,7 @@ ${foldCss}
 .ci-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 ${get('--wrap-pad')};height:${get('--bar-h')};}
 .ci-ell{flex:0 0 auto;width:${get('--ci-w')};display:flex;align-items:center;background:${op(document.getElementById('ciBg').value, document.getElementById('ciBgA').value/100)};border-radius:999px;height:${get('--ci-h')};max-height:${get('--bar-h')};padding:0 ${get('--ci-pad')};transform:translate(${get('--ci-x')},${get('--ci-y')});}
 .ci-field{flex:1;font-size:12px;color:${get('--placeholder-c')};white-space:nowrap;overflow:hidden;}
-.ci-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:${get('--icon-c')};font-size:${get('--icon-fs')};filter:grayscale(1);flex-shrink:0;}
-.ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+.ci-send{width:${get('--send-s')};height:${get('--send-s')};border-radius:50%;background:${get('--send-bg')};color:${get('--send-c')};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;transform:translate(${get('--send-x')},${get('--send-y')});}
 ${hidCss}${tearCss}`;
     document.getElementById('codeout').textContent = code;
   }
